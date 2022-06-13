@@ -2,16 +2,22 @@ import { cancelKeyboard, jobSeekerKeyboard } from "../../keybaords/menu_kbs";
 import {
     fetchEducationLevel,
     fetchEducationLevels,
+    fetchSectors,
     fetchWorkStatus,
     fetchWorkStatuses,
-    insertJobSeeker
+    insertJobSeeker,
 } from "../../services/basic";
+import { registerJobSeekerPersonalizedJob } from "../../services/personalization";
+
 import { Telegraf } from "telegraf"
 
 // use this instead of enter handler
-export const jobSeekerInitHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
-    ctx.reply(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard)
-})
+
+// export const jobSeekerInitHandler = Telegraf.on(["text", "contact", "document", "photo"], 
+export const jobSeekerInitHandler = async (ctx: any) => {
+    ctx.scene.state.userId = ctx.session.userId;
+    ctx.reply("Please eneter your Availability", cancelKeyboard)
+}
 
 // availability handler
 export const availablityHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
@@ -43,9 +49,8 @@ export const educationalLevelHandler = Telegraf.on(["text", "contact", "document
         const workStatuses = await fetchWorkStatuses()
         if (!errors) {
             const { education_levels } = data
-            const [{ education_lvl: id }] = education_levels
+            const [{ id }] = education_levels
             ctx.session.currentEducationLevel = id;
-
         }
         const { work_statuses } = workStatuses.data
         const workStasusNames = work_statuses.map((stat: any) => [{ text: stat.name }])
@@ -72,13 +77,13 @@ export const workStatusHandler = Telegraf.on(["text", "contact", "document", "ph
         const { data, errors } = await fetchWorkStatus({ name: ctx.scene.state.currentEmploymentStatus })
         if (!errors) {
             const { work_statuses } = data
-            const [{ work_stat: { id } }] = work_statuses
+            const [{ id }] = work_statuses
             ctx.session.currentWorkStatus = id;
             await insertJobSeeker({
                 obj: {
-                    user_id: JSON.stringify(ctx.session.userIdd),
-                    education_level_id: JSON.stringify(ctx.session.currentEducationLevel),
-                    work_status_id: JSON.stringify(ctx.session.currentWorkStatus)
+                    user_id: ctx.session.userIdd,
+                    education_level_id: ctx.session.currentEducationLevel,
+                    work_status_id: ctx.session.currentWorkStatus
                 }
             })
             ctx.reply("You have successfully Registerd As Job seeker", jobSeekerKeyboard);
@@ -89,3 +94,27 @@ export const workStatusHandler = Telegraf.on(["text", "contact", "document", "ph
         return;
     }
 })
+
+export const sectorSelectionActionHandler = async (ctx: any) => {
+    // TODO: improve handler
+    const selectedSector = ctx.match[0];
+    const { data: { sectors } } = await fetchSectors()
+    ctx.session.sectorNames = sectors.map((e: any) => e.name);
+    ctx.session.sectorIds = sectors.map((e: any) => e.id)
+
+    for (let x = 0; x < sectors.length; x++) {
+        if (parseInt(selectedSector) === x) {
+            ctx.session.selectedSectorName = ctx.session.sectorNames[x];
+            ctx.session.selectedSectorId = ctx.session.sectorIds[x];
+        }
+    }
+    const { data } = await registerJobSeekerPersonalizedJob({
+        objs: [{
+            job_seeker_id: ctx.session.personalizedJobSeekerId,
+            sector_id: ctx.session.selectedSectorId
+        }]
+    })
+    if (data) {
+        ctx.reply(`You have selected ${ctx.session.selectedSectorName}`);
+    }
+}

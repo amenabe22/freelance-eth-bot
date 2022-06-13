@@ -85,3 +85,17 @@ export const INSERT_JOB_SEEKER = gql`mutation($obj: job_seekers_insert_input!) {
     id
   }
 }`
+
+export const SECTORS = gql`query {
+  sectors{
+    id
+    name
+    description
+  }
+}`
+
+export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors_insert_input!]!) {
+  insert_job_seeker_sectors(objects: $objs) {
+    affected_rows
+  }
+}`

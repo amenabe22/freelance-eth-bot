@@ -1,14 +1,13 @@
-import { jobSeekerKeyboard } from "../../keybaords/menu_kbs";
+import { fetchSectors } from "../../services/basic";
+import { englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
 import { getUserByTelegramId } from "../../services/registration";
+import { changeToAmharicKeyboard, editDetailProfileInlineKeyboard, editProfileKeybaord, settingKeyboard } from "../../keybaords/settings";
 
 
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
-
-    console.log(ctx.from.id, "payload")
-    console.log(users, "da")
     if (users.length) {
         const [user] = users
         if (!user.job_seeker) {
@@ -22,13 +21,81 @@ export const menuJobseekerSelectionHandler = async (ctx: any) => {
     }
 }
 
+export const menuMainSelectorHandler = async (ctx: any) => {
+    ctx.reply(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard);
+}
+
+// settings handler
+export const menuSettingsSelectorHandler = async (ctx: any) => {
+    ctx.reply(`Alright ${ctx.from.first_name}, Here is some of your profile in our platform`, settingKeyboard);
+}
+
+// language selctor
+export const menuLanguageSelectorHandler = async (ctx: any) => {
+    ctx.reply(`Awsome ${ctx.from.first_name}, Your courrent language is English, please select your language prefernce below.`, changeToAmharicKeyboard)
+}
+
+// handler for english selector
+export const menuEnglishSelectorHandler = async (ctx: any) => {
+    ctx.reply(`Hey ${ctx.from.first_name}, Your language is English.`, settingKeyboard)
+}
+
+// handler for amharic selector
+export const menuAmharicSelectorHandler = async (ctx: any) => {
+    ctx.reply(`Sorry ${ctx.from.first_name}, Amharic language is not available right now.`, englishMainMenuKeyboard)
+}
+
+export const menuAccountSelectorHandler = async (ctx: any) => {
+    const boldName = ctx.from.first_name.bold();
+    const lastNameBold = ctx.from.last_name.bold();
+    ctx.reply(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editProfileKeybaord);
+    ctx.reply("Back to main menu", onlyMainMenuKeyboard);
+}
+
+// action
+export const editProfileHandler = async (ctx: any) => {
+    ctx.answerCbQuery();
+    ctx.deleteMessage();
+    const boldName = ctx.from.first_name.bold();
+    const lastNameBold = ctx.from.last_name.bold();
+    ctx.reply(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editDetailProfileInlineKeyboard);
+    ctx.reply("Back to main menu", onlyMainMenuKeyboard);
+}
+
+// action
+export const editMultipleProfileHandler = async (ctx: any) => {
+    ctx.answerCbQuery();
+    const toBeEdited = ctx.match[0];
+    const toBeEditedItem = toBeEdited.split('-')[1];
+    ctx.scene.state.toBeEditedItem = toBeEditedItem;
+    ctx.session.toBeEditedItem = ctx.scene.state.toBeEditedItem
+    ctx.scene.enter("editProfileScene")
+}
+
+// action
+export const termsAndConditionsHandler = async (ctx: any) => {
+    ctx.reply("Terms and conditions will be loaded here", onlyMainMenuKeyboard);
+}
+
+
+
 
 export const personalizedJobSelectionHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramId({ telegram_id: JSON.stringify(ctx.from.id) })
+    const sctrs = await fetchSectors()
     if (!error) {
-        const { users } = data
-        console.log(users)
-        const [{ user: { job_seeker } }] = users
-        ctx.session.personalizedJobSeekerId = job_seeker.id;
+        const [{ job_seeker: { id } }] = data.users
+        ctx.session.personalizedJobSeekerId = id;
+
+        const { sectors } = sctrs.data;
+        const boldSectors = "Sectors".bold();
+        ctx.reply(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
+            reply_markup: JSON.stringify({
+                inline_keyboard: sectors.map((x: any, xi: any) => ([{
+                    text: x.name, callback_data: JSON.stringify(xi + 0)
+                }])), resize_keyboard: true, one_time_keyboard: true,
+            }),
+        });
+        ctx.reply("*****************************", onlyMainMenuKeyboard)
     }
 }

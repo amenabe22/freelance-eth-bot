@@ -1,14 +1,27 @@
 import {
     AmharicSelectionAction,
+    EditMultipleProfileAction,
+    EditProfileAction,
     EnglishSelectionAction,
-    registerUserHandlerDob,
-    registerWithAgeAction
+    RegisterUserHandlerDob,
+    RegisterWithAgeAction,
+    SectorSelectionAction,
+    TermsAndConditionsAction
 } from "./actions";
 import { CoreBot } from "./bot";
 import { BOT_TOKEN } from "./constants";
 import { coreStage } from "./stages/registration.stage";
 import { StartCommand } from "./commands"
-import { menuJobseekerSelection, personalizedJobSelection } from "./handlers/callbacks";
+import {
+    menuAccountSelector,
+    menuAmharicSelector,
+    menuEnglishSelector,
+    menuJobseekerSelection,
+    menuLanguageSelector,
+    menuMainSelector,
+    menuSettingsSelector,
+    personalizedJobSelection
+} from "./handlers/callbacks";
 
 export const bot = new CoreBot(
     BOT_TOKEN,
@@ -18,10 +31,11 @@ export const bot = new CoreBot(
     ],
     // register actions
     [
-        registerWithAgeAction,
-        registerUserHandlerDob,
+        RegisterWithAgeAction,
+        RegisterUserHandlerDob,
         AmharicSelectionAction,
-        EnglishSelectionAction
+        EnglishSelectionAction,
+        SectorSelectionAction,
     ],
     // register commands
     [
@@ -30,6 +44,15 @@ export const bot = new CoreBot(
     // register core callbacks 
     [
         menuJobseekerSelection,
-        personalizedJobSelection
+        personalizedJobSelection,
+        menuMainSelector,
+        menuSettingsSelector,
+        menuLanguageSelector,
+        menuEnglishSelector,
+        menuAmharicSelector,
+        menuAccountSelector,
+        EditProfileAction,
+        EditMultipleProfileAction,
+        TermsAndConditionsAction
     ]
 );

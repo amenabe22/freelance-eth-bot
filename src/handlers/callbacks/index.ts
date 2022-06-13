@@ -4,7 +4,13 @@ import {
     registerJobSeekerCancelHandler,
 } from './callbacks'
 import {
+    menuAccountSelectorHandler,
+    menuAmharicSelectorHandler,
+    menuEnglishSelectorHandler,
     menuJobseekerSelectionHandler,
+    menuLanguageSelectorHandler,
+    menuMainSelectorHandler,
+    menuSettingsSelectorHandler,
     personalizedJobSelectionHandler
 } from "./core"
 
@@ -18,6 +24,36 @@ export const menuJobseekerSelection = {
     handler: menuJobseekerSelectionHandler
 }
 
+export const menuMainSelector = {
+    key: "Main Menu",
+    handler: menuMainSelectorHandler
+}
+
+export const menuSettingsSelector = {
+    key: "Settings",
+    handler: menuSettingsSelectorHandler
+}
+
+export const menuLanguageSelector = {
+    key: "Languages",
+    handler: menuLanguageSelectorHandler
+}
+
+export const menuEnglishSelector = {
+    key: "English",
+    handler: menuEnglishSelectorHandler
+}
+
+export const menuAmharicSelector = {
+    key: "Amharic",
+    handler: menuAmharicSelectorHandler
+}
+export const menuAccountSelector = {
+    key: "Account",
+    handler: menuAccountSelectorHandler
+}
+
+menuAccountSelectorHandler
 export const registerJobSeekerCancel = {
     key: "Back",
     handler: registerJobSeekerCancelHandler

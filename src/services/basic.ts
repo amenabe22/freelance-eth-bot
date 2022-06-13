@@ -53,3 +53,10 @@ export const insertJobSeeker = async (variables: any) => {
     })
     return res
 }
+
+export const fetchSectors = async () => {
+    const res = await client.query({
+        query: qry.SECTORS
+    })
+    return res
+}

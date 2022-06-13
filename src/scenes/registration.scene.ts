@@ -4,26 +4,32 @@ import { newCustomerRegistrationCancel, registerJobSeekerCancel } from "../handl
 
 export const ageInputStyleScene = new CoreScene(
   "ageInputStyleScene",
-  [
-    hdlr.ageInitHandler,
-    hdlr.ageInputStyleHandler,
-  ]
+  {
+    enter: null,
+    handlers: [
+      hdlr.ageInitHandler,
+      hdlr.ageInputStyleHandler,
+    ]
+  }
 )
 
 export const newCustomerRegistrationScene = new CoreScene(
   "newCustomerRegistrationScene",
-  [
-    hdlr.registrationInitHandler,
-    hdlr.phoneNumberRegisterHandler,
-    hdlr.firstNameRegisterHandler,
-    hdlr.lastNameRegisterHandler,
-    hdlr.genderRegisterHandler,
-    hdlr.residentCityRegisterHandler,
-    hdlr.chooseAgeInputStyleHandler,
-    hdlr.yearOfBirthRegisterHandler,
-    hdlr.monthOfBirthRegisterHandler,
-    hdlr.dateOfBirthRegisterHandler
-  ],
+  {
+    enter: null,
+    handlers: [
+      hdlr.registrationInitHandler,
+      hdlr.phoneNumberRegisterHandler,
+      hdlr.firstNameRegisterHandler,
+      hdlr.lastNameRegisterHandler,
+      hdlr.genderRegisterHandler,
+      hdlr.residentCityRegisterHandler,
+      hdlr.chooseAgeInputStyleHandler,
+      hdlr.yearOfBirthRegisterHandler,
+      hdlr.monthOfBirthRegisterHandler,
+      hdlr.dateOfBirthRegisterHandler
+    ]
+  },
   [
     newCustomerRegistrationCancel
   ]
@@ -32,12 +38,14 @@ export const newCustomerRegistrationScene = new CoreScene(
 export const registerJobSeekerScene = new CoreScene(
   "registerJobSeekerScene",
   // add enter handler for each middleware event
-  [
-    hdlr.jobSeekerInitHandler,
-    hdlr.availablityHandler,
-    hdlr.educationalLevelHandler,
-    hdlr.workStatusHandler
-  ],
+  {
+    enter: hdlr.jobSeekerInitHandler,
+    handlers: [
+      hdlr.availablityHandler,
+      hdlr.educationalLevelHandler,
+      hdlr.workStatusHandler
+    ]
+  },
   [
     registerJobSeekerCancel
   ]
