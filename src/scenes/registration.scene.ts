@@ -31,6 +31,7 @@ export const newCustomerRegistrationScene = new CoreScene(
 
 export const registerJobSeekerScene = new CoreScene(
   "registerJobSeekerScene",
+  // add enter handler for each middleware event
   [
     hdlr.jobSeekerInitHandler,
     hdlr.availablityHandler,

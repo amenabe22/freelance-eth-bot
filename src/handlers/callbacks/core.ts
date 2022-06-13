@@ -7,9 +7,9 @@ export const menuJobseekerSelectionHandler = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id)
     })
 
+    console.log(ctx.from.id, "payload")
+    console.log(users, "da")
     if (users.length) {
-        console.log(ctx.from.id, "payload")
-        console.log(users, "da")
         const [user] = users
         if (!user.job_seeker) {
             ctx.scene.state.userId = user.id;
