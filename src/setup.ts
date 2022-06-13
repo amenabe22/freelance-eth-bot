@@ -6,16 +6,15 @@ import {
 } from "./actions";
 import { CoreBot } from "./bot";
 import { BOT_TOKEN } from "./constants";
-import { mainMenuStage, registrationStage } from "./stages/registration.stage";
+import { coreStage } from "./stages/registration.stage";
 import { StartCommand } from "./commands"
-import { menuJobseekerSelection } from "./handlers/callbacks";
+import { menuJobseekerSelection, personalizedJobSelection } from "./handlers/callbacks";
 
 export const bot = new CoreBot(
     BOT_TOKEN,
     // register middlewares and stages
     [
-        registrationStage.middleware(),
-        mainMenuStage.middleware()
+        coreStage.middleware(),
     ],
     // register actions
     [
@@ -30,6 +29,7 @@ export const bot = new CoreBot(
     ],
     // register core callbacks 
     [
-        menuJobseekerSelection
+        menuJobseekerSelection,
+        personalizedJobSelection
     ]
 );

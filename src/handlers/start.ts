@@ -6,6 +6,7 @@ export const startCommandHand = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id)
     })
     console.log("Start: ", ctx.from.id)
+    console.log(ctx.scene)
     if (!users.length) {
         return ctx.scene.enter("newCustomerRegistrationScene");
     } else {

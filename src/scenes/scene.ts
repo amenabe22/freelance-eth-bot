@@ -11,5 +11,4 @@ export class CoreScene extends Scenes.WizardScene<any>{
             this.hears(e.key, e.handler)
         })
     }
-
 }

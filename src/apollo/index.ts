@@ -6,10 +6,10 @@ import fetch from 'cross-fetch';
 export const client = new ApolloClient({
     link: new HttpLink({
         uri: APOLLO_GRAPHQL_URL, fetch,
-        credentials: 'same-origin', 
-        headers:{
-            "x-hasura-admin-secret":HASURA_GRAPHQL_ADMIN_SECRET
+        credentials: 'same-origin',
+        headers: {
+            "x-hasura-admin-secret": HASURA_GRAPHQL_ADMIN_SECRET
         }
     }),
-    cache:new InMemoryCache()
+    cache: new InMemoryCache()
 });
