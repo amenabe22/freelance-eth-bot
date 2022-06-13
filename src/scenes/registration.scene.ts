@@ -1,6 +1,6 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
-import { newCustomerRegistrationCancel } from "../handlers/callbacks"
+import { newCustomerRegistrationCancel, registerJobSeekerCancel } from "../handlers/callbacks"
 
 export const ageInputStyleScene = new CoreScene(
   "ageInputStyleScene",
@@ -32,6 +32,12 @@ export const newCustomerRegistrationScene = new CoreScene(
 export const registerJobSeekerScene = new CoreScene(
   "registerJobSeekerScene",
   [
-    hdlr.availablityHandler
+    hdlr.jobSeekerInitHandler,
+    hdlr.availablityHandler,
+    hdlr.educationalLevelHandler,
+    hdlr.workStatusHandler
+  ],
+  [
+    registerJobSeekerCancel
   ]
 )

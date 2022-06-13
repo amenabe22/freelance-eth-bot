@@ -1,4 +1,4 @@
-import { Context, Middleware, Scenes } from "telegraf"
+import { Middleware, Scenes } from "telegraf"
 
 
 export class CoreScene extends Scenes.WizardScene<any>{

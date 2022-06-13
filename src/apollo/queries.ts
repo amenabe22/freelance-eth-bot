@@ -61,3 +61,27 @@ export const EDUCATION_LEVEL = gql`query getEducationalLevel($name: citext!) {
   id                  
   }
 }`
+
+export const WORK_STATUSES = gql`query {
+  work_statuses {
+    id
+    name
+  }
+}
+`
+
+export const WORK_STATUS = gql`query getWorkStatus($name: citext!) {
+  work_statuses(where: {
+    name: {
+      _eq: $name
+    }
+  }) {
+  id                  
+  }
+}`
+
+export const INSERT_JOB_SEEKER = gql`mutation($obj: job_seekers_insert_input!) {
+  insert_job_seeker(object: $obj) {
+    id
+  }
+}`

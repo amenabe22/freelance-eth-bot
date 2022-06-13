@@ -1,5 +1,5 @@
 
-import { newCustomerRegistrationCancelHandler } from './callbacks'
+import { newCustomerRegistrationCancelHandler, registerJobSeekerCancelHandler } from './callbacks'
 import { menuJobseekerSelectionHandler } from "./core"
 
 export const newCustomerRegistrationCancel = {
@@ -10,4 +10,9 @@ export const newCustomerRegistrationCancel = {
 export const menuJobseekerSelection = {
     key: "Job Seeker",
     handler: menuJobseekerSelectionHandler
+}
+
+export const registerJobSeekerCancel = {
+    key: "Back",
+    handler: registerJobSeekerCancelHandler
 }

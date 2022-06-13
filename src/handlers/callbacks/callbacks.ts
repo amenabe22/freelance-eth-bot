@@ -7,6 +7,11 @@ export const newCustomerRegistrationCancelHandler = (ctx: any) => {
   ctx.scene.leave();
 }
 
+// handler for job seeer scene back button event
+export const registerJobSeekerCancelHandler = (ctx: any) => {
+  ctx.reply(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard)
+  ctx.scene.leave();
+}
 
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
   const { data, error } = await getUserByTelegramId({ telegram_id: ctx.from.id })
@@ -20,7 +25,6 @@ export const menuJobseekerSelectionHandler = async (ctx: any) => {
     } else {
       ctx.reply(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard);
     }
-    ctx.reply("you haven't registered yet. please start the bot again using /start command");
     ctx.scene.leave();
   }
 }
