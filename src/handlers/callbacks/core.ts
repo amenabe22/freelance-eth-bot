@@ -1,7 +1,12 @@
 import { fetchSectors } from "../../services/basic";
-import { englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
+import { employerKeyboard, englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
 import { getUserByTelegramId } from "../../services/registration";
-import { changeToAmharicKeyboard, editDetailProfileInlineKeyboard, editProfileKeybaord, settingKeyboard } from "../../keybaords/settings";
+import {
+    changeToAmharicKeyboard,
+    editDetailProfileInlineKeyboard,
+    editProfileKeybaord, settingKeyboard
+} from "../../keybaords/settings";
+import { Context } from "telegraf";
 
 
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
@@ -15,51 +20,52 @@ export const menuJobseekerSelectionHandler = async (ctx: any) => {
             ctx.session.userId = ctx.scene.state.userId
             ctx.scene.enter("registerJobSeekerScene")
         } else {
-            ctx.reply(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard);
+            ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard);
         }
         ctx.scene.leave();
     }
 }
 
 export const menuMainSelectorHandler = async (ctx: any) => {
-    ctx.reply(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard);
+    ctx.replyWithHTML(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard);
 }
 
 // settings handler
 export const menuSettingsSelectorHandler = async (ctx: any) => {
-    ctx.reply(`Alright ${ctx.from.first_name}, Here is some of your profile in our platform`, settingKeyboard);
+    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, Here is some of your profile in our platform`, settingKeyboard);
 }
 
 // language selctor
 export const menuLanguageSelectorHandler = async (ctx: any) => {
-    ctx.reply(`Awsome ${ctx.from.first_name}, Your courrent language is English, please select your language prefernce below.`, changeToAmharicKeyboard)
+    ctx.replyWithHTML(`Awsome ${ctx.from.first_name}, Your courrent language is English, please select your language prefernce below.`, changeToAmharicKeyboard)
 }
 
 // handler for english selector
 export const menuEnglishSelectorHandler = async (ctx: any) => {
-    ctx.reply(`Hey ${ctx.from.first_name}, Your language is English.`, settingKeyboard)
+    ctx.replyWithHTML(`Hey ${ctx.from.first_name}, Your language is English.`, settingKeyboard)
 }
 
 // handler for amharic selector
 export const menuAmharicSelectorHandler = async (ctx: any) => {
-    ctx.reply(`Sorry ${ctx.from.first_name}, Amharic language is not available right now.`, englishMainMenuKeyboard)
+    ctx.replyWithHTML(`Sorry ${ctx.from.first_name}, Amharic language is not available right now.`, englishMainMenuKeyboard)
 }
 
 export const menuAccountSelectorHandler = async (ctx: any) => {
     const boldName = ctx.from.first_name.bold();
     const lastNameBold = ctx.from.last_name.bold();
-    ctx.reply(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editProfileKeybaord);
-    ctx.reply("Back to main menu", onlyMainMenuKeyboard);
+    ctx.replyWithHTML(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editProfileKeybaord);
+    ctx.replyWithHTML("Back to main menu", onlyMainMenuKeyboard);
 }
 
 // action
 export const editProfileHandler = async (ctx: any) => {
+    console.log("dawgGgggg")
     ctx.answerCbQuery();
     ctx.deleteMessage();
     const boldName = ctx.from.first_name.bold();
     const lastNameBold = ctx.from.last_name.bold();
-    ctx.reply(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editDetailProfileInlineKeyboard);
-    ctx.reply("Back to main menu", onlyMainMenuKeyboard);
+    ctx.replyWithHTML(`${boldName} ${lastNameBold}\n*********\n\nHired n times by employers\nCompleted n Jobs total\nBudges(emojis)\nLodeded CV here`, editDetailProfileInlineKeyboard);
+    ctx.replyWithHTML("Back to main menu", onlyMainMenuKeyboard);
 }
 
 // action
@@ -74,7 +80,7 @@ export const editMultipleProfileHandler = async (ctx: any) => {
 
 // action
 export const termsAndConditionsHandler = async (ctx: any) => {
-    ctx.reply("Terms and conditions will be loaded here", onlyMainMenuKeyboard);
+    ctx.replyWithHTML("Terms and conditions will be loaded here", onlyMainMenuKeyboard);
 }
 
 
@@ -82,6 +88,7 @@ export const termsAndConditionsHandler = async (ctx: any) => {
 
 export const personalizedJobSelectionHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramId({ telegram_id: JSON.stringify(ctx.from.id) })
+
     const sctrs = await fetchSectors()
     if (!error) {
         const [{ job_seeker: { id } }] = data.users
@@ -89,13 +96,19 @@ export const personalizedJobSelectionHandler = async (ctx: any) => {
 
         const { sectors } = sctrs.data;
         const boldSectors = "Sectors".bold();
-        ctx.reply(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
+        ctx.replyWithHTML(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
             reply_markup: JSON.stringify({
                 inline_keyboard: sectors.map((x: any, xi: any) => ([{
                     text: x.name, callback_data: JSON.stringify(xi + 0)
                 }])), resize_keyboard: true, one_time_keyboard: true,
             }),
         });
-        ctx.reply("*****************************", onlyMainMenuKeyboard)
+        ctx.replyWithHTML("*****************************", onlyMainMenuKeyboard)
     }
 }
+
+
+export const employerMenuSelectionHandler = async (ctx: any) => {
+    ctx.replyWithHTML(`${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
+}
+

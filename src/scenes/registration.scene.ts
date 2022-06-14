@@ -39,13 +39,16 @@ export const registerJobSeekerScene = new CoreScene(
   "registerJobSeekerScene",
   // add enter handler for each middleware event
   {
+    // enter handler
     enter: hdlr.jobSeekerInitHandler,
+    // steps handler
     handlers: [
       hdlr.availablityHandler,
       hdlr.educationalLevelHandler,
       hdlr.workStatusHandler
     ]
   },
+  // middlewares for buttons
   [
     registerJobSeekerCancel
   ]

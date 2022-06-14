@@ -1,9 +1,12 @@
 
+import { jobPostCancelButtonHandler, postJobMenuSelectionHandler } from '../jobpost'
+import { handleCvUploadSelectionHandler } from '../personalization'
 import {
     newCustomerRegistrationCancelHandler,
     registerJobSeekerCancelHandler,
 } from './callbacks'
 import {
+    employerMenuSelectionHandler,
     menuAccountSelectorHandler,
     menuAmharicSelectorHandler,
     menuEnglishSelectorHandler,
@@ -63,4 +66,24 @@ export const registerJobSeekerCancel = {
 export const personalizedJobSelection = {
     key: "Personalized Jobs",
     handler: personalizedJobSelectionHandler
+}
+
+export const handleCvUploadSelection = {
+    key: "Upload CV",
+    handler: handleCvUploadSelectionHandler
+}
+
+export const employerMenuSelection = {
+    key: "Employer",
+    handler: employerMenuSelectionHandler
+}
+
+export const postJobMenuSelection = {
+    key: "Post a Job",
+    handler: postJobMenuSelectionHandler
+}
+
+export const jobPostCancelButton = {
+    key: "Back",
+    handler: jobPostCancelButtonHandler
 }

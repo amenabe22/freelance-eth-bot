@@ -16,7 +16,7 @@ import { Telegraf } from "telegraf"
 // export const jobSeekerInitHandler = Telegraf.on(["text", "contact", "document", "photo"], 
 export const jobSeekerInitHandler = async (ctx: any) => {
     ctx.scene.state.userId = ctx.session.userId;
-    ctx.reply("Please eneter your Availability", cancelKeyboard)
+    ctx.replyWithHTML("Please eneter your Availability", cancelKeyboard)
 }
 
 // availability handler
@@ -27,7 +27,7 @@ export const availablityHandler = Telegraf.on(["text", "contact", "document", "p
         if (!errors) {
             const { education_levels } = data;
             const educationLevelNames = education_levels.map((lvl: any) => [{ text: lvl.name }])
-            ctx.reply("please choose your educational level.", {
+            ctx.replyWithHTML("please choose your educational level.", {
                 reply_markup: JSON.stringify({
                     keyboard: educationLevelNames
                     , resize_keyboard: true, one_time_keyboard: true,
@@ -37,7 +37,7 @@ export const availablityHandler = Telegraf.on(["text", "contact", "document", "p
 
         return ctx.wizard.next();
     } else {
-        ctx.reply(ctx.chat.id, "Please enter a valid availablity status!", cancelKeyboard);
+        ctx.replyWithHTML(ctx.chat.id, "Please enter a valid availablity status!", cancelKeyboard);
         return;
     }
 })
@@ -54,7 +54,7 @@ export const educationalLevelHandler = Telegraf.on(["text", "contact", "document
         }
         const { work_statuses } = workStatuses.data
         const workStasusNames = work_statuses.map((stat: any) => [{ text: stat.name }])
-        ctx.reply("please enter your work status.", {
+        ctx.replyWithHTML("please enter your work status.", {
             reply_markup: JSON.stringify({
                 keyboard: workStasusNames,
                 resize_keyboard: true,
@@ -64,7 +64,7 @@ export const educationalLevelHandler = Telegraf.on(["text", "contact", "document
 
         return ctx.wizard.next();
     } else {
-        ctx.reply("Please enter a valid educational level!", cancelKeyboard);
+        ctx.replyWithHTML("Please enter a valid educational level!", cancelKeyboard);
         return;
     }
 })
@@ -86,11 +86,11 @@ export const workStatusHandler = Telegraf.on(["text", "contact", "document", "ph
                     work_status_id: ctx.session.currentWorkStatus
                 }
             })
-            ctx.reply("You have successfully Registerd As Job seeker", jobSeekerKeyboard);
+            ctx.replyWithHTML("You have successfully Registerd As Job seeker", jobSeekerKeyboard);
             ctx.scene.leave();
         }
     } else {
-        ctx.reply("Please enter a valid work status!", cancelKeyboard);
+        ctx.replyWithHTML("Please enter a valid work status!", cancelKeyboard);
         return;
     }
 })
@@ -115,6 +115,6 @@ export const sectorSelectionActionHandler = async (ctx: any) => {
         }]
     })
     if (data) {
-        ctx.reply(`You have selected ${ctx.session.selectedSectorName}`);
+        ctx.replyWithHTML(`You have selected ${ctx.session.selectedSectorName}`);
     }
 }

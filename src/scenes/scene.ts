@@ -8,7 +8,6 @@ export class CoreScene extends Scenes.WizardScene<any>{
     ) {
         super(id, ...steps.handlers)
         if (steps.enter) this.enter(steps.enter)
-        // console.log(steps..map((e: any) => e.enter), "step")
         middlewares?.forEach((e: any) => {
             this.hears(e.key, e.handler)
         })

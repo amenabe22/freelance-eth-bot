@@ -3,6 +3,8 @@ import {
     EditMultipleProfileAction,
     EditProfileAction,
     EnglishSelectionAction,
+    jobPostCompanyAction,
+    jobPostCompanySelectorAction,
     RegisterUserHandlerDob,
     RegisterWithAgeAction,
     SectorSelectionAction,
@@ -10,9 +12,11 @@ import {
 } from "./actions";
 import { CoreBot } from "./bot";
 import { BOT_TOKEN } from "./constants";
-import { coreStage } from "./stages/registration.stage";
+import { coreStage } from "./stages/core.stage";
 import { StartCommand } from "./commands"
 import {
+    employerMenuSelection,
+    handleCvUploadSelection,
     menuAccountSelector,
     menuAmharicSelector,
     menuEnglishSelector,
@@ -20,7 +24,8 @@ import {
     menuLanguageSelector,
     menuMainSelector,
     menuSettingsSelector,
-    personalizedJobSelection
+    personalizedJobSelection,
+    postJobMenuSelection
 } from "./handlers/callbacks";
 
 export const bot = new CoreBot(
@@ -36,6 +41,9 @@ export const bot = new CoreBot(
         AmharicSelectionAction,
         EnglishSelectionAction,
         SectorSelectionAction,
+        jobPostCompanyAction,
+        EditProfileAction,
+        jobPostCompanySelectorAction
     ],
     // register commands
     [
@@ -51,8 +59,11 @@ export const bot = new CoreBot(
         menuEnglishSelector,
         menuAmharicSelector,
         menuAccountSelector,
-        EditProfileAction,
         EditMultipleProfileAction,
-        TermsAndConditionsAction
+        TermsAndConditionsAction,
+        handleCvUploadSelection,
+        employerMenuSelection,
+        postJobMenuSelection
     ]
 );
+

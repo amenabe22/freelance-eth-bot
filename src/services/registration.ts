@@ -12,6 +12,7 @@ export const registerNewBotUser = async (variables: any) => {
 export const getUserByTelegramId = async (variables: any) => {
     const res = await client.query({
         query: USER,
+        // to avoid caching
         fetchPolicy: "network-only",
         variables
     })

@@ -31,6 +31,7 @@ export const USER = gql`
       last_name
       job_seeker{
         id
+        cv
         availability_status
         work_status{
           id

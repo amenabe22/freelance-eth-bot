@@ -7,5 +7,4 @@ export const registerJobSeekerPersonalizedJob = async (variables: any) => {
         variables
     })
     return res
-
 }

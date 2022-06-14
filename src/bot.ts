@@ -1,4 +1,4 @@
-import { Telegraf, session, Middleware, MiddlewareFn } from "telegraf";
+import { Telegraf, session, MiddlewareFn } from "telegraf";
 import { MatchedMiddleware, Triggers } from "telegraf/typings/composer";
 import { Context } from "telegraf/typings/context";
 
@@ -55,6 +55,5 @@ export class CoreBot {
     stop(reason = 'unspecified') {
         return this.instance.stop(reason)
     }
-
 }
 
