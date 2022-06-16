@@ -1,4 +1,12 @@
-
+export const editRegisterKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "First Name", callback_data: "er_first.name" }, { text: "Last Name", callback_data: "er_last.name" }],
+            [{ text: "Email", callback_data: "er_email" }, { text: "Gender", callback_data: "er_gender" }],
+            [{ text: "Age", callback_data: "er_age" }],
+        ]
+    }
+}
 // Remove parsemode it's deprecated
 export const shareContactKeyboard = {
     reply_markup: {

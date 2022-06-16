@@ -5,7 +5,7 @@ export const startCommandHand = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
-    if (!users.length) {
+    if (users.length) {
         return ctx.scene.enter("newCustomerRegistrationScene");
     } else {
         const [usr] = users

@@ -7,4 +7,4 @@ async function main() {
     process.once('SIGTERM', () => bot.stop('SIGTERM'));
 }
 
-main().then(() => console.log("bot launched", "hey")).catch(e => console.log(e, "Errr"))
+main().then(() => console.log("bot launched")).catch(e => console.log(e, "Errr"))

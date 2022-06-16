@@ -4,7 +4,8 @@ import {
     termsAndConditionsHandler
 } from "../handlers/callbacks/core";
 import * as hdlr from "../handlers";
-import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers";
+import { editRegisterWithAgeUserHandler, editRegistrationInfoCallbackHandler, jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers";
+
 export const RegisterCompanyGMAction = {
     key: "Genaral Manager",
     handler: hdlr.companyGMSelectionHandler,
@@ -44,7 +45,6 @@ export const EditProfileAction = {
     handler: editProfileHandler
 }
 
-
 export const EditMultipleProfileAction = {
     key: ["edit-Name", "edit-Education Level", "edit-Email", "edit-Birth date", "edit-Availability", "edit-Gender"],
     handler: editMultipleProfileHandler
@@ -64,4 +64,15 @@ export const jobPostCompanyAction = {
 export const jobPostCompanySelectorAction = {
     key: ["c1", "c2", "c3", "c4", "c5", "c6", "jobPostStartup", "jobPostPrivateClient"],
     handler: jobPostCompanySelectorActionHandler
+}
+
+
+export const editRegisterWithAgeUserAction = {
+    key: "editRegisterWithAgeUser",
+    handler: editRegisterWithAgeUserHandler
+}
+
+export const editRegistrationInfoAction = {
+    key: ["er_first.name", "er_last.name", "er_email", "er_gender", "er_age"],
+    handler: editRegistrationInfoCallbackHandler
 }

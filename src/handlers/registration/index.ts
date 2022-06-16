@@ -3,7 +3,7 @@ import { Telegraf, Context } from "telegraf"
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import {
-    ageKeyboard, genderKeyboard,
+    ageKeyboard, editRegisterKeyboard, genderKeyboard,
     registerUserKeyboard,
     registerUserWithAgeKeyboard, shareContactKeyboard
 } from "../../keybaords/registration_kbs";
@@ -12,9 +12,76 @@ import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
 
 let globalState: any;
 
+export const editProfileRegistrationInfoInitHandler = async (ctx: any) => {
+    const target = ctx.session.editTarget.split("_")
+    const formatted = target[1].split(".").join(" ")
+    if (!["er_gender", "er_age"].includes(ctx.session.editTarget)) {
+        ctx.wizard.next()
+    }
+    if (target[1].split(".").length > 1) {
+        ctx.reply(`Enter your ${formatted} please`, cancelKeyboard)
+    } else {
+        ctx.reply(`Enter your ${target[1]} please`, cancelKeyboard)
+    }
+}
+export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
+    // ctx.scene.state.firstNameRegister = ctx.message.text;
+    const response = ctx.message.text
+    const target = ctx.session.editTarget.split("_")
+    if (response) {
+        // validate and update state
+        switch (ctx.session.editTarget) {
+            case "er_first.name":
+                globalState.firstNameRegister = response
+                ctx.reply("updated")
+                ctx.scene.leave();
+                break;
+            case "er_last.name":
+                globalState.lastNameRegister = response
+                ctx.reply("updated")
+                ctx.scene.leave();
+                break;
+            case "er_email":
+                globalState.emailRegister = response
+                ctx.reply("updated")
+                ctx.scene.leave();
+                break;
+            case "er_gender":
+                ctx.reply("Enter your gender please", genderKeyboard)
+                // request for gender
+                break;
+            case "er_age":
+                ctx.replyWithHTML("Please choose how you want to enter your age. using Date of Birth or Age.", ageKeyboard);
+                // ctx.reply("Enter your age please")
+                // request for gender
+                break;
+
+            default:
+                break;
+        }
+        return ctx.wizard.next();
+    }
+})
+
+
+
+export const editRegistrationInfoCallbackHandler = async (ctx: any) => {
+    console.log("edit registration info triggered")
+    console.log(ctx.match)
+    const target = ctx.match[0];
+    ctx.scene.state.editTarget = target;
+    ctx.session.editTarget = target
+    ctx.scene.enter("editProfileRegistrationScene")
+}
+
+export const editRegisterWithAgeUserHandler = async (ctx: any) => {
+    ctx.answerCbQuery();
+    ctx.deleteMessage();
+    ctx.reply("\nSelect the field you would like to edit\n", editRegisterKeyboard)
+}
+
 // registration handler with date of birth
 export const registerUserHandler = async (ctx: any) => {
-    console.log("register handler triggered")
     const {
         phoneNumberRegister,
         firstNameRegister,
@@ -122,7 +189,7 @@ export const firstNameRegisterHandler = Telegraf.on(["text", "contact", "documen
 export const lastNameRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.lastNameRegister = ctx.message.text;
-        await ctx.replyWithHTML("please enter your gender.", genderKeyboard);
+        ctx.replyWithHTML("please enter your gender.", genderKeyboard);
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML("Please enter a valid last name!", cancelKeyboard);
@@ -134,25 +201,39 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
     async (ctx: any) => {
         if (ctx.message.text) {
             ctx.scene.state.genderRegister = ctx.message.text;
-            const { data, error } = await fetchCities()
-            if (data) {
-                const { cities } = data;
-                let cnames = cities.map((nm: any) => nm.name);
-                ctx.session.cityNames = cnames
-                ctx.replyWithHTML("please enter your residence city.", {
-                    reply_markup: JSON.stringify({
-                        keyboard: cnames.map((x: string, _: string) => ([{
-                            text: x,
-                        }])), resize_keyboard: true, one_time_keyboard: true,
-                    }),
-                })
-            }
+            ctx.reply("please enter your email.", cancelKeyboard);
             return ctx.wizard.next();
         } else {
             ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
             return;
         }
     })
+
+// user email registration handler
+export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
+    if (ctx.message.text) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!re.test(ctx.message.text)) {
+            ctx.reply("Please enter a valid email!")
+            return;
+        }
+        ctx.scene.state.emailRegister = ctx.message.text;
+        const { data, error } = await fetchCities()
+        if (data) {
+            const { cities } = data;
+            let cnames = cities.map((nm: any) => nm.name);
+            ctx.session.cityNames = cnames
+            ctx.replyWithHTML("please enter your residence city.", {
+                reply_markup: JSON.stringify({
+                    keyboard: cnames.map((x: string, _: string) => ([{
+                        text: x,
+                    }])), resize_keyboard: true, one_time_keyboard: true,
+                }),
+            })
+            return ctx.wizard.next();
+        }
+    }
+})
 
 export const residentCityRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
@@ -225,12 +306,14 @@ export const ageInputStyleHandler = Telegraf.on(["text", "contact", "document", 
             firstNameRegister,
             lastNameRegister,
             genderRegister,
+            emailRegister,
             residentCityRegister,
             chooseAgeInputStyle,
             ageInputStyle
         } = globalState;
+        console.log(globalState)
         // userEmailRegister is removed because email isn't being handled yet
-        ctx.replyWithHTML(`\n\nFirstName: ${globalState.firstNameRegister}\nLastName: ${lastNameRegister}\nEmail: nGender: ${genderRegister}\Age: ${ageInputStyle}`, registerUserWithAgeKeyboard);
+        ctx.replyWithHTML(`\n\nFirstName: ${globalState.firstNameRegister}\nLastName: ${lastNameRegister}\nEmail: ${emailRegister}\nGender: ${genderRegister}\Age: ${ageInputStyle}`, registerUserWithAgeKeyboard);
         ctx.scene.leave();
     } else {
         ctx.replyWithHTML("Please enter a valid age number", cancelKeyboard);

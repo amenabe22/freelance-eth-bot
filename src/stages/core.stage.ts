@@ -1,5 +1,6 @@
 import {
     ageInputStyleScene,
+    editProfileRegistrationScene,
     newCustomerRegistrationScene,
     registerJobSeekerScene
 } from "../scenes/registration.scene"
@@ -16,6 +17,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         registerJobSeekerScene,
         postAJobScene,
         companyRegistrationGMScene,
-        companyRegistrationRScene
+        companyRegistrationRScene,
+        editProfileRegistrationScene
     ]
 )

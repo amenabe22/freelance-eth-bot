@@ -1,36 +1,10 @@
-import {
-    RegisterCompanyGMAction,
-    RegisterCompanyRAction,
-    AmharicSelectionAction,
-    EditMultipleProfileAction,
-    EditProfileAction,
-    EnglishSelectionAction,
-    jobPostCompanyAction,
-    jobPostCompanySelectorAction,
-    RegisterUserHandlerDob,
-    RegisterWithAgeAction,
-    SectorSelectionAction,
-    TermsAndConditionsAction
-} from "./actions";
+import * as act from "./actions"
+
 import { CoreBot } from "./bot";
 import { BOT_TOKEN } from "./constants";
 import { coreStage } from "./stages/core.stage";
 import { StartCommand } from "./commands"
-import {
-    companyStartup,
-    company,
-    employerMenuSelection,
-    handleCvUploadSelection,
-    menuAccountSelector,
-    menuAmharicSelector,
-    menuEnglishSelector,
-    menuJobseekerSelection,
-    menuLanguageSelector,
-    menuMainSelector,
-    menuSettingsSelector,
-    personalizedJobSelection,
-    postJobMenuSelection
-} from "./handlers/callbacks";
+import * as cb from "./handlers/callbacks"
 
 export const bot = new CoreBot(
     BOT_TOKEN,
@@ -40,16 +14,18 @@ export const bot = new CoreBot(
     ],
     // register actions
     [
-        RegisterCompanyGMAction,
-        RegisterCompanyRAction,
-        RegisterWithAgeAction,
-        RegisterUserHandlerDob,
-        AmharicSelectionAction,
-        EnglishSelectionAction,
-        SectorSelectionAction,
-        jobPostCompanyAction,
-        EditProfileAction,
-        jobPostCompanySelectorAction
+        act.RegisterCompanyGMAction,
+        act.RegisterCompanyRAction,
+        act.RegisterWithAgeAction,
+        act.RegisterUserHandlerDob,
+        act.AmharicSelectionAction,
+        act.EnglishSelectionAction,
+        act.SectorSelectionAction,
+        act.jobPostCompanyAction,
+        act.EditProfileAction,
+        act.jobPostCompanySelectorAction,
+        act.editRegisterWithAgeUserAction,
+        act.editRegistrationInfoAction,
     ],
     // register commands
     [
@@ -57,21 +33,22 @@ export const bot = new CoreBot(
     ],
     // register core callbacks 
     [
-        companyStartup,
-        company,
-        menuJobseekerSelection,
-        personalizedJobSelection,
-        menuMainSelector,
-        menuSettingsSelector,
-        menuLanguageSelector,
-        menuEnglishSelector,
-        menuAmharicSelector,
-        menuAccountSelector,
-        EditMultipleProfileAction,
-        TermsAndConditionsAction,
-        handleCvUploadSelection,
-        employerMenuSelection,
-        postJobMenuSelection
+        cb.companyStartup,
+        cb.company,
+        cb.menuJobseekerSelection,
+        cb.personalizedJobSelection,
+        cb.menuMainSelector,
+        cb.menuSettingsSelector,
+        cb.menuLanguageSelector,
+        cb.menuEnglishSelector,
+        cb.menuAmharicSelector,
+        cb.menuAccountSelector,
+        act.EditMultipleProfileAction,
+        act.TermsAndConditionsAction,
+        cb.handleCvUploadSelection,
+        cb.employerMenuSelection,
+        cb.postJobMenuSelection
     ]
-);
-
+    );
+    
+    
