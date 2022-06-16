@@ -15,8 +15,33 @@ let globalState: any;
 export const editProfileRegistrationInfoInitHandler = async (ctx: any) => {
     const target = ctx.session.editTarget.split("_")
     const formatted = target[1].split(".").join(" ")
-    if (!["er_gender", "er_age"].includes(ctx.session.editTarget)) {
-        ctx.wizard.next()
+
+    // if (!["er_gender", "er_age"].includes(ctx.session.editTarget)) {
+    //     ctx.reply("please enter your gender")
+    //     return
+    // }
+    if (ctx.session.editTarget === "er_gender") {
+        ctx.replyWithHTML("please enter your gender.", genderKeyboard);
+        return;
+    } else if (ctx.session.editTarget === "er_age") {
+        ctx.replyWithHTML("please enter your age.");
+        return;
+    } else if (ctx.session.editTarget === "er_residence") {
+        const { data, error } = await fetchCities()
+        if (data) {
+            const { cities } = data;
+            let cnames = cities.map((nm: any) => nm.name);
+            ctx.session.cityNames = cnames
+            ctx.replyWithHTML("please enter your residence city.", {
+                reply_markup: JSON.stringify({
+                    keyboard: cnames.map((x: string, _: string) => ([{
+                        text: x,
+                    }])), resize_keyboard: true, one_time_keyboard: true,
+                }),
+            })
+        }
+
+        return;
     }
     if (target[1].split(".").length > 1) {
         ctx.reply(`Enter your ${formatted} please`, cancelKeyboard)
@@ -34,31 +59,48 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
             case "er_first.name":
                 globalState.firstNameRegister = response
                 ctx.reply("updated")
-                ctx.scene.leave();
                 break;
             case "er_last.name":
                 globalState.lastNameRegister = response
                 ctx.reply("updated")
-                ctx.scene.leave();
                 break;
             case "er_email":
                 globalState.emailRegister = response
                 ctx.reply("updated")
-                ctx.scene.leave();
                 break;
             case "er_gender":
-                ctx.reply("Enter your gender please", genderKeyboard)
-                // request for gender
+                globalState.genderRegister = response
+                ctx.reply(`your gender is updated`)
+                break;
+            case "er_residence":
+                ctx.scene.state.residentCityRegister = ctx.message.text
+                const { data, error } = await fetchCity({ name: ctx.scene.state.residentCityRegister })
+                let [{ id }] = data.cities;
+                globalState.residentCityRegister = id
+                ctx.reply(`your residence is updated`)
                 break;
             case "er_age":
-                ctx.replyWithHTML("Please choose how you want to enter your age. using Date of Birth or Age.", ageKeyboard);
-                // ctx.reply("Enter your age please")
-                // request for gender
+                globalState.ageInputStyle = response
+                ctx.replyWithHTML("updated");
                 break;
 
             default:
                 break;
         }
+        const {
+            phoneNumberRegister,
+            firstNameRegister,
+            lastNameRegister,
+            genderRegister,
+            emailRegister,
+            residentCityRegister,
+            chooseAgeInputStyle,
+            ageInputStyle
+        } = globalState;
+        console.log(globalState)
+        // userEmailRegister is removed because email isn't being handled yet
+        ctx.replyWithHTML(`\n\nFirstName: ${globalState.firstNameRegister}\nLastName: ${lastNameRegister}\nEmail: ${emailRegister}\nResidence city: ${ctx.scene.state.residentCityRegister}\nGender: ${genderRegister}\nAge: ${ageInputStyle}`, registerUserWithAgeKeyboard);
+        ctx.scene.leave();
         return ctx.wizard.next();
     }
 })
@@ -241,7 +283,7 @@ export const residentCityRegisterHandler = Telegraf.on(["text", "contact", "docu
         const { data, error } = await fetchCity({ name: ctx.scene.state.residentCityRegister })
         const { cities } = data
         console.log(cities.length, "bpt 1")
-        if (cities.length == 0) {
+        if (!cities.length) {
             ctx.replyWithHTML("Please enter a valid recidency city!", {
                 reply_markup: JSON.stringify({
                     keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{

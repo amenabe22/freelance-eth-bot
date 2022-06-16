@@ -3,7 +3,7 @@ export const editRegisterKeyboard = {
         inline_keyboard: [
             [{ text: "First Name", callback_data: "er_first.name" }, { text: "Last Name", callback_data: "er_last.name" }],
             [{ text: "Email", callback_data: "er_email" }, { text: "Gender", callback_data: "er_gender" }],
-            [{ text: "Age", callback_data: "er_age" }],
+            [{ text: "Residence City", callback_data: "er_residence" }, { text: "Age", callback_data: "er_age" }],
         ]
     }
 }
@@ -22,6 +22,16 @@ export const shareContactKeyboard = {
         one_time_keyboard: true,
     },
 }
+export const genderEditKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{ text: "male" }, { text: "female" }],
+            [{ text: "Cancel" }]
+        ], resize_keyboard: true, one_time_keyboard: true
+    }
+}
+
+
 export const genderKeyboard = {
     reply_markup: {
         keyboard: [

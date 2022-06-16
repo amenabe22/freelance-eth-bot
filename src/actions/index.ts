@@ -73,6 +73,6 @@ export const editRegisterWithAgeUserAction = {
 }
 
 export const editRegistrationInfoAction = {
-    key: ["er_first.name", "er_last.name", "er_email", "er_gender", "er_age"],
+    key: ["er_first.name", "er_last.name", "er_email", "er_gender", "er_age", "er_residence"],
     handler: editRegistrationInfoCallbackHandler
 }
