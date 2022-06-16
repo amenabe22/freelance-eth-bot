@@ -59,7 +59,6 @@ export const menuAccountSelectorHandler = async (ctx: any) => {
 
 // action
 export const editProfileHandler = async (ctx: any) => {
-    console.log("dawgGgggg")
     ctx.answerCbQuery();
     ctx.deleteMessage();
     const boldName = ctx.from.first_name.bold();

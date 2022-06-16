@@ -1,6 +1,7 @@
 
 import { jobPostCancelButtonHandler, postJobMenuSelectionHandler } from '../jobpost'
 import { handleCvUploadSelectionHandler } from '../personalization'
+import { editProfileCancelHandler } from '../settings'
 import {
     newCustomerRegistrationCancelHandler,
     registerJobSeekerCancelHandler,
@@ -56,7 +57,7 @@ export const menuAccountSelector = {
     handler: menuAccountSelectorHandler
 }
 
-menuAccountSelectorHandler
+
 export const registerJobSeekerCancel = {
     key: "Back",
     handler: registerJobSeekerCancelHandler
@@ -86,4 +87,9 @@ export const postJobMenuSelection = {
 export const jobPostCancelButton = {
     key: "Back",
     handler: jobPostCancelButtonHandler
+}
+
+export const editProfileCancel = {
+    key: "Back",
+    handler: editProfileCancelHandler
 }

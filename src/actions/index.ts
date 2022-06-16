@@ -5,6 +5,7 @@ import {
 } from "../handlers/callbacks/core";
 import * as hdlr from "../handlers";
 import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers";
+import { confirmEditProfileHandler } from "../handlers/settings";
 
 export const RegisterWithAgeAction = {
     key: "RegisterWithAgeUser",
@@ -57,4 +58,9 @@ export const jobPostCompanyAction = {
 export const jobPostCompanySelectorAction = {
     key: ["c1", "c2", "c3", "c4", "c5", "c6", "jobPostStartup", "jobPostPrivateClient"],
     handler: jobPostCompanySelectorActionHandler
+}
+
+export const confirmEditProfileAction = {
+    key: "confirmEditProfile",
+    handler:confirmEditProfileHandler
 }

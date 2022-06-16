@@ -1,5 +1,6 @@
 import {
     AmharicSelectionAction,
+    confirmEditProfileAction,
     EditMultipleProfileAction,
     EditProfileAction,
     EnglishSelectionAction,
@@ -43,7 +44,9 @@ export const bot = new CoreBot(
         SectorSelectionAction,
         jobPostCompanyAction,
         EditProfileAction,
-        jobPostCompanySelectorAction
+        jobPostCompanySelectorAction,
+        EditMultipleProfileAction,
+        confirmEditProfileAction
     ],
     // register commands
     [
@@ -59,7 +62,6 @@ export const bot = new CoreBot(
         menuEnglishSelector,
         menuAmharicSelector,
         menuAccountSelector,
-        EditMultipleProfileAction,
         TermsAndConditionsAction,
         handleCvUploadSelection,
         employerMenuSelection,
