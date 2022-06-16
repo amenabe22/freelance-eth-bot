@@ -5,7 +5,14 @@ import {
 } from "../handlers/callbacks/core";
 import * as hdlr from "../handlers";
 import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers";
-
+export const RegisterCompanyGMAction = {
+    key: "Genaral Manager",
+    handler: hdlr.companyGMSelectionHandler,
+}
+export const RegisterCompanyRAction = {
+    key: "Representative",
+    handler: hdlr.companyRSelectionHandler,
+}
 export const RegisterWithAgeAction = {
     key: "RegisterWithAgeUser",
     handler: hdlr.ageRegistrationHandlder

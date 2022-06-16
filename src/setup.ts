@@ -1,4 +1,6 @@
 import {
+    RegisterCompanyGMAction,
+    RegisterCompanyRAction,
     AmharicSelectionAction,
     EditMultipleProfileAction,
     EditProfileAction,
@@ -15,6 +17,8 @@ import { BOT_TOKEN } from "./constants";
 import { coreStage } from "./stages/core.stage";
 import { StartCommand } from "./commands"
 import {
+    companyStartup,
+    company,
     employerMenuSelection,
     handleCvUploadSelection,
     menuAccountSelector,
@@ -36,6 +40,8 @@ export const bot = new CoreBot(
     ],
     // register actions
     [
+        RegisterCompanyGMAction,
+        RegisterCompanyRAction,
         RegisterWithAgeAction,
         RegisterUserHandlerDob,
         AmharicSelectionAction,
@@ -51,6 +57,8 @@ export const bot = new CoreBot(
     ],
     // register core callbacks 
     [
+        companyStartup,
+        company,
         menuJobseekerSelection,
         personalizedJobSelection,
         menuMainSelector,

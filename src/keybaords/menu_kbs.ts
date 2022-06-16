@@ -60,3 +60,12 @@ export const employerKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+export const chooseCompanyStartupKeyboard = {
+    parse_mode: "HTML",
+    reply_markup: {
+        keyboard:[
+            [{text: "Company"}, {text: "Startup"}],
+            [{text: "Main Menu"}],
+        ],resize_keyboard: true, one_time_keyboard:true,
+    }
+}

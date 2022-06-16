@@ -4,8 +4,11 @@ import { handleCvUploadSelectionHandler } from '../personalization'
 import {
     newCustomerRegistrationCancelHandler,
     registerJobSeekerCancelHandler,
+    companyRegistraionCancelHandler
 } from './callbacks'
 import {
+    companyStartupHandler,
+    companyHandler,
     employerMenuSelectionHandler,
     menuAccountSelectorHandler,
     menuAmharicSelectorHandler,
@@ -16,12 +19,22 @@ import {
     menuSettingsSelectorHandler,
     personalizedJobSelectionHandler
 } from "./core"
-
+export const companyStartup = {
+    key: "My Companies / Startup",
+    handler: companyStartupHandler
+}
+export const company = {
+    key: "Company",
+    handler: companyHandler
+}
 export const newCustomerRegistrationCancel = {
     key: "Back",
     handler: newCustomerRegistrationCancelHandler
 }
-
+export const companyRegistraionCancel = {
+    key: "Back",
+    handler: companyRegistraionCancelHandler
+}
 export const menuJobseekerSelection = {
     key: "Job Seeker",
     handler: menuJobseekerSelectionHandler

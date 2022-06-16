@@ -158,8 +158,6 @@ export const residentCityRegisterHandler = Telegraf.on(["text", "contact", "docu
     if (ctx.message.text) {
         ctx.scene.state.residentCityRegister = ctx.message.text;
         const { data, error } = await fetchCity({ name: ctx.scene.state.residentCityRegister })
-
-
         const { cities } = data
         console.log(cities.length, "bpt 1")
         if (cities.length == 0) {

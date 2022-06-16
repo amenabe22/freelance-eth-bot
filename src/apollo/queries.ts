@@ -94,6 +94,13 @@ export const SECTORS = gql`query {
     description
   }
 }`
+export const SECTOR = gql`query getSector($name: citext!) {
+  cities(where: { name: { _eq: $name } }) {
+    id
+    name
+  }
+}
+`
 
 export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors_insert_input!]!) {
   insert_job_seeker_sectors(objects: $objs) {

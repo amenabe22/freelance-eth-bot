@@ -1,14 +1,23 @@
 import { fetchSectors } from "../../services/basic";
-import { employerKeyboard, englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
+import { employerKeyboard, englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard, chooseCompanyStartupKeyboard } from "../../keybaords/menu_kbs";
 import { getUserByTelegramId } from "../../services/registration";
 import {
     changeToAmharicKeyboard,
     editDetailProfileInlineKeyboard,
     editProfileKeybaord, settingKeyboard
 } from "../../keybaords/settings";
+import { companyKeyboard } from "../../keybaords/company.registration_kbs";
 import { Context } from "telegraf";
-
-
+var boldCompany = "Company".bold();
+var boldStartup = "Startup".bold();
+export const companyStartupHandler = async (ctx: any) => {
+    ctx.replyWithHTML(`Please Select Company or Startup to register and post jobs.\n\nRequirements---\n${boldCompany}\n   . General manager ID\n   . License Photo\n${boldStartup}\n   . General Manager ID\n   . License Photo`, chooseCompanyStartupKeyboard);
+}
+export const companyHandler = async (ctx: any) => {
+    var boldGManager = "General Manager".bold();
+    var boldRepresentative = "Representative".bold();
+   ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
+}
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
