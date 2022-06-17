@@ -266,11 +266,9 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
 // user email registration handler
 export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
-        const skipped = ctx.message.text.toLocaleLowerCase == "skip"
         ctx.scene.state.emailRegister = ctx.message.text;
-        console.log(ctx.message)
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!skipped && !re.test(ctx.message.text)) {
+        if (!re.test(ctx.message.text)) {
             ctx.reply("Please enter a valid email!")
             return;
         } else {
