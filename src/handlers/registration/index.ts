@@ -16,10 +16,6 @@ export const editProfileRegistrationInfoInitHandler = async (ctx: any) => {
     const target = ctx.session.editTarget.split("_")
     const formatted = target[1].split(".").join(" ")
 
-    // if (!["er_gender", "er_age"].includes(ctx.session.editTarget)) {
-    //     ctx.reply("please enter your gender")
-    //     return
-    // }
     if (ctx.session.editTarget === "er_gender") {
         ctx.replyWithHTML("please enter your gender.", genderKeyboard);
         return;

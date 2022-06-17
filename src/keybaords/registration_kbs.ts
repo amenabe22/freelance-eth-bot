@@ -50,7 +50,7 @@ export const emailRegisterKeyboard = {
 export const registerUserKeyboard = {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Edit", callback_data: "editRegisterUser" }, { text: "Register", callback_data: "RegisterUser" }]
+            [{ text: "Edit", callback_data: "editRegisterWithAgeUser" }, { text: "Register", callback_data: "RegisterUser" }]
         ]
     }
 }
