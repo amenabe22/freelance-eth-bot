@@ -268,6 +268,7 @@ export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", 
     if (ctx.message.text) {
         const skipped = ctx.message.text.toLocaleLowerCase == "skip"
         ctx.scene.state.emailRegister = ctx.message.text;
+        console.log(ctx.message)
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!skipped && !re.test(ctx.message.text)) {
             ctx.reply("Please enter a valid email!")
