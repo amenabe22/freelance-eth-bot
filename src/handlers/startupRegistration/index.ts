@@ -6,6 +6,7 @@ import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import {
     startupRegisterOptionalKeyboard,
+    starupFounderKeyboard
 } from "../../keybaords/company.registration_kbs"
 
 // const download = (url, path, callback) => {
@@ -1004,8 +1005,116 @@ export const startupLRTikTokLinkHandler = Telegraf.on(["photo", "text","contact"
 
 //unlicensed startup registration with Representative starts 
 
-
-
+export const startupURNameHandler = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any)=>{
+  if(ctx.message.text){
+   ctx.scene.state.startupURName = ctx.message.text;
+   ctx.replyWithHTML("please enter founder name of your startup", cancelKeyboard);
+   return ctx.wizard.next();
+  }else{
+    ctx.replyWithHTML("please enter valid startup name!");
+    return;
+  }
+})
+export const startupURFounder1NameHandler = Telegraf.on(["photo", "text","contact", "document"], (ctx: any)=>{
+  if(ctx.message.text){
+  ctx.scene.state.startupURFounder1Name = ctx.message.text;
+  ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
+  return ctx.wizard.next();
+  }else{
+    ctx.replyWithHTML("please enter valid founder name!",starupFounderKeyboard);
+    return;
+  }
+})
+export const startupURFounder2NameHandler = Telegraf.on(["photo", "text","contact", "document"], (ctx: any)=>{
+  if(ctx.message.text){
+    if(ctx.message.text == "Done"){
+      ctx.scene.enter ("startupURFounderDoneScene");
+    }else{
+      ctx.scene.state.startupURFounder2Name = ctx.message.text;
+      ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
+      return ctx.wizard.next();
+    }
+  }else{
+    ctx.replyWithHTML("please enter valid founder name", starupFounderKeyboard);
+    return;
+  }
+})
+export const startupURFounder3NameHandler = Telegraf.on(["photo", "text","contact", "document"], (ctx: any)=>{
+  if(ctx.message.text){
+    if(ctx.message.text == "Done"){
+      ctx.scene.enter ("startupURFounderDoneScene");
+    }else{
+      ctx.scene.state.startupURFounder3Name = ctx.message.text;
+      ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
+      return ctx.wizard.next();
+    }
+  }else{
+    ctx.replyWithHTML("please enter valid founder name", starupFounderKeyboard);
+    return;
+  }
+})
+export const startupURFounder4NameHandler = Telegraf.on(["photo", "text","contact", "document"], (ctx: any)=>{
+  if(ctx.message.text){
+    if(ctx.message.text == "Done"){
+      ctx.scene.enter ("startupURFounderDoneScene");
+    }else{
+      ctx.scene.state.startupURFounder4Name = ctx.message.text;
+      ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
+      return ctx.wizard.next();
+    }
+  }else{
+    ctx.replyWithHTML("please enter valid founder name", starupFounderKeyboard);
+    return;
+  }
+})
+export const startupURFounder5NameHandler = Telegraf.on(["photo", "text","contact", "document"], (ctx: any)=>{
+  if(ctx.message.text){
+    if(ctx.message.text == "Done"){
+      ctx.scene.enter ("startupURFounderDoneScene");
+    }else{
+      ctx.scene.state.startupURFounder5Name = ctx.message.text;
+      ctx.replyWithHTML("please enter startup trade license photo", startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
+    }
+  }else{
+    ctx.replyWithHTML("please enter valid founder name", starupFounderKeyboard);
+    return;
+  }
+})
+export const startupURTradeLicensePhoto = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any)=>{
+  if(ctx.message.text && ctx.message.text == "Skip"){
+    ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
+    return ctx.wizard.next();
+  }else if(ctx.update.message.photo){
+    ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
+    return ctx.wizard.next();
+  }else{
+    ctx.replyWithHTML("please enter valid trade license photo", startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  }
+})
+export const startupUPIdphotoHandler = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any)=>{
+  if(ctx.message.text && ctx.message.text == "Skip"){
+    ctx.replyWithHTML("please enter stamped letter photo", startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  }else if(ctx.update.message.photo){
+    ctx.replyWithHTML("please enter stamped letter photo", startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  }else{
+    ctx.replyWithHTML("please enter valid startup representative id photo!", startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURStampedLetterHandler = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any)=>{
+  if(ctx.message.text && ctx.message.text == "Skip"){
+    ctx.replyWithHTML("please enter employee size of your startup", startupRegisterOptionalKeyboard)
+    return ctx.wizard.next();
+  }else if(ctx.update.message.photo){
+    ctx.replyWithHTML("please enter employee size of your startup", startupRegisterOptionalKeyboard)
+  }else{
+    ctx.replyWithHTML("please enter valid startup stamped letter photo", )
+  }
+})
 //unlicensed startup registraiton with representative ends here...
 
 

@@ -143,3 +143,8 @@ export const starupStatusKeyboard = {
         ]
     }
 }
+export const starupFounderKeyboard = {
+    reply_markup: {
+      keyboard:[[{text: "Done "}, {text: "Back"}],],resize_keyboard: true, one_time_keyboard: true,
+    }
+  }

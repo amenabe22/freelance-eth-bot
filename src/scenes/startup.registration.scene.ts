@@ -99,3 +99,38 @@ export const startupRegistrationLRscene = new CoreScene(
     companyRegistraionCancel
   ]
 )
+export const startupRegistrationURscene = new CoreScene(
+  "startupRegistrationURscene",
+  {
+  enter: hdlr.startupURNameHandler,
+    handlers: [
+      hdlr.startupURNameHandler,
+      hdlr.startupURFounder1NameHandler,
+      hdlr.startupURFounder2NameHandler,
+      hdlr.startupURFounder3NameHandler,
+      hdlr.startupURFounder4NameHandler,
+      hdlr.startupURFounder5NameHandler,
+      hdlr.startupURTradeLicensePhoto,
+      hdlr.startupUPIdphotoHandler,
+      hdlr.startupURStampedLetterHandler,
+
+      
+      hdlr.startupLREmployeeSizeHandler,
+      hdlr.startupLRWebsiteHandler,
+      hdlr.startupLRFacebookLinkHandler,
+      hdlr.startupLRTelegramLinkHandler,
+      hdlr.startupLRYouTubeLinkHandler,
+      hdlr.startupLRTikTokLinkHandler,
+      hdlr.startupLRTwitterLinkHandler,
+      hdlr.startupLROtherLink1Handler,
+      hdlr.startupLROtherLink2Handler,
+      hdlr.startupLROtherLink3Handler,
+      hdlr.startupLREmailHandler,
+      hdlr.startupLROfficialPhoneNoHandler,
+      hdlr.startupLRHeadQuarterLocationHandler,  
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
