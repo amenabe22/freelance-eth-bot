@@ -90,7 +90,6 @@ export const jobPostCompanySelectorAction = {
     handler: jobPostCompanySelectorActionHandler
 }
 
-
 export const editRegisterWithAgeUserAction = {
     key: "editRegisterWithAgeUser",
     handler: editRegisterWithAgeUserHandler

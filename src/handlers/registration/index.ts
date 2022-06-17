@@ -1,6 +1,6 @@
 import { bot } from "../../setup";
 import { Telegraf, Context } from "telegraf"
-import { cancelKeyboard } from "../../keybaords/menu_kbs";
+import { cancelKeyboard, skipKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import {
     ageKeyboard, editRegisterKeyboard, genderKeyboard,
@@ -20,7 +20,9 @@ export const editProfileRegistrationInfoInitHandler = async (ctx: any) => {
         ctx.replyWithHTML("please enter your gender.", genderKeyboard);
         return;
     } else if (ctx.session.editTarget === "er_age") {
-        ctx.replyWithHTML("please enter your age.");
+        ctx.replyWithHTML("Please choose how you want to enter your age. using Date of Birth or Age.", ageKeyboard);
+        // ctx.replyWithHTML("please enter your age.");
+        // ctx.replyWithHTML("please enter your age.");
         return;
     } else if (ctx.session.editTarget === "er_residence") {
         const { data, error } = await fetchCities()
@@ -76,8 +78,22 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
                 ctx.reply(`your residence is updated`)
                 break;
             case "er_age":
-                globalState.ageInputStyle = response
-                ctx.replyWithHTML("updated");
+                ctx.scene.state.chooseAgeInputStyle = ctx.message.text;
+                if (ctx.scene.state.chooseAgeInputStyle == "Age") {
+                    globalState.ageInputStyle = response
+                    ctx.reply("updated")
+                } else if (ctx.scene.state.chooseAgeInputStyle == "Gregorian calendar") {
+                    ctx.scene.state.calanderType = "Gregorian";
+                    await ctx.replyWithHTML("Please enter the year in 4 digit numbers. Example: 1995", cancelKeyboard);
+                    return ctx.wizard.next();
+                } else if (ctx.scene.state.chooseAgeInputStyle == "Ethiopian calendar") {
+                    ctx.scene.state.calanderType = "Ethiopian";
+                    await ctx.replyWithHTML("Please enter the year in 4 digit numbers. Example: 1995", cancelKeyboard);
+                    return ctx.wizard.next();
+                } else {
+                    await ctx.replyWithHTML("please enter the correct option!", ageKeyboard);
+                    return;
+                }
                 break;
 
             default:
@@ -239,7 +255,7 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
     async (ctx: any) => {
         if (ctx.message.text) {
             ctx.scene.state.genderRegister = ctx.message.text;
-            ctx.reply("please enter your email.", cancelKeyboard);
+            ctx.reply("please enter your email.", skipKeyboard);
             return ctx.wizard.next();
         } else {
             ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
@@ -250,25 +266,27 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
 // user email registration handler
 export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
+        const skipped = ctx.message.text.toLocaleLowerCase == "skip"
+        ctx.scene.state.emailRegister = ctx.message.text;
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!re.test(ctx.message.text)) {
+        if (!skipped && !re.test(ctx.message.text)) {
             ctx.reply("Please enter a valid email!")
             return;
-        }
-        ctx.scene.state.emailRegister = ctx.message.text;
-        const { data, error } = await fetchCities()
-        if (data) {
-            const { cities } = data;
-            let cnames = cities.map((nm: any) => nm.name);
-            ctx.session.cityNames = cnames
-            ctx.replyWithHTML("please enter your residence city.", {
-                reply_markup: JSON.stringify({
-                    keyboard: cnames.map((x: string, _: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
-                }),
-            })
-            return ctx.wizard.next();
+        } else {
+            const { data, error } = await fetchCities()
+            if (data) {
+                const { cities } = data;
+                let cnames = cities.map((nm: any) => nm.name);
+                ctx.session.cityNames = cnames
+                ctx.replyWithHTML("please enter your residence city.", {
+                    reply_markup: JSON.stringify({
+                        keyboard: cnames.map((x: string, _: string) => ([{
+                            text: x,
+                        }])), resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+                return ctx.wizard.next();
+            }
         }
     }
 })
@@ -378,7 +396,7 @@ export const monthOfBirthRegisterHandler = Telegraf.on(["text", "contact", "docu
         if (ctx.scene.state.chooseAgeInputStyle == "Gregorian calendar") {
             await ctx.replyWithHTML("Please enter the day from 1 to 31. Example: 19", cancelKeyboard);
         } else if (ctx.scene.state.chooseAgeInputStyle == "Ethiopian calendar") {
-            await ctx.replyWithHTML(ctx.chat.id, "Please enter the day from 1 to 30. Example: 19", cancelKeyboard);
+            await ctx.replyWithHTML("Please enter the day from 1 to 30. Example: 19", cancelKeyboard);
         }
         return ctx.wizard.next();
     } else {
@@ -387,6 +405,32 @@ export const monthOfBirthRegisterHandler = Telegraf.on(["text", "contact", "docu
     }
 })
 
+export const dateOfBirthRegisterEditHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
+    if (ctx.message.text) {
+        if (ctx.scene.state.chooseAgeInputStyle == "Gregorian calendar") {
+            ctx.session.ethiopianDOB = false;
+        } else if (ctx.scene.state.chooseAgeInputStyle == "Ethiopian calendar") {
+            ctx.session.ethiopianDOB = true;
+        }
+
+        ctx.scene.state.dateOfBirthRegister = ctx.message.text;
+        ctx.session.isEthiopianDOB = ctx.session.ethiopianDOB;
+        ctx.session.yearOfBirthRegister = ctx.scene.state.yearOfBirthRegister;
+        ctx.session.monthOfBirthRegister = ctx.scene.state.monthOfBirthRegister;
+        ctx.session.yearOfBirthRegister = ctx.scene.state.yearOfBirthRegister;
+        ctx.session.monthOfBirthRegister = ctx.scene.state.monthOfBirthRegister;
+        ctx.session.dateOfBirthRegister = ctx.scene.state.dateOfBirthRegister;
+        globalState.yearOfBirthRegister = ctx.scene.state.yearOfBirthRegister
+        globalState.monthOfBirthRegister = ctx.scene.state.monthOfBirthRegister
+        globalState.dateOfBirthRegister = ctx.scene.state.dateOfBirthRegister
+
+        console.log("----------------------------------------------")
+        console.log(globalState)
+        console.log("----------------------------------------------")
+
+        ctx.replyWithHTML(`here is your data. \n\nFirstName: ${ctx.session.firstNameRegister}\nLastName: ${ctx.session.lastNameRegister}\nGender: ${ctx.session.genderRegister}\nDateOfBirth: ${ctx.session.yearOfBirthRegister}-${ctx.session.monthOfBirthRegister}-${ctx.session.dateOfBirthRegister}`, registerUserKeyboard)
+    }
+})
 export const dateOfBirthRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         if (ctx.scene.state.chooseAgeInputStyle == "Gregorian calendar") {

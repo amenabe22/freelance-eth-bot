@@ -5,7 +5,8 @@ import { editRegistrationInfoCallbackHandler } from '../registration'
 import {
     newCustomerRegistrationCancelHandler,
     registerJobSeekerCancelHandler,
-    companyRegistraionCancelHandler
+    companyRegistraionCancelHandler,
+    newCustomerRegistrationSkipHandler
 } from './callbacks'
 import {
     companyStartupHandler,
@@ -36,6 +37,10 @@ export const startup = {
 export const newCustomerRegistrationCancel = {
     key: "Back",
     handler: newCustomerRegistrationCancelHandler
+}
+export const newCustomerRegistrationSkip = {
+    key: "Skip",
+    handler: newCustomerRegistrationSkipHandler
 }
 export const companyRegistraionCancel = {
     key: "Back",

@@ -1,13 +1,16 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
-import { newCustomerRegistrationCancel, registerJobSeekerCancel } from "../handlers/callbacks"
+import { newCustomerRegistrationCancel, newCustomerRegistrationSkip, registerJobSeekerCancel } from "../handlers/callbacks"
 
 export const editProfileRegistrationScene = new CoreScene(
   "editProfileRegistrationScene",
   {
     enter:hdlr.editProfileRegistrationInfoInitHandler,
     handlers: [
-      hdlr.editProfileRegistrationInfoHandler
+      hdlr.editProfileRegistrationInfoHandler,
+      hdlr.yearOfBirthRegisterHandler,
+      hdlr.monthOfBirthRegisterHandler,
+      hdlr.dateOfBirthRegisterEditHandler
     ]
   }
 )
@@ -42,7 +45,8 @@ export const newCustomerRegistrationScene = new CoreScene(
     ]
   },
   [
-    newCustomerRegistrationCancel
+    newCustomerRegistrationCancel,
+    newCustomerRegistrationSkip
   ]
 )
 
