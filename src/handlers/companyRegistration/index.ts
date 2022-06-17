@@ -6,12 +6,12 @@ import path from "path";
 // import  fetch from 'node-fetch';
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
+import { fetchSectors, fetchSector } from "../../services/basic";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
     registerCompanyConfirmGMKeyboard
 } from "../../keybaords/company.registration_kbs";
-import { fetchSectors, fetchSector } from "../../services/basic";
 let globalState: any;
 
 const download = (url: any, path: any, callback: any) => {

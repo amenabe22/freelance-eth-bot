@@ -6,7 +6,7 @@ import {
     editDetailProfileInlineKeyboard,
     editProfileKeybaord, settingKeyboard
 } from "../../keybaords/settings";
-import { companyKeyboard } from "../../keybaords/company.registration_kbs";
+import { companyKeyboard, starupStatusKeyboard, LicensedStartupKeyboard } from "../../keybaords/company.registration_kbs";
 import { Context } from "telegraf";
 var boldCompany = "Company".bold();
 var boldStartup = "Startup".bold();
@@ -17,6 +17,9 @@ export const companyHandler = async (ctx: any) => {
     var boldGManager = "General Manager".bold();
     var boldRepresentative = "Representative".bold();
    ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
+}
+export const startupHandler = async (ctx: any) => {
+    ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard);
 }
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({

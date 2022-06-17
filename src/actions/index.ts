@@ -14,6 +14,30 @@ export const RegisterCompanyRAction = {
     key: "Representative",
     handler: hdlr.companyRSelectionHandler,
 }
+export const LicensedStartupAction = {
+    key: "LicensedStarup",
+    handler: hdlr.startupLicensedActionHandler,
+}
+export const UnlicensedStartupAction = {
+    key: "UnlicensedStartup", 
+    handler: hdlr.startupUnlicensedActionHandler,
+}
+export const RegisterStartupLGMAction = {
+    key: "StartupLicensedGM",
+    handler: hdlr.startupLGMSelectionHandler,
+}
+export const RegisterStartupUGMAction = { 
+    key: "StartupUnlicensedGM",
+    handler: hdlr.startupUGMSelectionHandler,
+}
+export const RegisterStartupLRAction = {
+    key: "StartupLicensedR",
+    handler: hdlr.startupLRSelectionHandler,
+}
+export const RegisterStartupURAction = {
+    key: "StartupUnlicensedR",
+    handler: hdlr.startupURSelectionHandler,
+}
 export const RegisterWithAgeAction = {
     key: "RegisterWithAgeUser",
     handler: hdlr.ageRegistrationHandlder

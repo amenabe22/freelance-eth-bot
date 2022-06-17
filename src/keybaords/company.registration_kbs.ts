@@ -19,9 +19,17 @@ export const LicensedStartupKeyboard = {
     parse_mode: "HTML",
     reply_markup: {
         inline_keyboard: [
-            [{text: "Startup Manager", callback_data: "Startup Manager Licensed"}, {text: "Startup Representative", callback_data: "Startup Representative Licensed"}]
+            [{text: "Startup Manager", callback_data: "StartupLicensedGM"}, {text: "Startup Representative", callback_data: "StartupLicensedR"}]
         ]
     }
+}
+export const UnlicensedStartupKeyboard = {
+        parse_mode: "HTML",
+        reply_markup:{
+            inline_keyboard: [
+                [{text: "General Manager", callback_data: "StartupUnlicensedGM"}, {text: "Representative", callback_data: "StartupUnlicensedR"}]
+            ]
+        } 
 }
 export const companyRegisterOptionalKeyboard = {
     parse_mode: "HTML",

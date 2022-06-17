@@ -16,6 +16,12 @@ export const bot = new CoreBot(
     [
         act.RegisterCompanyGMAction,
         act.RegisterCompanyRAction,
+        act.LicensedStartupAction,
+        act.UnlicensedStartupAction,
+        act.RegisterStartupLGMAction,
+        act.RegisterStartupUGMAction,
+        act.RegisterStartupLRAction,
+        act.RegisterStartupURAction,
         act.RegisterWithAgeAction,
         act.RegisterUserHandlerDob,
         act.AmharicSelectionAction,
@@ -26,7 +32,7 @@ export const bot = new CoreBot(
         act.jobPostCompanySelectorAction,
         act.editRegisterWithAgeUserAction,
         act.editRegistrationInfoAction,
-    ],
+    ],  
     // register commands
     [
         StartCommand
@@ -35,6 +41,7 @@ export const bot = new CoreBot(
     [
         cb.companyStartup,
         cb.company,
+        cb.startup,
         cb.menuJobseekerSelection,
         cb.personalizedJobSelection,
         cb.menuMainSelector,

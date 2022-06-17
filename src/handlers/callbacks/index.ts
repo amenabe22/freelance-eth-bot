@@ -10,6 +10,7 @@ import {
 import {
     companyStartupHandler,
     companyHandler,
+    startupHandler,
     employerMenuSelectionHandler,
     menuAccountSelectorHandler,
     menuAmharicSelectorHandler,
@@ -27,6 +28,10 @@ export const companyStartup = {
 export const company = {
     key: "Company",
     handler: companyHandler
+}
+export const startup = {
+    key: "Startup",
+    handler: startupHandler,
 }
 export const newCustomerRegistrationCancel = {
     key: "Back",
