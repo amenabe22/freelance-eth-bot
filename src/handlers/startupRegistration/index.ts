@@ -8,6 +8,8 @@ import {
   starupFounderKeyboard
 } from "../../keybaords/company.registration_kbs"
 import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
+import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
+import path from "path";
 
 let totalAddedFounders = 0
 
@@ -485,11 +487,19 @@ export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "
     console.log(ctx.scene.state.startupTradeLicensePhoto);
     console.log(ctx.update.message.photo[0])
     const startupTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-    const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupTradeLicensePhoto}`);
-    console.log(res);
-    const res2 = await res.json();
-    const filePath = res2.result.file_path;
-    const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
+    const fileType = path.extname(ctx.update.message.photo[0].file_name);
+    const fname = `${ctx.from.id}${fileType}`
+    const { downloadURL } = await fetchTelegramDownloadLink(startupTradeLicensePhoto)
+    download({ url: downloadURL, path: `files/startupTradeLicencePhotos/${fname}` },
+      async () => {
+        console.log("uploaded startup license photo")
+        // const { data } = await uploadJobseekerCv(job_seeker_id, path.join(`files/cv/${fname}`))
+        // if (data) {
+        //   ctx.reply("You have successfully uplead your cv.", cancelKeyboard)
+        // }
+      }
+    )
+
     console.log(downloadURL);
     //    download(downloadURL, path.join(('startupTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
     //    console.log('Done!')
