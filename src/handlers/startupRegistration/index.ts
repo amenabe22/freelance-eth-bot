@@ -42,17 +42,12 @@ export const startupLGMTradeLicensePhotoHandler = Telegraf.on(["photo", "text", 
   if (ctx.update.message.photo) {
     ctx.scene.state.startupTradeLicensePhoto = ctx.update.message.photo;
     console.log(ctx.scene.state.startupTradeLicensePhoto);
-    console.log(ctx.update.message.photo[0])
+    console.log(ctx.update.message.photo[0], "bp2")
+
     const startupTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-    const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupTradeLicensePhoto}`);
-    console.log(res);
-    const res2 = await res.json();
-    const filePath = res2.result.file_path;
-    const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-    console.log(downloadURL);
-    //    download(downloadURL, path.join(('startupTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
-    //    console.log('Done!')
-    //    )
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(startupTradeLicensePhoto)
+    download(downloadURL, path.join(process.cwd(), `dist/files/startupTradeLicencePhotos/${fname}`))
     ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
@@ -65,12 +60,16 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
     console.log(ctx.scene.state.startupIdPhoto);
     const startupIdPhoto = ctx.update.message.photo[0].file_id;
-    const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupIdPhoto}`);
-    console.log(res);
-    const res2 = await res.json();
-    const filePath = res2.result.file_path;
-    const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-    console.log(downloadURL);
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(startupIdPhoto)
+    download(downloadURL, path.join(process.cwd(), `dist/files/startupRepOrGMidPhotos/${fname}`))
+
+    // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupIdPhoto}`);
+    // console.log(res);
+    // const res2 = await res.json();
+    // const filePath = res2.result.file_path;
+    // const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
+    // console.log(downloadURL);
     //    download(downloadURL, path.join(('startupRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
     //    console.log('Done!')
     //    )
@@ -484,21 +483,13 @@ export const startupLRFounder1Handler = Telegraf.on(["photo", "text", "contact",
 export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
     ctx.scene.state.startupTradeLicensePhoto = ctx.update.message.photo;
-    console.log(ctx.scene.state.startupTradeLicensePhoto);
-    console.log(ctx.update.message.photo[0])
+    // console.log(ctx.scene.state.startupTradeLicensePhoto);
+    console.log(ctx.update.message.photo[0], " dawg=>>>")
     const startupTradeLicensePhoto = ctx.update.message.photo[0].file_id;
     const fileType = path.extname(ctx.update.message.photo[0].file_name);
     const fname = `${ctx.from.id}${fileType}`
-    const { downloadURL } = await fetchTelegramDownloadLink(startupTradeLicensePhoto)
-    download({ url: downloadURL, path: `files/startupTradeLicencePhotos/${fname}` },
-      async () => {
-        console.log("uploaded startup license photo")
-        // const { data } = await uploadJobseekerCv(job_seeker_id, path.join(`files/cv/${fname}`))
-        // if (data) {
-        //   ctx.reply("You have successfully uplead your cv.", cancelKeyboard)
-        // }
-      }
-    )
+    const { downloadURL }: any = await fetchTelegramDownloadLink(startupTradeLicensePhoto)
+    download(downloadURL, path.join(process.cwd(), `dist/files/startupTradeLicencePhotos/${fname}`))
 
     console.log(downloadURL);
     //    download(downloadURL, path.join(('startupTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>

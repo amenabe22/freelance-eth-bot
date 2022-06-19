@@ -15,9 +15,18 @@ export const fetchTelegramDownloadLink = async (fileid: string) => {
     }
 }
 
-
-export const download = ({ url, path }: any, callback: any) => {
-    request.head(url, () => {
-        request(url).pipe(fs.createWriteStream(path)).on("close", callback)
+export const download = (async (url: string, path: string) => {
+    const { body }: any = await fetch(url);
+    const fileStream = fs.createWriteStream(path);
+    await new Promise((resolve, reject) => {
+        body.pipe(fileStream);
+        body.on("error", reject);
+        fileStream.on("finish", resolve);
     });
-};
+});
+
+// export const download = ({ url, path }: any, callback: any) => {
+//     request.head(url, () => {
+//         request(url).pipe(fs.createWriteStream(path)).on("close", callback)
+//     });
+// };

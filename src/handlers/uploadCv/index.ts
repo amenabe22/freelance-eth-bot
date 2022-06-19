@@ -27,19 +27,17 @@ export const uploadCvHandler = Telegraf.on(["document", "text", "contact", "phot
         const allowed_ext = [".pdf", ".docx"]
         if (allowed_ext.includes(fileType)) {
             const job_seeker_id = ctx.session.userJobSeekerId;
-            const { downloadURL } = await fetchTelegramDownloadLink(ctx.update.message.document.file_id)
+            const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.document.file_id)
             const fname = `${ctx.from.id}${fileType}`
             const base = path.basename(__dirname);
             // var relativePath = path.relative(process.cwd(), `files/cv/${fname}`);
-            console.log(base,"==>",process.cwd)
-            download({ url: downloadURL, path: `files/cv/${fname}` },
-                async () => {
-                    const { data } = await uploadJobseekerCv(job_seeker_id, path.join(`files/cv/${fname}`))
-                    if (data) {
-                        ctx.reply("You have successfully uplead your cv.", cancelKeyboard)
-                    }
+            console.log(base, "==>", process.cwd)
+            download(downloadURL, `files/cv/${fname}`,).then(async () => {
+                const { data } = await uploadJobseekerCv(job_seeker_id, path.join(`files/cv/${fname}`))
+                if (data) {
+                    ctx.reply("You have successfully uplead your cv.", cancelKeyboard)
                 }
-            )
+            })
 
         } else {
             ctx.replyWithHTML('please enter correct document type. allwed(*.pdf, *.docx)', cancelKeyboard);
