@@ -364,133 +364,8 @@ export const startupUGMFirstFounderNameHandler = Telegraf.on(["photo", "text", "
     }
 
     ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
-
-    // ctx.replyWithHTML(`please add more founder name or click done`, {
-    //   parse_mode: "HTML",
-    //   reply_markup: {
-    //     keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-    //   }
-    // })
-    // return ctx.wizard.next();
   }
 })
-// export const startupUGMFounderNameHandler = Telegraf.on(["text", "contact", "photo", "document"], (ctx: any) => {
-//   if (ctx.message.text) {
-//     if (ctx.message.text == "Add More Founder") {
-//       ctx.replyWithHTML(`please enter another name of your startup founder.`, cancelKeyboard);
-//       return ctx.wizard.next();
-//     } else if (ctx.message.text == "Done") {
-//       ctx.scene.enter("startupRegisterFounderNameDoneScene");
-//     } else {
-//       ctx.replyWithHTML(`sorry I don't understand`, {
-//         parse_mode: "HTML",
-//         reply_markup: {
-//           keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//         }
-//       });
-//     }
-//     return
-//   }
-
-// })
-// export const startupUGMSecondFounderNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     ctx.scene.state.startupUGMFounder2Name = ctx.message.text;
-//     console.log(ctx.scene.state.startupUGMFounder2Name)
-//     ctx.replyWithHTML(`please add more founder name or click done`, {
-//       parse_mode: "HTML",
-//       reply_markup: {
-//         keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//       }
-//     })
-//     return ctx.wizard.next();
-//   }
-// })
-// export const startupUGMFounderNameeHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     if (ctx.message.text == "Add More Founder") {
-//       ctx.replyWithHTML(`please enter another name of your startup founder`, cancelKeyboard);
-//       return ctx.wizard.next();
-//     } else if (ctx.message.text == "Done") {
-//       ctx.scene.enter("startupRegisterFounderNameDoneScene");
-//     } else {
-//       ctx.replyWithHTML(`sorry I don't understand`, {
-//         parse_mode: "HTML",
-//         reply_markup: {
-//           keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//         }
-//       });
-//       return;
-//     }
-//   }
-// })
-// export const startupUGMThirdFounderNameHandler = Telegraf.on(["photo", "text", "contact", "document"], (ctx: any) => {
-//   if (ctx.message.text) {
-//     ctx.scene.state.startupUGMFounder3Name = ctx.message.text;
-//     ctx.replyWithHTML(`please add more founder name or click done`, {
-//       parse_mode: "HTML",
-//       reply_markup: {
-//         keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//       }
-//     })
-//     return ctx.wizard.next();
-//   }
-// })
-// export const startupUGMFounderNameeeHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     if (ctx.message.text == "Add More Founder") {
-//       ctx.replyWithHTML(`please enter another name of your startup founder`, cancelKeyboard);
-//       return ctx.wizard.next();
-//     } else if (ctx.message.text == "Done") {
-//       ctx.scene.enter("startupRegisterFounderNameDoneScene");
-//     } else {
-//       ctx.replyWithHTML(`sorry I don't understand`, {
-//         parse_mode: "HTML",
-//         reply_markup: {
-//           keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//         }
-//       });
-//       return;
-//     }
-//   }
-// })
-// export const startupUGMForthNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     ctx.scene.state.startupUGMFounder4Name = ctx.message.text;
-//     ctx.replyWithHTML(`please add more founder name or click done`, {
-//       parse_mode: "HTML",
-//       reply_markup: {
-//         keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//       }
-//     })
-//     return ctx.wizard.next();
-//   }
-// })
-// export const startupUGMFounderNameeeeeHandeler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     if (ctx.message.text == "Add More Founder") {
-//       ctx.replyWithHTML(`please enter another name of your startup founder`, cancelKeyboard);
-//       return ctx.wizard.next();
-//     } else if (ctx.message.text == "Done") {
-//       ctx.scene.enter("startupRegisterFounderNameDoneScene");
-//     } else {
-//       ctx.replyWithHTML(`sorry I don't understand`, {
-//         parse_mode: "HTML",
-//         reply_markup: {
-//           keyboard: [[{ text: "Add More Founder" }, { text: "Done" }], [{ text: "Cancel" }],], resize_keyboard: true, one_time_keyboard: true,
-//         }
-//       });
-//       return;
-//     }
-//   }
-// })
-// export const startupUGMFifthNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-//   if (ctx.message.text) {
-//     ctx.scene.state.startupUGMFounder4Name = ctx.message.text;
-//   }
-//   ctx.replyWithHTML(`please enter trade license photo of your startup`, startupRegisterOptionalKeyboard);
-//   return ctx.wizard.next();
-// })
 export const startupUGMTradeLicenseHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
     return ctx.wizard.next();
@@ -583,8 +458,7 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
 export const startupLRNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupLRName = ctx.message.text;
-    console.log(ctx.scene.state.startupLRName);
-    ctx.replyWithHTML(`please enter startup founder name 1.`, cancelKeyboard);
+    ctx.replyWithHTML(`please enter startup founders name`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(`Please enter a valid startup G/M name!`, cancelKeyboard);
@@ -593,51 +467,15 @@ export const startupLRNameHandler = Telegraf.on(["photo", "text", "contact", "do
 })
 export const startupLRFounder1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
-    ctx.scene.state.startupLRFounder1 = ctx.message.text;
+    totalAddedFounders++
+    ctx.scene.state[`startupLRFounder${totalAddedFounders}`] = ctx.message.text;
+    if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
+      ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
+      return ctx.wizard.next();
+    }
     ctx.replyWithHTML(`please enter startup founder name 2. `, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
   } else {
-    ctx.replyWithHTML(`please enter a valid startup fundar name 1!`, startupRegisterOptionalKeyboard);
-    return;
-  }
-})
-export const startupLRFounder2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
-    ctx.scene.state.startupLRFounder2 = ctx.message.text;
-    ctx.replyWithHTML(`please enter startup founder name 3.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
-  } else {
-    ctx.replyWithHTML(`Please enter a valid startup founder name 2!`, startupRegisterOptionalKeyboard);
-    return;
-  }
-})
-export const startupLRFounder3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
-    ctx.scene.state.startupLRFounder3 = ctx.message.text;
-    ctx.replyWithHTML(`please enter startup founder name 4.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
-  } else {
-    ctx.replyWithHTML(`Please enter a valid startup founder name 3!`, startupRegisterOptionalKeyboard);
-    return;
-  }
-})
-export const startupLRFounder4Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
-    ctx.scene.state.startupLRFounder4 = ctx.message.text;
-    ctx.replyWithHTML(`please enter startup founder name 5. `, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
-  } else {
-    ctx.replyWithHTML(`Please enter a valid startup founder name 4!`, startupRegisterOptionalKeyboard);
-    return;
-  }
-})
-export const startupLRFounder5Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
-    ctx.scene.state.startupLRFounder5 = ctx.message.text;
-    ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
-    return ctx.wizard.next();
-  } else {
-    ctx.replyWithHTML(`Please enter a valid startup founder name 5!`, startupRegisterOptionalKeyboard);
+    ctx.replyWithHTML(`please enter a valid startup fundar name`, startupRegisterOptionalKeyboard);
     return;
   }
 })

@@ -59,10 +59,6 @@ export const startupRegistrationLRscene = new CoreScene(
   enter: hdlr.startupLRNameHandler,
     handlers: [
       hdlr.startupLRFounder1Handler,
-      hdlr.startupLRFounder2Handler,
-      hdlr.startupLRFounder3Handler,
-      hdlr.startupLRFounder4Handler,
-      hdlr.startupLRFounder5Handler,
       hdlr.startupLRTradeLicensePhotoHandler,
       hdlr.startupLRIdPhotoHandler,
       hdlr.startupLRStampedLetterHandler,
