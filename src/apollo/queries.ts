@@ -95,7 +95,7 @@ export const SECTORS = gql`query {
   }
 }`
 export const SECTOR = gql`query getSector($name: citext!) {
-  cities(where: { name: { _eq: $name } }) {
+  sectors(where: { name: { _eq: $name } }) {
     id
     name
   }
@@ -107,3 +107,14 @@ export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors
     affected_rows
   }
 }`
+
+export const JOB_SEEKER = gql`
+  query getUser($telegram_id: String!) {
+    users(where: { telegram_id: { _eq: $telegram_id } }) {
+      job_seeker{
+        id
+        cv
+       }
+    }
+  }
+  `

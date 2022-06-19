@@ -10,19 +10,18 @@ import { companyRegistrationGMScene,
 import { startupRegistrationLGMscene, 
          startupRegistrationUGMscene,
          startupRegistrationLRscene,
-         startupRegistrationURscene,
-
-        
+         startupRegistrationURscene,        
       }from "../scenes/startup.registration.scene"
 import { Scenes } from "telegraf"
 import { postAJobScene } from "../scenes/jobpost.scene"
-
+import { uploadCvScene } from "../scenes/uploadCv.scene"
 export const coreStage: any = new Scenes.Stage<any>(
     [
         newCustomerRegistrationScene,
         ageInputStyleScene,
         registerJobSeekerScene,
         postAJobScene,
+        uploadCvScene,
         companyRegistrationGMScene,
         startupRegistrationLGMscene,
         startupRegistrationUGMscene,
