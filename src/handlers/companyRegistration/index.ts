@@ -74,15 +74,6 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text","contact", "d
 export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any)=>{
       if (ctx.update.message.photo) {
          const companyStampedLetterPhoto = ctx.update.message.photo[0].file_id;    
-        //  const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyStampedLetterPhoto}`);
-        //  console.log(res);
-        //  const res2 = await res.json();
-        //  const filePath = res2.result.file_path;
-        //  const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        //  console.log(downloadURL);
-        //  download(downloadURL, path.join(('companyStampedLetterPhotos'), `${ctx.from.id}.jpg`), () =>
-        //  console.log('Done!')
-        //  )     
          const { data, error } = await fetchSectors()
          if (data) {
              const { sectors } = data;
@@ -106,24 +97,25 @@ export const companyIndustrySectorRHandler = Telegraf.on(["photo", "text","conta
     if(ctx.message.text){
         ctx.scene.state.companyRSectorName = ctx.message.text;
         const { data, error } = await fetchSector({ name: ctx.scene.state.companyRSectorName})
-        const { sectors } = data
-        console.log(sectors.length, "bpt 1")
-        if (!sectors.length) {
-            ctx.replyWithHTML("please enter valid industry sector!", {
-                reply_markup: JSON.stringify({
-                    keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
-                }),
-            })
-            return;
-        } else {
-            let sectorId = sectors[0].id;
-            console.log("bpt 2", sectorId)
-            ctx.session.companyRSectorID = sectorId;
-            ctx.scene.state.companyRSectorID = sectorId;
-            ctx.replyWithHTML("please enter employee size of your company.", cancelKeyboard);
-            return ctx.wizard.next();
+        if(data){
+            const { sectors } = data
+            if (!sectors.length) {
+                ctx.replyWithHTML("please enter valid industry sector!", {
+                    reply_markup: JSON.stringify({
+                        keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+                            text: x,
+                        }])), resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+                return;
+            } else {
+                let sectorId = sectors[0].id;
+                console.log("bpt 2", sectorId)
+                ctx.session.companyRSectorID = sectorId;
+                ctx.scene.state.companyRSectorID = sectorId;
+                ctx.replyWithHTML("please enter employee size of your company.", cancelKeyboard);
+                return ctx.wizard.next();
+            }
         }
     }
 })
@@ -131,10 +123,10 @@ export const companyEmployeeSizeRHandler = Telegraf.on(["photo", "text","contact
     if(ctx.message.text){
             ctx.scene.state.companyREmployeeSize = ctx.message.text; 
             console.log(ctx.scene.state.companyREmployeeSize);
-            ctx.replyWithHTML(ctx.chat.id,`please enter website of your company.`,companyRegisterOptionalKeyboard);
+            ctx.replyWithHTML(`please enter website of your company.`,companyRegisterOptionalKeyboard);
             return ctx.wizard.next();
     }else{
-        ctx.replyWithHTML(ctx.chat.id,`please enter valid employee size of your company!`,companyRegisterOptionalKeyboard);  
+        ctx.replyWithHTML(`please enter valid employee size of your company!`,companyRegisterOptionalKeyboard);  
         return;
     } 
 })
@@ -294,11 +286,12 @@ export const companyIdPhotoGHandler = Telegraf.on(["photo", "text","contact", "d
 
 export const companyIndustrySectorGHandler = Telegraf.on(["photo", "text","contact", "document"], async (ctx: any) =>{
     if(ctx.message.text){
+        console.log(ctx.scene.state.companyGSectorName,"sector name")
         ctx.scene.state.companyGSectorName = ctx.message.text;
         const { data, error } = await fetchSector({ name: ctx.scene.state.companyGSectorName})
         const { sectors } = data
-        console.log(sectors)
-        if (!sectors.length) {
+        console.log(data)
+        if (!sectors) {
             ctx.replyWithHTML("please enter valid industry sector!", {
                 reply_markup: JSON.stringify({
                     keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -321,10 +314,10 @@ export const companyEmployeeSizeGHandler = Telegraf.on(["photo", "text","contact
     if(ctx.message.text){
             ctx.scene.state.companyGEmployeeSize = ctx.message.text; 
             console.log(ctx.scene.state.companyGEmployeeSize);
-            ctx.replyWithHTML(ctx.chat.id,`please enter website of your company.`,companyRegisterOptionalKeyboard);
+            ctx.replyWithHTML(`please enter website of your company.`,companyRegisterOptionalKeyboard);
             return ctx.wizard.next();
     }else{
-        ctx.replyWithHTML(ctx.chat.id,`please enter valid employee size of your company!`,companyRegisterOptionalKeyboard);  
+        ctx.replyWithHTML(`please enter valid employee size of your company!`,companyRegisterOptionalKeyboard);  
         return;
     } 
 })

@@ -9,10 +9,6 @@ export const startupRegistrationLGMscene = new CoreScene(
     handlers: [
       hdlr.startupLGMNameHandler,
       hdlr.startupLGMFounder1Handler,
-      hdlr.startupLGMFounder2Handler,
-      hdlr.startupLGMFounder3Handler,
-      hdlr.startupLGMFounder4Handler,
-      hdlr.startupLGMFounder5Handler,
       hdlr.startupLGMTradeLicensePhotoHandler,
       hdlr.startupLGMIdPhotoHandler,
       hdlr.companyIdPhotoGHandler,
@@ -44,14 +40,6 @@ export const startupRegistrationUGMscene = new CoreScene(
     handlers: [
       hdlr.startupUGMNameHandler,
       hdlr.startupUGMFirstFounderNameHandler,
-      hdlr.startupUGMFounderNameHandler,
-      hdlr.startupUGMSecondFounderNameHandler,
-      hdlr.startupUGMFounderNameeHandler,
-      hdlr.startupUGMThirdFounderNameHandler,
-      hdlr.startupUGMFounderNameeeHandler,
-      hdlr.startupUGMForthNameHandler,
-      hdlr.startupUGMFounderNameeeeeHandeler,
-      hdlr.startupUGMFifthNameHandler,
       hdlr.startupUGMTradeLicenseHandler,
       hdlr.startupUGMIdPhotoHandler,
       hdlr.startupUGMEmployeeSizeHandler,
@@ -59,7 +47,6 @@ export const startupRegistrationUGMscene = new CoreScene(
       hdlr.startupUGMSectorHandler,
       hdlr.startupUGMPhoneNumberHandler,
       hdlr.startupUGMHeadQuarterLocationHandler,
-  
     ]
   },
   [
@@ -106,10 +93,6 @@ export const startupRegistrationURscene = new CoreScene(
     handlers: [
       hdlr.startupURNameHandler,
       hdlr.startupURFounder1NameHandler,
-      hdlr.startupURFounder2NameHandler,
-      hdlr.startupURFounder3NameHandler,
-      hdlr.startupURFounder4NameHandler,
-      hdlr.startupURFounder5NameHandler,
       hdlr.startupURTradeLicensePhoto,
       hdlr.startupUPIdphotoHandler,
       hdlr.startupURStampedLetterHandler,
