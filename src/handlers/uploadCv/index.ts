@@ -3,21 +3,12 @@ import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import { Telegraf, Context } from "telegraf";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { uploadJobseekerCv } from "../../services/cv_process";
-// const download = (url, path, callback) => {
-//     request.head(url, (err, res, body) => {
-//     request(url).pipe(fs.createWriteStream(path)).on('close', callback);
-//   });
-// };
 export const uploadCvInitHandler = Telegraf.on(["document", "text", "contact", "photo"], async (ctx: any) => {
-    // if (ctx.session.userDataCvStatus == null) {
-    //     ctx.replyWithHTML(`Please upload your CV here.\n\nNote: uploaded CV will be automatically attached when you apply for a job post. \n\nYou can edit your CV if you want to update it.`, cancelKeyboard);
-    // } else {
-    //     const cvDocument = ctx.session.neededCvId;
-    //     ctx.replyWithHTML(`you have uploaded you cv before.\n\n${cvDocument}\n\nNote: uploaded CV will be automatically attached when you apply for a job post.\n\nIf you want to upload anew one please attach your cv.`, cancelKeyboard);
-    // }
-    // return ctx.wizard.next()
+if(ctx.session.neededCvId){
+    ctx.replyWithHTML('You have uploaded your cv before. the above doucument is your CV uploaded earlier.\n\nuploaded CV will be automatically attached when you apply for a job post.\n\nIf you want to upload new CV please attach it here.', cancelKeyboard)
+}else{
     ctx.replyWithHTML(`Please upload your CV here.\n\nNote: uploaded CV will be automatically attached when you apply for a job post. \n\nYou can edit your CV if you want to update it.`, cancelKeyboard);
-
+}
 })
 export const uploadCvHandler = Telegraf.on(["document", "text", "contact", "photo"], async (ctx: any) => {
     if (ctx.update.message.document) {
@@ -35,17 +26,18 @@ export const uploadCvHandler = Telegraf.on(["document", "text", "contact", "phot
             download(downloadURL, `files/cv/${fname}`,).then(async () => {
                 const { data } = await uploadJobseekerCv(job_seeker_id, path.join(`files/cv/${fname}`))
                 if (data) {
+                    console.log(data);
                     ctx.reply("You have successfully uplead your cv.", cancelKeyboard)
                 }
             })
-
+  
         } else {
             ctx.replyWithHTML('please enter correct document type. allwed(*.pdf, *.docx)', cancelKeyboard);
             return;
         }
 
     } else {
-        ctx.replyWithHTML('please enter correct document type.', cancelKeyboard);
+        ctx.replyWithHTML('please enter correct document type. allwed(*.pdf, *.docx)', cancelKeyboard);
         return;
     }
 })

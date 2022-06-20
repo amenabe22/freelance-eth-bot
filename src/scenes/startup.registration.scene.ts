@@ -5,13 +5,12 @@ import  {companyRegistraionCancel}  from "../handlers/callbacks"
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
   {
-    enter: hdlr.startupLGMNameHandler,
+    enter: hdlr.startupLGMInitHandler,
     handlers: [
       hdlr.startupLGMNameHandler,
-      hdlr.startupLGMFounder1Handler,
+      hdlr.startupLGMFoundersHandler,
       hdlr.startupLGMTradeLicensePhotoHandler,
       hdlr.startupLGMIdPhotoHandler,
-      hdlr.companyIdPhotoGHandler,
       hdlr.startupLGMIndustrySectorHandler,
       hdlr.startupLGMEmployeeSizeHandler,
       hdlr.startupLGMWebsiteHandler,
@@ -36,7 +35,7 @@ export const startupRegistrationLGMscene = new CoreScene(
 export const startupRegistrationUGMscene = new CoreScene(
   "startupRegistrationUGMscene",
   {
-  enter: hdlr.startupUGMNameHandler,
+  enter: hdlr.startupUGMInitHandler,
     handlers: [
       hdlr.startupUGMNameHandler,
       hdlr.startupUGMFirstFounderNameHandler,
@@ -56,9 +55,10 @@ export const startupRegistrationUGMscene = new CoreScene(
 export const startupRegistrationLRscene = new CoreScene(
   "startupRegistrationLRscene",
   {
-  enter: hdlr.startupLRNameHandler,
+  enter: hdlr.startupLRInitHandler,
     handlers: [
-      hdlr.startupLRFounder1Handler,
+      hdlr.startupLRNameHandler,
+      hdlr.startupLRFoundersHandler,
       hdlr.startupLRTradeLicensePhotoHandler,
       hdlr.startupLRIdPhotoHandler,
       hdlr.startupLRStampedLetterHandler,

@@ -3,8 +3,6 @@ import FormData from "form-data";
 import axios from "axios"
 import { UPLOAD_ENDPOINT } from "../constants";
 
-
-
 export const uploadJobseekerCv = async (jsid: string, path: string) => {
     const formData = new FormData();
     formData.append('job_seeker_id', jsid)
@@ -15,3 +13,4 @@ export const uploadJobseekerCv = async (jsid: string, path: string) => {
     })
     return res
 }
+  
