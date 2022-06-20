@@ -6,6 +6,9 @@ import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
 import {
   registerStartupConfirmLGMKeyboard,
+  registerStartupConfirmUGMKeyboard,
+  registerStartupConfirmLRKeyboard,
+  registerStartupConfirmURKeyboard,
   startupRegisterOptionalKeyboard,
   starupFounderKeyboard
 } from "../../keybaords/company.registration_kbs"
@@ -15,6 +18,8 @@ import path from "path";
 import fs from "fs";
 let globalState: any;
 let totalAddedFounders = 0
+
+//licensed startup registering by General managrer starts here.
 export const startupLGMInitHandler = async (ctx: any) => {
   ctx.replyWithHTML('please enter the name of your startup', cancelKeyboard);
 }
@@ -334,40 +339,6 @@ export const startupHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "
       ctx.scene.state.startupLGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterL}\nOther link: ${globalState.startupLGMOther1Link}`, registerStartupConfirmLGMKeyboard)
-      // let formDataObj = {
-      // 'name': globalState.startupLGMName,
-      // 'founder': globalState.startupLGMFounderName,
-      // 'phone': globalState.startupLGMPhoneNumber,
-      // 'sector': globalState.startupLGMSectorID,
-      // 'is_user_gm': globalState.statupLGMIsUserGm,
-      // 'user_first_name': globalState.startupLGMUFN,
-      // 'user_last_name':  globalState.startupLGMULN,
-      // 'employee_size': globalState.startupLGMEmployeeSize,
-      // 'website': globalState.startupLGMWebsite,
-      // 'email': globalState.startupLGMEmail,
-      // 'user_phone': globalState.startupLGMUP,
-      // 'head_quarter': globalState.startupLGMHeadQuarterLocation,
-      // 'facebook_link': globalState.startupLGMFacebookLink,
-      // 'telegram_link': globalState.startupLGMFacebookLink,
-      // 'youtube_link': globalState.startupLGMFacebookLink,
-      // 'tiktok_link': globalState.startupLGMFacebookLink,
-      // 'twitter_link': globalState.startupLGMFacebookLink,
-      // 'linkedin': globalState.startupLGMFacebookLink,
-      // 'other_link_one': globalState.startupLGMFacebookLink,
-      // 'other_link_two': globalState.startupLGMFacebookLink,
-      // 'other_link_three': globalState.startupLGMFacebookLink,
-      // 'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
-      // 'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
-      // 'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
-      // 'folder': 'entity',
-      // 'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-
-      // }
-      // const { data } = await registerStartup(formDataObj)
-      // if (data) {
-      //     console.log(data);
-      //     ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-      // }
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -380,6 +351,53 @@ export const startupHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "
     return;
   }
 })
+
+export const confirmRegisterStartUpLGMHandler = async (ctx: any) =>{
+  let formDataObj = {
+    'name': globalState.startupLGMName,
+    'founder': globalState.startupLGMFounderName,
+    'phone': globalState.startupLGMPhoneNumber,
+    'sector': globalState.startupLGMSectorID,
+    'is_user_gm': globalState.statupLGMIsUserGm,
+    'user_first_name': globalState.startupLGMUFN,
+    'user_last_name':  globalState.startupLGMULN,
+    'employee_size': globalState.startupLGMEmployeeSize,
+    'website': globalState.startupLGMWebsite,
+    'email': globalState.startupLGMEmail,
+    'user_phone': globalState.startupLGMUP,
+    'head_quarter': globalState.startupLGMHeadQuarterLocation,
+    'facebook_link': globalState.startupLGMFacebookLink,
+    'telegram_link': globalState.startupLGMFacebookLink,
+    'youtube_link': globalState.startupLGMFacebookLink,
+    'tiktok_link': globalState.startupLGMFacebookLink,
+    'twitter_link': globalState.startupLGMFacebookLink,
+    'linkedin': globalState.startupLGMFacebookLink,
+    'other_link_one': globalState.startupLGMFacebookLink,
+    'other_link_two': globalState.startupLGMFacebookLink,
+    'other_link_three': globalState.startupLGMFacebookLink,
+    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
+    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
+    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'folder': 'entity',
+    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+
+    }
+    const { data } = await registerStartup(formDataObj)
+    if (data) {
+        console.log(data);
+        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+    }
+}
+
+
+export const editRegisterStartupInitLGMHandler = async (ctx: any) => {
+
+}
+
+export const editRegisterStartUpLGMHandler = async (ctx: any) => {
+
+}
+
 //licensed startup registration with General manager ends here...
 
 
@@ -577,7 +595,7 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
       ctx.session.startupLGMHeadQuarterLocation = hqId;
       ctx.scene.state.startupLGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}`)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}`, registerStartupConfirmUGMKeyboard);
   } 
 }else {
     ctx.replyWithHTML(`please enter a valid location of your startup.`, {
@@ -589,6 +607,50 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
     });
   }
 })
+
+export const confirmRegisterStartUpUGMHandler = async (ctx: any) =>{
+  let formDataObj = {
+    'name': globalState.startupUGMName,
+    'founder': globalState.startupUGMFounderName,
+    'phone': globalState.startupUGMPhoneNumber,
+    'sector': globalState.startupUGMSectorID,
+    'is_user_gm': globalState.statupUGMIsUserGm,
+    'user_first_name': globalState.startupUGMUFN,
+    'user_last_name':  globalState.startupUGMULN,
+    'employee_size': globalState.startupUGMEmployeeSize,
+    'website': globalState.startupUGMWebsite,
+    'email': globalState.startupUGMEmail,
+    'user_phone': globalState.startupUGMUP,
+    'head_quarter': globalState.startupUGMHeadQuarterLocation,
+    'facebook_link': globalState.startupUGMFacebookLink,
+    'telegram_link': globalState.startupUGMFacebookLink,
+    'youtube_link': globalState.startupUGMFacebookLink,
+    'tiktok_link': globalState.startupUGMFacebookLink,
+    'twitter_link': globalState.startupUGMFacebookLink,
+    'linkedin': globalState.startupUGMFacebookLink,
+    'other_link_one': globalState.startupUGMFacebookLink,
+    'other_link_two': globalState.startupUGMFacebookLink,
+    'other_link_three': globalState.startupUGMFacebookLink,
+    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
+    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
+    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'folder': 'entity',
+    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+
+    }
+    const { data } = await registerStartup(formDataObj)
+    if (data) {
+        console.log(data);
+        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+    }
+
+}
+
+
+
+export const editRegisterStartUpUGMHandler = async (ctx: any) => {
+
+}
 
 //Unicensed startup registration with General manager endes here...
 
@@ -624,42 +686,32 @@ export const startupLRFoundersHandler = Telegraf.on(["photo", "text", "contact",
 })
 export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
-    ctx.scene.state.startupTradeLicensePhoto = ctx.update.message.photo;
-    // console.log(ctx.scene.state.startupTradeLicensePhoto);
-    console.log(ctx.update.message.photo[0], " dawg=>>>")
-    const startupTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-    const fileType = path.extname(ctx.update.message.photo[0].file_name);
-    const fname = `${ctx.from.id}${fileType}`
-    const { downloadURL }: any = await fetchTelegramDownloadLink(startupTradeLicensePhoto)
-    download(downloadURL, path.join(process.cwd(), `dist/files/startupTradeLicencePhotos/${fname}`))
-
+    console.log(ctx.update.message.photo[2].file_id);
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
-    //    download(downloadURL, path.join(('startupTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
-    //    console.log('Done!')
-    //    )
-    ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+    const fname = `${ctx.from.id}.jpg`
+            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+               return ctx.wizard.next();
+            })
+  } else if (ctx.message.text && ctx.message.text == "Skip") {
+    ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
-    ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
-    return;
+    ctx.replyWithHTML(` please enter valid trade licence photo!`, startupRegisterOptionalKeyboard);
+    return
   }
 })
 export const startupLRIdPhotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
     ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
     console.log(ctx.scene.state.startupIdPhoto);
-    const startupIdPhoto = ctx.update.message.photo[0].file_id;
-    const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupIdPhoto}`);
-    console.log(res);
-    const res2 = await res.json();
-    const filePath = res2.result.file_path;
-    const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-    console.log(downloadURL);
-    //    download(downloadURL, path.join(('startupLRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
-    //    console.log('Done!')
-    //    )
-    ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
-    return ctx.wizard.next();
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else {
     ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
     return;
@@ -667,41 +719,36 @@ export const startupLRIdPhotoHandler = Telegraf.on(["photo", "text", "contact", 
 })
 export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
-    const startupStampedPhoto = ctx.update.message.photo[0].file_id;
-    const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${startupStampedPhoto}`);
-    console.log(res);
-    const res2 = await res.json();
-    const filePath = res2.result.file_path;
-    const downloadURL = `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-    console.log(downloadURL);
-    //    download(downloadURL, path.join(('startupStampedLetterPhotos'), `${ctx.from.id}.jpg`), () =>
-    //    console.log('Done!')
-    //    )
-    const { data, error } = await fetchSectors()
-    if (data) {
-      const { sectors } = data;
-      let snames = sectors.map((nm: any) => nm.name);
-      ctx.session.sectorNames = snames
-      ctx.replyWithHTML("please enter industry sector.", {
-        reply_markup: JSON.stringify({
-          keyboard: snames.map((x: string, _: string) => ([{
-            text: x,
-          }])), resize_keyboard: true, one_time_keyboard: true,
-        }),
-      })
-    }
-    return ctx.wizard.next();
+    ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
+    console.log(ctx.scene.state.startupIdPhoto);
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
+      const { data, error } = await fetchSectors()
+      if (data) {
+        const { sectors } = data;
+        let snames = sectors.map((nm: any) => nm.name);
+        ctx.session.sectorNames = snames
+        ctx.replyWithHTML("please enter industry sector.", {
+          reply_markup: JSON.stringify({
+            keyboard: ctx.session.sectorNames.map((x: string, _: string) => ([{
+              text: x,
+            }])), resize_keyboard: true, one_time_keyboard: true,
+          }),
+        })
+      }
+      return ctx.wizard.next();
+    })
   } else {
     ctx.replyWithHTML(`please enter a valid Stamped letter photo!`, cancelKeyboard);
   }
-
 })
 export const startupLRIndustrySectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupLRSectorName = ctx.message.text;
     const { data, error } = await fetchSector({ name: ctx.scene.state.startupLRSectorName })
     const { sectors } = data
-    console.log(sectors.length, "bpt 1")
+    console.log(sectors.length)
     if (!sectors.length) {
       ctx.replyWithHTML("please enter valid industry sector!", {
         reply_markup: JSON.stringify({
@@ -936,6 +983,7 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       console.log("bpt 2", hqId)
       ctx.session.startupLRHeadQuarterLocation = hqId;
       ctx.scene.state.startupLRHeadQuarterLocation = hqId;
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterL}\nOther link: ${globalState.startupLROther1Link}`, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
       ctx.scene.leave()
@@ -951,6 +999,48 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
     return;
   }
 });
+export const confirmRegisterStartUpLRHandler = async (ctx: any) =>{
+  let formDataObj = {
+    'name': globalState.startupLRName,
+    'founder': globalState.startupLRFounderName,
+    'phone': globalState.startupLRPhoneNumber,
+    'sector': globalState.startupLRSectorID,
+    'is_user_gm': globalState.statupLRIsUserGm,
+    'user_first_name': globalState.startupLRUFN,
+    'user_last_name':  globalState.startupLRULN,
+    'employee_size': globalState.startupLREmployeeSize,
+    'website': globalState.startupLRWebsite,
+    'email': globalState.startupLREmail,
+    'user_phone': globalState.startupLRUP,
+    'head_quarter': globalState.startupLRHeadQuarterLocation,
+    'facebook_link': globalState.startupLRFacebookLink,
+    'telegram_link': globalState.startupLRFacebookLink,
+    'youtube_link': globalState.startupLRFacebookLink,
+    'tiktok_link': globalState.startupLRFacebookLink,
+    'twitter_link': globalState.startupLRFacebookLink,
+    'linkedin': globalState.startupLRFacebookLink,
+    'other_link_one': globalState.startupLRFacebookLink,
+    'other_link_two': globalState.startupLRFacebookLink,
+    'other_link_three': globalState.startupLRFacebookLink,
+    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
+    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
+    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'folder': 'entity',
+    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+
+    }
+    const { data } = await registerStartup(formDataObj)
+    if (data) {
+        console.log(data);
+        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+    }
+
+}
+
+
+export const editRegisterStartUpLRHandler = async (ctx: any) => {
+
+}
 //licensed startup registration with representative ends here...
 
 //unlicensed startup registration with Representative starts 
@@ -965,7 +1055,7 @@ export const startupURNameHandler = Telegraf.on(["photo", "text", "contact", "do
     return;
   }
 })
-export const startupURFounder1NameHandler = Telegraf.on(["photo", "text", "contact", "document"], (ctx: any) => {
+export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "contact", "document"], (ctx: any) => {
   if (ctx.message.text) {
     totalAddedFounders++
     ctx.scene.state[`startupURFounder${totalAddedFounders}Name`] = ctx.message.text;
@@ -988,11 +1078,20 @@ export const startupURTradeLicensePhoto = Telegraf.on(["photo", "text", "contact
     ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
     return ctx.wizard.next();
   } else if (ctx.update.message.photo) {
-    ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
+    console.log(ctx.update.message.photo[2].file_id);
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
+    console.log(downloadURL);
+    const fname = `${ctx.from.id}.jpg`
+            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+               return ctx.wizard.next();
+            })
+  } else if (ctx.message.text && ctx.message.text == "Skip") {
+    ctx.replyWithHTML(`please enter representative id photo`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
-    ctx.replyWithHTML("please enter valid trade license photo", startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
+    ctx.replyWithHTML(` please enter valid trade licence photo!`, startupRegisterOptionalKeyboard);
+    return
   }
 })
 export const startupUPIdphotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -1000,10 +1099,16 @@ export const startupUPIdphotoHandler = Telegraf.on(["photo", "text", "contact", 
     ctx.replyWithHTML("please enter stamped letter photo", startupRegisterOptionalKeyboard);
     return ctx.wizard.next();
   } else if (ctx.update.message.photo) {
-    ctx.replyWithHTML("please enter stamped letter photo", startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
+    ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
+    console.log(ctx.scene.state.startupIdPhoto);
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else {
-    ctx.replyWithHTML("please enter valid startup representative id photo!", startupRegisterOptionalKeyboard);
+    ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
     return;
   }
 })
@@ -1012,9 +1117,327 @@ export const startupURStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     ctx.replyWithHTML("please enter employee size of your startup", startupRegisterOptionalKeyboard)
     return ctx.wizard.next();
   } else if (ctx.update.message.photo) {
-    ctx.replyWithHTML("please enter employee size of your startup", startupRegisterOptionalKeyboard)
+    ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
+    console.log(ctx.scene.state.startupIdPhoto);
+    const fname = `${ctx.from.id}.jpg`
+    const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
+      const { data, error } = await fetchSectors()
+      if (data) {
+        const { sectors } = data;
+        let snames = sectors.map((nm: any) => nm.name);
+        ctx.session.sectorNames = snames
+        ctx.replyWithHTML("please enter industry sector.", {
+          reply_markup: JSON.stringify({
+            keyboard: ctx.session.sectorNames.map((x: string, _: string) => ([{
+              text: x,
+            }])), resize_keyboard: true, one_time_keyboard: true,
+          }),
+        })
+      }
+      return ctx.wizard.next();
+    })
   } else {
-    ctx.replyWithHTML("please enter valid startup stamped letter photo",)
+    ctx.replyWithHTML(`please enter a valid Stamped letter photo!`, cancelKeyboard);
   }
 })
+export const startupURIndustrySectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    ctx.scene.state.startupURSectorName = ctx.message.text;
+    const { data, error } = await fetchSector({ name: ctx.scene.state.startupURSectorName })
+    const { sectors } = data
+    console.log(sectors.length)
+    if (!sectors.length) {
+      ctx.replyWithHTML("please enter valid industry sector!", {
+        reply_markup: JSON.stringify({
+          keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+            text: x,
+          }])), resize_keyboard: true, one_time_keyboard: true,
+        }),
+      })
+      return;
+    } else {
+      let sectorId = sectors[0].id;
+      console.log("bpt 2", sectorId)
+      ctx.session.startupURSectorID = sectorId;
+      ctx.scene.state.startupURSectorID = sectorId;
+      ctx.replyWithHTML(`please enter employee size of your startup.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
+    }
+  } else {
+    ctx.replyWithHTML("please enter valid industry sector!", {
+      reply_markup: JSON.stringify({
+        keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+          text: x,
+        }])), resize_keyboard: true, one_time_keyboard: true,
+      }),
+    })
+    return;
+  }
+})
+export const startupUREmployeeSizeHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupUREmployeeSize = " ";
+    } else {
+      ctx.scene.state.startupUREmployeeSize = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupUREmployeeSize);
+    ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURWebsiteHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURWebsite = " ";
+    } else {
+      ctx.scene.state.startupURWebsite = ctx.message.text;
+    }
+    ctx.replyWithHTML(`please enter Facebook link of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter a valid startup website!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURFacebookLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURFacebookLink = " ";
+    } else {
+      ctx.scene.state.startupURFacebookLink = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupURFacebookLink);
+    ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid Facebook link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURTelegramLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURTelegramLink = " ";
+    } else {
+      ctx.scene.state.startupURTelegramLink = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupURTelegramLink);
+    ctx.replyWithHTML(`please enter YouTube link of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid Telegram link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURYouTubeLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURYouTubeLink = " ";
+    } else {
+      ctx.scene.state.startupURYouTubeLink = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupURYouTubeLink);
+    ctx.replyWithHTML(`please enter Tiktok link of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid YouTube link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURTikTokLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURTikTokLink = " ";
+    } else {
+      ctx.scene.state.startupURTikTokLink = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupURTikTokLink);
+    ctx.replyWithHTML(`please enter Twitter link of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupURTwitterLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupURTwitterLink = " ";
+    } else {
+      ctx.scene.state.startupURTwitterLink = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupURTwitterLink);
+    ctx.replyWithHTML(`please enter other Link 1 of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupUROtherLink1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupUROther1Link = " ";
+    } else {
+      ctx.scene.state.startupUROther1Link = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupUROther1Link);
+    ctx.replyWithHTML(`please enter other link 2 of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid link of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupUROtherLink2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupUROther2Link = " ";
+    } else {
+      ctx.scene.state.startupUROther2Link = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupUROther2Link);
+    ctx.replyWithHTML(`please enter other link 3 of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter ohter link 2 of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupUROtherLink3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupUROther3Link = " ";
+    } else {
+      ctx.scene.state.startupUROther3Link = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupUROther3Link);
+    ctx.replyWithHTML(`please enter email of your startup.`, startupRegisterOptionalKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid other link 3 of your startup!`, startupRegisterOptionalKeyboard);
+    return;
+  }
+})
+export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
+      ctx.scene.state.startupUREmail = " ";
+    } else {
+      ctx.scene.state.startupUREmail = ctx.message.text;
+    }
+    console.log(ctx.scene.state.startupUREmail);
+    ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`please enter valid email address of your startup!`, startupRegisterOptionalKeyboard);
+  }
+})
+export const startupUROfficialPhoneNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    ctx.scene.state.startupURPhoneNumber = ctx.message.text;
+    console.log(ctx.scene.state.startupURPhoneNumber);
+    const { data, error } = await fetchCities()
+    if (data) {
+      const { cities } = data;
+      let cnames = cities.map((nm: any) => nm.name);
+      ctx.session.cityNames = cnames
+      ctx.replyWithHTML("please enter location of your startup head quarter.", {
+        reply_markup: JSON.stringify({
+          keyboard: cnames.map((x: string, _: string) => ([{
+            text: x,
+          }])), resize_keyboard: true, one_time_keyboard: true,
+        }),
+      })
+    }
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML(`Please enter valid official phone number of your startup!`, cancelKeyboard);
+    return;
+  }
+})
+export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    ctx.scene.state.startupURHeadQuarterLocation = ctx.message.text;
+    const { data, error } = await fetchCity({ name: ctx.scene.state.startupURHeadQuarterLocation })
+    const { cities } = data
+    console.log(cities, "bpt 1")
+    if (!cities.length) {
+      ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
+        reply_markup: JSON.stringify({
+          keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+            text: x,
+          }])), resize_keyboard: true, one_time_keyboard: true,
+        }),
+      })
+      return;
+    } else {
+      let hqId = cities[0].id;
+      console.log("bpt 2", hqId)
+      ctx.session.startupURHeadQuarterLocation = hqId;
+      ctx.scene.state.startupURHeadQuarterLocation = hqId;
+
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterL}\nOther link: ${globalState.startupUROther1Link}`, registerStartupConfirmURKeyboard)
+
+      ctx.reply("Finished here is your info please approve")
+      ctx.scene.leave()
+    }
+  } else {
+    ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
+      reply_markup: JSON.stringify({
+        keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+          text: x,
+        }])), resize_keyboard: true, one_time_keyboard: true,
+      }),
+    })
+    return;
+  }
+});
+export const confirmRegisterStartUpURHandler = async (ctx: any) =>{
+  let formDataObj = {
+    'name': globalState.startupURName,
+    'founder': globalState.startupURFounderName,
+    'phone': globalState.startupURPhoneNumber,
+    'sector': globalState.startupURSectorID,
+    'is_user_gm': globalState.statupURIsUserGm,
+    'user_first_name': globalState.startupURUFN,
+    'user_last_name':  globalState.startupURULN,
+    'employee_size': globalState.startupUREmployeeSize,
+    'website': globalState.startupURWebsite,
+    'email': globalState.startupUREmail,
+    'user_phone': globalState.startupURUP,
+    'head_quarter': globalState.startupURHeadQuarterLocation,
+    'facebook_link': globalState.startupURFacebookLink,
+    'telegram_link': globalState.startupURFacebookLink,
+    'youtube_link': globalState.startupURFacebookLink,
+    'tiktok_link': globalState.startupURFacebookLink,
+    'twitter_link': globalState.startupURFacebookLink,
+    'linkedin': globalState.startupURFacebookLink,
+    'other_link_one': globalState.startupURFacebookLink,
+    'other_link_two': globalState.startupURFacebookLink,
+    'other_link_three': globalState.startupURFacebookLink,
+    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
+    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
+    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'folder': 'entity',
+    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+
+    }
+    const { data } = await registerStartup(formDataObj)
+    if (data) {
+        console.log(data);
+        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+    }
+
+}
+
+export const editRegisterStartUpURHandler = async (ctx: any) => {
+
+}
+
 //unlicensed startup registraiton with representative ends here...

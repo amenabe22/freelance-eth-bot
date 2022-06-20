@@ -42,6 +42,38 @@ export const RegisterWithAgeAction = {
     key: "RegisterWithAgeUser",
     handler: hdlr.ageRegistrationHandlder
 }
+export const confirmRegisteringStartupLGMAction = {
+    key: "confirmRegisteringStartupLGM",
+    handler: hdlr.confirmRegisterStartUpLGMHandler
+}
+export const confirmRegisteringStartupUGMAction = {
+    key: "confirmRegisteringStartupUGM",
+    handler: hdlr.confirmRegisterStartUpUGMHandler
+}
+export const confirmRegisteringStartupLRAction = {
+    key: "confirmRegisteringStartupLR",
+    handler: hdlr.confirmRegisterStartUpLRHandler
+}
+export const confirmRegisteringStartupURAction = {
+    key: "confirmRegisteringStartupUR",
+    handler: hdlr.confirmRegisterStartUpURHandler
+}
+export const editRegisteringStartupLGMAction = {
+    key: "editStartupRegistringLGM",
+    handler: hdlr.editRegisterStartUpLGMHandler
+}
+export const editRegisteringStartupUGMAction = {
+    key: "editStartupRegistringUGM",
+    handler: hdlr.editRegisterStartUpUGMHandler
+}
+export const editRegisteringStartupLRAction = {
+    key: "editStartupRegistringLR",
+    handler: hdlr.editRegisterStartUpLRHandler
+}
+export const editRegisteringStartupURAction = {
+    key: "editStartupRegistringLGM",
+    handler: hdlr.editRegisterStartUpURHandler
+}
 
 export const RegisterUserHandlerDob = {
     key: "RegisterUser",

@@ -79,6 +79,7 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
                 break;
             case "er_age":
                 ctx.scene.state.chooseAgeInputStyle = ctx.message.text;
+                
                 if (ctx.scene.state.chooseAgeInputStyle == "Age") {
                     globalState.ageInputStyle = response
                     ctx.reply("updated")
