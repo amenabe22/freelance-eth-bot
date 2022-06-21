@@ -3,11 +3,14 @@ import FormData from "form-data";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
+import { getUserByTelegramId } from "../../services/registration";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
     registerCompanyConfirmGMKeyboard,
-    registerCompanyEditKeyboard
+    registerCompanyEditKeyboard,
+    companyEditHandOverKeyboard,
+    companyEditKeyboard
 } from "../../keybaords/company.registration_kbs";
 import { registerCompany } from "../../services/company.registration";
 import { formatCompanyRegistrationMsg } from "../../utils.py/formatMessage";
@@ -602,5 +605,169 @@ export const companyHeadQuarterLocationGHandler = Telegraf.on(["photo", "text", 
             }),
         });
         return;
+    }
+})
+
+//register company with General manager ends here.
+
+
+
+export const companySelectionActionHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log("here")
+    const selectedCompany = ctx.match[0];
+    console.log(selectedCompany);
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+   if(data){
+    let checkUserEntity = data.users[0].user_entities;
+    if(checkUserEntity){
+        ctx.session.userCName = checkUserEntity.map((nam: any)=>(nam.entity["name"]))
+         console.log(ctx.session.userCName)
+        ctx.session.userCId = checkUserEntity.map((nam: any)=>nam.entity["id"])
+            console.log(ctx.session.userCId);
+      if(selectedCompany == 30){
+        ctx.session.selectedCompanyName = ctx.session.userCName[0];
+       ctx.session.selectedCompanyId = ctx.session.userCId[0];
+      }else if(selectedCompany == 31){
+        ctx.session.selectedCompanyName = ctx.session.userCName[1];
+        ctx.session.selectedCompanyId = ctx.session.userCId[1]; 
+      }else if(selectedCompany == 32){
+        ctx.session.selectedCompanyName = ctx.session.userCName[2];
+        ctx.session.selectedCompanyId = ctx.session.userCId[2]; 
+      }
+      else if(selectedCompany == 33){ 
+        ctx.session.selectedCompanyName = ctx.session.userCName[3];
+        ctx.session.selectedCompanyId = ctx.session.userCId[3]; 
+      }
+      else if(selectedCompany == 34){
+        ctx.session.selectedCompanyName = ctx.session.userCName[4];
+        ctx.session.selectedCompanyId = ctx.session.userCId[4]; 
+      }
+      else if(selectedCompany == 35){
+        ctx.session.selectedCompanyName = ctx.session.userCName[5];
+        ctx.session.selectedCompanyId = ctx.session.userCId[5]; 
+      }
+      else if(selectedCompany == 36){
+        ctx.session.selectedCompanyName = ctx.session.userCName[6];
+        ctx.session.selectedCompanyId = ctx.session.userCId[6]; 
+      }
+      else if(selectedCompany == 37){
+        ctx.session.selectedCompanyName = ctx.session.userCName[7];
+        ctx.session.selectedCompanyId = ctx.session.userCId[7]; 
+      }
+      else if(selectedCompany == 38){
+        ctx.session.selectedCompanyName = ctx.session.userCName[8];
+        ctx.session.selectedCompanyId = ctx.session.userCId[8]; 
+      }
+      else if(selectedCompany == 39){
+        ctx.session.selectedCompanyName = ctx.session.userCName[9];
+        ctx.session.selectedCompanyId = ctx.session.userCId[9]; 
+      }
+      else if(selectedCompany == 40){
+        ctx.session.selectedCompanyName = ctx.session.userCName[10];
+        ctx.session.selectedCompanyId = ctx.session.userCId[10]; 
+      }
+      else if(selectedCompany == 41){
+        ctx.session.selectedCompanyName = ctx.session.userCName[11];
+        ctx.session.selectedCompanyId = ctx.session.userCId[11]; 
+      }
+    console.log(ctx.session.selectedCompanyName);
+    console.log(ctx.session.selectedCompanyId); 
+    const companyNameBold = ctx.session.selectedCompanyName.bold();
+  await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditHandOverKeyboard)
+   await ctx.replyWithHTML("*************************************", cancelKeyboard)
+    }    
+}
+}
+
+export const companyEditHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    const companyNameBold = ctx.session.selectedCompanyName.bold();
+   await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditKeyboard);
+}
+
+export const comanyEditFieldHandler = async (ctx: any) => {
+    ctx.session.tobeEditedCompanyField = ctx.match[0];
+    ctx.scene.enter("companyEditSpecificFieldScene")
+}
+
+export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
+console.log(ctx.session.tobeEditedCompanyField)
+if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+   ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
+    ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
+    ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
+    ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
+    ctx.replyWithHTML("please enter the new location of your company",cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
+    ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
+ }
+}
+export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+  if(ctx.message.text){
+    if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+        ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text; 
+    }else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
+        ctx.scene.state.tobeEditedCompanyEmployeeSizeField = ctx.message.text;
+    }
+    else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
+        ctx.scene.state.tobeEditedCompanyEmailField = ctx.message.text;
+    }
+    else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
+        ctx.scene.state.tobeEditedCompanyPhoneField = ctx.message.text;
+    }
+    else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
+        ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
+    }else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
+        ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
+    }
+  }
+  ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+  ctx.scene.leave();
+})
+
+export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+
+})
+
+export const companyHandOverHandler = async (ctx: any)=>{
+     ctx.scene.enter("handOverCompanyScene");
+}
+  
+export const handOverCompanyInitHandler = async (ctx: any)=>{
+    ctx.deleteMessage();
+    ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
+}
+export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any)=>{
+if(ctx.message.text){
+   ctx.scene.state.representativePhone = ctx.message.text;
+   console.log(ctx.scene.state.representativePhone);
+   let BoldRepNo = ctx.message.text.bold();
+   ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+    reply_markup: {
+        keyboard: [
+            [{text: "Yes"}, {text: "No"}],
+        ],resize_keyboard: true, one_time_keyboard: true
+    }
+   })
+   return ctx.wizard.next();
+}else{ 
+    ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
+}
+})
+export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if(ctx.message.text){
+        if(ctx.message.text == "Yes"){
+            ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
+        }else if(ctx.message.text == "No"){
+            ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
+        }
+        ctx.scene.leave();
     }
 })

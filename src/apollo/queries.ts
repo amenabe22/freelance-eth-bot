@@ -42,6 +42,12 @@ export const USER = gql`
           name
         }
       }
+      user_entities {
+        entity {
+          name
+          id
+        }
+      }
     }
   }
   `

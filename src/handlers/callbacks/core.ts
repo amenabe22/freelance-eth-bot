@@ -14,6 +14,42 @@ export const companyStartupHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Please Select Company or Startup to register and post jobs.\n\nRequirements---\n${boldCompany}\n   . General manager ID\n   . License Photo\n${boldStartup}\n   . General Manager ID\n   . License Photo`, chooseCompanyStartupKeyboard);
 }
 export const companyHandler = async (ctx: any) => {
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+   if(data){
+    console.log(data);
+    let checkUserEntity = data.users[0].user_entities;
+    console.log(checkUserEntity)
+    if(checkUserEntity){
+        ctx.session.userEName = checkUserEntity.map((nam: any)=>{
+            return `${nam.entity["name"]}`
+        })
+         console.log(ctx.session.userEName)
+        ctx.session.userEId = checkUserEntity.map((nam: any)=>{
+            return `${nam.entity["id"]}`
+        })
+            console.log(ctx.session.userEId);
+   await ctx.replyWithHTML(`Companies you have registered\n\nplease select the companies to edit the information or update it.`,{
+        reply_markup: JSON.stringify({
+            inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
+              text: x, callback_data: JSON.stringify(xi+30)
+            }]))
+          }),
+    })
+   await ctx.replyWithHTML('********************************************', {
+    reply_markup: {
+        keyboard:[[{text: "Add Company"}], [{text: "Main Menu"}]],resize_keyboard: true, one_time_keyboard: true
+    }
+   })
+    }else{
+        var boldGManager = "General Manager".bold();
+        var boldRepresentative = "Representative".bold();
+       ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
+    }
+ }    
+}
+export const addMoreCompanyHandler = async (ctx: any) => {
     var boldGManager = "General Manager".bold();
     var boldRepresentative = "Representative".bold();
    ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)

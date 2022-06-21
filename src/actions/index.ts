@@ -14,6 +14,18 @@ export const RegisterCompanyRAction = {
     key: "Representative",
     handler: hdlr.companyRSelectionHandler,
 }
+export const CompanyHandOverAction = {
+    key: "hand-over-company",
+    handler: hdlr.companyHandOverHandler
+}
+export const CompanyEditAction = {
+    key: "edit-company",
+    handler: hdlr.companyEditHandler
+}
+export const CompanyEditFieldAction = {
+    key: ["edit_name_of_company", "edit_employee_of_company", "edit_email_of_company", "edit_phone_of_company", "edit_location_of_company", "edit_websit_of_company"],
+    handler: hdlr.comanyEditFieldHandler
+}
 export const LicensedStartupAction = {
     key: "LicensedStarup",
     handler: hdlr.startupLicensedActionHandler,
@@ -103,6 +115,11 @@ export const EnglishSelectionAction = {
 export const SectorSelectionAction = {
     key: /\b(0?[0-9]|1[0-9]|2[0-0])\b/g,
     handler: hdlr.sectorSelectionActionHandler
+}
+//listen for 30 - 40 in the callback data for list of companies
+export const CompanySelectionAction = {
+    key: /\b(3?[0-9]|4[0-9]|5[0-0])\b/g,
+    handler: hdlr.companySelectionActionHandler
 }
 
 export const EditProfileAction = {

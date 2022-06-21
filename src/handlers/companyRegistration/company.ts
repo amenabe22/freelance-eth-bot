@@ -1,3 +1,4 @@
+import {companyEditKeyboard} from "../../keybaords/company.registration_kbs"
 export const companyGMSelectionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
@@ -8,3 +9,4 @@ export const companyRSelectionHandler = async (ctx: any) => {
     ctx.deleteMessage();
     ctx.replyWithHTML('please enter the name of your company', ctx.scene.enter("companyRegistrationRScene"));
 }
+
