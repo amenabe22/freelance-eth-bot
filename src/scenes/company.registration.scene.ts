@@ -1,6 +1,17 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
 import  {companyRegistraionCancel}  from "../handlers/callbacks"
+import { handOverCompanyInitHandler } from "../handlers"
+
+export const companyRegistrationEditScene = new CoreScene(
+  "companyRegistrationEditScene",
+  {
+    enter: hdlr.companyNameGHandler,
+    handlers: [
+      hdlr.companyNameGHandler
+    ]
+  }
+)
 
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
@@ -15,7 +26,7 @@ export const companyRegistrationGMScene = new CoreScene(
       hdlr.companyWebsiteGHandler,
       hdlr.companyEmailGHandler,
       hdlr.companyOfficialPhoneNoGHandler,
-      hdlr.companyHeadQuarterLocationGHandler,
+      hdlr.companyHeadQuarterLocationGHandler, 
     ]
   },
   [
@@ -42,4 +53,16 @@ export const companyRegistrationRScene = new CoreScene(
   [
     companyRegistraionCancel
   ]
+)
+
+export const handOverCompanyScene = new CoreScene(
+  "handOverCompanyScene",
+  {
+    enter: handOverCompanyInitHandler,
+    handlers: [
+      hdlr.handOverCompanyPhoneHandler,
+      hdlr.handOverComapanyYesNoHandler
+
+    ]
+  }
 )

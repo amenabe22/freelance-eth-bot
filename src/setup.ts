@@ -42,7 +42,8 @@ export const bot = new CoreBot(
         act.editRegisterWithAgeUserAction,
         act.editRegistrationInfoAction,
         act.confirmRegisterCompanyAction,
-        act.confirmRegisterCompanyGMAction
+        act.confirmRegisterCompanyGMAction,
+        act.editCompanyRegistringAction
     ],
     // register commands
     [
@@ -53,6 +54,7 @@ export const bot = new CoreBot(
         cb.companyStartup,
         cb.company,
         cb.startup,
+        cb.adMoreCompany,
         cb.menuJobseekerSelection,
         cb.personalizedJobSelection,
         cb.menuMainSelector,

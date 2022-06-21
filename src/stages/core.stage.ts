@@ -4,8 +4,10 @@ import {
     newCustomerRegistrationScene,
     registerJobSeekerScene
 } from "../scenes/registration.scene"
-import { companyRegistrationGMScene, 
+import { companyRegistrationEditScene, 
+    companyRegistrationGMScene, 
          companyRegistrationRScene,
+         handOverCompanyScene
         } from "../scenes/company.registration.scene"
 import { startupRegistrationLGMscene, 
          startupRegistrationUGMscene,
@@ -28,6 +30,8 @@ export const coreStage: any = new Scenes.Stage<any>(
         startupRegistrationLRscene,
         startupRegistrationURscene,
         companyRegistrationRScene,
-        editProfileRegistrationScene
+        editProfileRegistrationScene,
+        companyRegistrationEditScene,
+        handOverCompanyScene
     ]
 )

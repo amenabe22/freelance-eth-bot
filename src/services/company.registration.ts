@@ -18,4 +18,4 @@ export const registerCompany = async (formDataObj: FormData) => {
         headers: formData.getHeaders()
     })
     return res
-}
+}  
