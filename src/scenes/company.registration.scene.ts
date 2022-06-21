@@ -2,6 +2,13 @@ import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
 import  {companyRegistraionCancel}  from "../handlers/callbacks"
 
+export const companyRegistrationEditScene = new CoreScene(
+  "companyRegistrationEditScene",
+  {
+    enter: hdlr.companyNameGHandler,
+  }
+)
+
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
   {

@@ -11,7 +11,8 @@ import { fetchSectors, fetchSector } from "../../services/basic";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
-    registerCompanyConfirmGMKeyboard
+    registerCompanyConfirmGMKeyboard,
+    registerCompanyEditKeyboard
 } from "../../keybaords/company.registration_kbs";
 import { registerCompany } from "../../services/company.registration";
 let globalState: any;
@@ -22,6 +23,13 @@ const download = (url: any, path: any, callback: any) => {
     });
 };
 
+export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
+    ctx.reply("initiating edit scene")
+}
+
+export const editCompanyRegistringHandler = async (ctx: any) => {
+    ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
+}
 
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     ctx.answerCbQuery();
@@ -470,5 +478,3 @@ export const companyHeadQuarterLocationGHandler = Telegraf.on(["photo", "text", 
         return;
     }
 })
-
-//register company with General manager ends here.

@@ -140,3 +140,13 @@ export const editRegistrationInfoAction = {
     key: ["er_first.name", "er_last.name", "er_email", "er_gender", "er_age", "er_residence"],
     handler: editRegistrationInfoCallbackHandler
 }
+
+export const editCompanyRegistrationCbAction = {
+    key: ["edc.name", "edc.sector", "edc.phone", "edc.website", "edc.email", "edc.hqs"],
+    handler: hdlr.editCompanyRegistrationCbActionHandler
+}
+
+export const editCompanyRegistringAction = {
+    key: "editCompanyRegistring",
+    handler:hdlr.editCompanyRegistringHandler
+}
