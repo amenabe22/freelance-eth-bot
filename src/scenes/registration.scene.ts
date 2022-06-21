@@ -5,7 +5,7 @@ import { newCustomerRegistrationCancel, newCustomerRegistrationSkip, registerJob
 export const editProfileRegistrationScene = new CoreScene(
   "editProfileRegistrationScene",
   {
-    enter:hdlr.editProfileRegistrationInfoInitHandler,
+    enter: hdlr.editProfileRegistrationInfoInitHandler,
     handlers: [
       hdlr.editProfileRegistrationInfoHandler,
       hdlr.yearOfBirthRegisterHandler,
