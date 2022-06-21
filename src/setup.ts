@@ -41,7 +41,9 @@ export const bot = new CoreBot(
         act.jobPostCompanySelectorAction,
         act.editRegisterWithAgeUserAction,
         act.editRegistrationInfoAction,
-    ],  
+        act.confirmRegisterCompanyAction,
+        act.confirmRegisterCompanyGMAction
+    ],
     // register commands
     [
         StartCommand
@@ -65,6 +67,5 @@ export const bot = new CoreBot(
         cb.employerMenuSelection,
         cb.postJobMenuSelection
     ]
-    );
-    
-    
+);
+

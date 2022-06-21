@@ -19,14 +19,14 @@ export const LicensedStartupAction = {
     handler: hdlr.startupLicensedActionHandler,
 }
 export const UnlicensedStartupAction = {
-    key: "UnlicensedStartup", 
+    key: "UnlicensedStartup",
     handler: hdlr.startupUnlicensedActionHandler,
 }
 export const RegisterStartupLGMAction = {
     key: "StartupLicensedGM",
     handler: hdlr.startupLGMSelectionHandler,
 }
-export const RegisterStartupUGMAction = { 
+export const RegisterStartupUGMAction = {
     key: "StartupUnlicensedGM",
     handler: hdlr.startupUGMSelectionHandler,
 }
@@ -48,7 +48,16 @@ export const confirmRegisteringStartupLGMAction = {
 }
 export const confirmRegisteringStartupUGMAction = {
     key: "confirmRegisteringStartupUGM",
-    handler: hdlr.confirmRegisterStartUpUGMHandler
+    handler: hdlr.confirmRegisterCompanyGMActionHanlder
+}
+export const confirmRegisterCompanyAction = {
+    key: "confirmRegisterCompany",
+    handler: hdlr.confirmRegisterCompanyActionHandler
+}
+
+export const confirmRegisterCompanyGMAction = {
+    key: "confirmRegisterCompanyGM",
+    handler: hdlr.confirmRegisterCompanyGMActionHanlder
 }
 export const confirmRegisteringStartupLRAction = {
     key: "confirmRegisteringStartupLR",
