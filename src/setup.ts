@@ -17,6 +17,7 @@ export const bot = new CoreBot(
         act.RegisterCompanyGMAction,
         act.RegisterCompanyRAction,
         act.LicensedStartupAction,
+        act.CompanySelectionAction,
         act.UnlicensedStartupAction,
         act.RegisterStartupLGMAction,
         act.RegisterStartupUGMAction,

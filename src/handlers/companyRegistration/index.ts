@@ -7,6 +7,7 @@ import path from "path";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
+import { getUserByTelegramId } from "../../services/registration";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
@@ -411,3 +412,105 @@ export const companyHeadQuarterLocationGHandler = Telegraf.on(["photo", "text","
 })
 
 //register company with General manager ends here.
+
+
+
+export const companySelectionActionHandler = async (ctx: any) => {
+    // TODO: improve handler
+    console.log("here")
+    const selectedCompany = ctx.match[0];
+    console.log(selectedCompany);
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+   if(data){
+    let checkUserEntity = data.users[0].user_entities;
+    console.log(checkUserEntity)
+    if(checkUserEntity){
+        ctx.session.userCName = checkUserEntity.map((nam: any)=>(nam.entity["name"]))
+         console.log(ctx.session.userCName)
+        ctx.session.userCId = checkUserEntity.map((nam: any)=>nam.entity["id"])
+            console.log(ctx.session.userCId);
+      if(checkUserEntity = 30){
+        ctx.session.selectedCompanyName = ctx.session.userUName[0];
+       ctx.session.selectedCompanyId = ctx.session.userEId[0];
+      }else if(checkUserEntity = 31){
+        ctx.session.selectedCompanyName = ctx.session.userCName[1];
+        ctx.session.selectedCompanyId = ctx.session.userCId[1]; 
+      }else if(checkUserEntity = 32){
+        ctx.session.selectedCompanyName = ctx.session.userEName[2];
+        ctx.session.selectedCompanyId = ctx.session.userEId[2]; 
+      }
+      else if(checkUserEntity = 33){
+        ctx.session.selectedCompanyName = ctx.session.userEName[3];
+        ctx.session.selectedCompanyId = ctx.session.userEId[3]; 
+      }
+      else if(checkUserEntity = 34){
+        ctx.session.selectedCompanyName = ctx.session.userEName[4];
+        ctx.session.selectedCompanyId = ctx.session.userEId[4]; 
+      }
+      else if(checkUserEntity = 35){
+        ctx.session.selectedCompanyName = ctx.session.userEName[4];
+        ctx.session.selectedCompanyId = ctx.session.userEId[4]; 
+      }
+      else if(checkUserEntity = 36){
+        ctx.session.selectedCompanyName = ctx.session.userEName[5];
+        ctx.session.selectedCompanyId = ctx.session.userEId[5]; 
+      }
+      else if(checkUserEntity = 37){
+        ctx.session.selectedCompanyName = ctx.session.userEName[6];
+        ctx.session.selectedCompanyId = ctx.session.userEId[6]; 
+      }
+      else if(checkUserEntity = 38){
+        ctx.session.selectedCompanyName = ctx.session.userEName[7];
+        ctx.session.selectedCompanyId = ctx.session.userEId[7]; 
+      }
+      else if(checkUserEntity = 39){
+        ctx.session.selectedCompanyName = ctx.session.userEName[8];
+        ctx.session.selectedCompanyId = ctx.session.userEId[8]; 
+      }
+      else if(checkUserEntity = 40){
+        ctx.session.selectedCompanyName = ctx.session.userEName[9];
+        ctx.session.selectedCompanyId = ctx.session.userEId[9]; 
+      }
+      else if(checkUserEntity = 41){
+        ctx.session.selectedCompanyName = ctx.session.userEName[10];
+        ctx.session.selectedCompanyId = ctx.session.userEId[10]; 
+      }
+
+    console.log(ctx.session.selectedCompanyName);
+    console.log(ctx.session.selectedCompanyId); 
+    // for (let x = 0; x < ctx.session.userEName.length; x++) {
+    //     if (parseInt(selectedCompany) === x) {
+    //         ctx.session.selectedCompanyName = ctx.session.userEName[0];
+    //         ctx.session.selectedCompanyId = ctx.session.userEId[0];
+    //     }
+    //     console.log(ctx.session.selectedCompanyName);
+    //     console.log(ctx.session.selectedCompanyId);
+    // }
+    }
+}
+    // ctx.session.companyNames = 
+
+
+    // const selectedSector = ctx.match[0];
+    // const { data: { sectors } } = await fetchSectors()
+    // ctx.session.sectorNames = sectors.map((e: any) => e.name);
+    // ctx.session.sectorIds = sectors.map((e: any) => e.id)
+
+    // for (let x = 0; x < sectors.length; x++) {
+    //     if (parseInt(selectedSector) === x) {
+    //         ctx.session.selectedSectorName = ctx.session.sectorNames[x];
+    //         ctx.session.selectedSectorId = ctx.session.sectorIds[x];
+    //     }
+    // }
+    // const { data } = await registerJobSeekerPersonalizedJob({
+    //     objs: [{
+    //         job_seeker_id: ctx.session.personalizedJobSeekerId,
+    //         sector_id: ctx.session.selectedSectorId
+    //     }]
+    // })
+    // if (data) {
+    //     ctx.replyWithHTML(`You have selected ${ctx.session.selectedSectorName}`);
+    // }
+}

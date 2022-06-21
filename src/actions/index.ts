@@ -95,6 +95,11 @@ export const SectorSelectionAction = {
     key: /\b(0?[0-9]|1[0-9]|2[0-0])\b/g,
     handler: hdlr.sectorSelectionActionHandler
 }
+//listen for 30 - 40 in the callback data for list of companies
+export const CompanySelectionAction = {
+    key: /\b(3?[0-9]|4[0-9]|5[0-0])\b/g,
+    handler: hdlr.companySelectionActionHandler
+}
 
 export const EditProfileAction = {
     key: "EditProfile",
