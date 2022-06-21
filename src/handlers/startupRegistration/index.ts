@@ -4,21 +4,26 @@ import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
+import { getUserByTelegramId } from "../../services/registration";
 import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
   registerStartupConfirmLRKeyboard,
   registerStartupConfirmURKeyboard,
   startupRegisterOptionalKeyboard,
-  starupFounderKeyboard
+  starupFounderKeyboard,
+  // startupCompanyEditKeyboard,
+  startupEditHandOverKeyboard,
+  startupEditKeyboard
 } from "../../keybaords/company.registration_kbs"
 import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import path from "path";
 import fs from "fs";
 let globalState: any;
-let totalAddedFounders = 0
 
+let totalAddedFounders = 0
+var startupNameBold = "";
 //licensed startup registering by General managrer starts here.
 export const startupLGMInitHandler = async (ctx: any) => {
   ctx.replyWithHTML('please enter the name of your startup', cancelKeyboard);
@@ -1464,3 +1469,181 @@ export const editRegisterStartUpURHandler = async (ctx: any) => {
 }
 
 //unlicensed startup registraiton with representative ends here...
+
+
+
+
+
+
+
+
+
+
+
+
+export const startupSelectionActionHandler = async (ctx: any) => {
+  ctx.deleteMessage()
+  const selectedStartup = ctx.match[0];
+  console.log(selectedStartup);
+  const { data, error } = await getUserByTelegramId({
+      telegram_id: JSON.stringify(ctx.from.id)
+  })
+ if(data){
+  let checkUserEntity = data.users[0].user_entities;
+  if(checkUserEntity){
+      ctx.session.userSName = checkUserEntity.map((nam: any)=>(nam.entity["name"]))
+       console.log(ctx.session.userSName)
+      ctx.session.userSId = checkUserEntity.map((nam: any)=>nam.entity["id"])
+          console.log(ctx.session.userSId);
+    if(selectedStartup == 60){
+      ctx.session.selectedStartupName = ctx.session.userSName[0];
+     ctx.session.selectedStartupId = ctx.session.userSId[0];
+    }else if(selectedStartup == 61){
+      ctx.session.selectedStartupName = ctx.session.userSName[1];
+      ctx.session.selectedStartupId = ctx.session.userSId[1]; 
+    }else if(selectedStartup == 62){
+      ctx.session.selectedStartupName = ctx.session.userSName[2];
+      ctx.session.selectedStartupId = ctx.session.userSId[2]; 
+    }
+    else if(selectedStartup == 63){ 
+      ctx.session.selectedStartupName = ctx.session.userSName[3];
+      ctx.session.selectedStartupId = ctx.session.userSId[3]; 
+    }
+    else if(selectedStartup == 64){
+      ctx.session.selectedStartupName = ctx.session.userSName[4];
+      ctx.session.selectedStartupId = ctx.session.userSId[4]; 
+    }
+    else if(selectedStartup == 65){
+      ctx.session.selectedStartupName = ctx.session.userSName[5];
+      ctx.session.selectedStartupId = ctx.session.userSId[5]; 
+    }
+    else if(selectedStartup == 66){
+      ctx.session.selectedStartupName = ctx.session.userSName[6];
+      ctx.session.selectedStartupId = ctx.session.userSId[6]; 
+    }
+    else if(selectedStartup == 67){
+      ctx.session.selectedStartupName = ctx.session.userSName[7];
+      ctx.session.selectedStartupId = ctx.session.userSId[7]; 
+    }
+    else if(selectedStartup == 68){
+      ctx.session.selectedStartupName = ctx.session.userSName[8];
+      ctx.session.selectedStartupId = ctx.session.userSId[8]; 
+    }
+    else if(selectedStartup == 69){
+      ctx.session.selectedStartupName = ctx.session.userSName[9];
+      ctx.session.selectedStartupId = ctx.session.userSId[9]; 
+    }
+    else if(selectedStartup == 60){
+      ctx.session.selectedStartupName = ctx.session.userSName[10];
+      ctx.session.selectedStartupId = ctx.session.userSId[10]; 
+    }
+    else if(selectedStartup == 71){
+      ctx.session.selectedStartupName = ctx.session.userSName[11];
+      ctx.session.selectedStartupId = ctx.session.userSId[11]; 
+    }
+  console.log(ctx.session.selectedStartupName);
+  console.log(ctx.session.selectedStartupId); 
+  startupNameBold = ctx.session.selectedStartupName.bold();
+await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,startupEditHandOverKeyboard)
+ await ctx.replyWithHTML("*************************************",  {
+  reply_markup: {
+      keyboard:[[{text: "Main Menu"}],], resize_keyboard: true, one_time_keyboard: true
+  }
+ })
+  }    
+}
+}
+
+
+export const startupEditHandler = async (ctx: any) => {
+  ctx.deleteMessage();
+ await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,startupEditKeyboard);
+}
+
+export const startupEditFieldHandler = async (ctx: any) => {
+  ctx.session.tobeEditedStartupField = ctx.match[0];
+  console.log(ctx.session.tobeEditedStartupField);
+  ctx.scene.enter("startupEditSpecificFieldScene")
+}
+
+export const startupEditSpecificFieldInitHandler = async (ctx: any) => {
+  ctx.deleteMessage();
+console.log(ctx.session.tobeEditedStartupField, "hm")
+if(ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
+ ctx.replyWithHTML("please enter the new name of your startup", cancelKeyboard);
+}else if(ctx.session.tobeEditedStartupField == "edit_employee_of_startup"){
+  ctx.replyWithHTML("please enter the new employee size of your startup", cancelKeyboard);
+}else if(ctx.session.tobeEditedStartupField == "edit_email_of_startup"){
+  ctx.replyWithHTML("please enter the new email of your startup", cancelKeyboard);
+}else if(ctx.session.tobeEditedStartupField == "edit_phone_of_startup"){
+  ctx.replyWithHTML("please enter the new phone no of your startup", cancelKeyboard);
+}else if(ctx.session.tobeEditedStartupField == "edit_location_of_startup"){
+  ctx.replyWithHTML("please enter the new location of your startup",cancelKeyboard);
+}else if(ctx.session.tobeEditedStartupField == "edit_websit_of_startup"){
+  ctx.replyWithHTML("please enter the new website of your startup", cancelKeyboard);
+}
+}
+export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+if(ctx.message.text){
+  if(ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
+      ctx.scene.state.toBeEditedStartupNameField = ctx.message.text; 
+  }else if(ctx.session.tobeEditedStartupField == "edit_employee_of_startup"){
+      ctx.scene.state.tobeEditedStartupEmployeeSizeField = ctx.message.text;
+  }
+  else if(ctx.session.tobeEditedStartupField == "edit_email_of_startup"){
+      ctx.scene.state.tobeEditedStartupEmailField = ctx.message.text;
+  }
+  else if(ctx.session.tobeEditedStartupField == "edit_phone_of_startup"){
+      ctx.scene.state.tobeEditedStartupPhoneField = ctx.message.text;
+  }
+  else if(ctx.session.tobeEditedStartupField == "edit_location_of_startup"){
+      ctx.scene.state.tobeEditedStartupLocationField = ctx.message.text;
+  }else if(ctx.session.tobeEditedStartupField == "edit_websit_of_startup"){
+      ctx.scene.state.tobeEditedStartupWebsiteField == ctx.message.text;
+  }
+}
+ctx.replyWithHTML("you have successfully edited your startup", cancelKeyboard);
+})
+
+export const startupEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+
+})
+
+
+
+
+
+export const startupHandOverHandler = async (ctx: any)=>{
+  ctx.scene.enter("handOverStartupScene");
+}
+
+export const handOverStartupInitHandler = async (ctx: any)=>{
+ ctx.deleteMessage();
+ ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
+}
+export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any)=>{
+if(ctx.message.text){
+ctx.scene.state.representativePhone = ctx.message.text;
+console.log(ctx.scene.state.representativePhone);
+let BoldRepNo = ctx.message.text.bold();
+ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+ reply_markup: {
+     keyboard: [
+         [{text: "Yes"}, {text: "No"}],
+     ],resize_keyboard: true, one_time_keyboard: true
+ }
+})
+return ctx.wizard.next();
+}else{ 
+ ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
+}
+})
+export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+ if(ctx.message.text){
+     if(ctx.message.text == "Yes"){
+         ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
+     }else if(ctx.message.text == "No"){
+         ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
+     }
+ }
+})

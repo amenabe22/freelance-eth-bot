@@ -21,7 +21,8 @@ import {
     menuLanguageSelectorHandler,
     menuMainSelectorHandler,
     menuSettingsSelectorHandler,
-    personalizedJobSelectionHandler
+    personalizedJobSelectionHandler,
+    addMoreStartupHandler
 } from "./core"
 export const companyStartup = {
     key: "My Companies / Startup",
@@ -39,7 +40,10 @@ export const adMoreCompany = {
     key: "Add Company",
     handler: addMoreCompanyHandler
 }
-
+export const addMoreStartup = {
+    key: "Add Startup",
+    handler: addMoreStartupHandler,
+}
 export const newCustomerRegistrationCancel = {
     key: "Back",
     handler: newCustomerRegistrationCancelHandler

@@ -55,7 +55,42 @@ export const addMoreCompanyHandler = async (ctx: any) => {
    ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
 }
 export const startupHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard);
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+   if(data){
+    console.log(data);
+    let checkUserEntity = data.users[0].user_entities;
+    console.log(checkUserEntity)
+    if(checkUserEntity){
+        ctx.session.userEName = checkUserEntity.map((nam: any)=>{
+            return `${nam.entity["name"]}`
+        }) 
+         console.log(ctx.session.userEName)
+        ctx.session.userEId = checkUserEntity.map((nam: any)=>{
+            return `${nam.entity["id"]}`
+        })
+            console.log(ctx.session.userEId);
+            await ctx.replyWithHTML(`Starup you have registered\n\nplease select the startup to edit the information or update it.`,{
+                reply_markup: JSON.stringify({
+                    inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
+                      text: x, callback_data: JSON.stringify(xi+60)
+                    }]))
+                  }),
+            })
+            await ctx.replyWithHTML('********************************************', {
+                reply_markup: {
+                    keyboard:[[{text: "Add Startup"}], [{text: "Main Menu"}]],resize_keyboard: true, one_time_keyboard: true
+                }
+               })      
+    }else{
+        ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard);
+    }
+ }  
+}
+
+export const addMoreStartupHandler = async (ctx: any)=> {
+    ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard); 
 }
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({

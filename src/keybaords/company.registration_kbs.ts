@@ -232,6 +232,11 @@ export const companyEditHandOverKeyboard = {
         inline_keyboard:[[{text: "Edit", callback_data: "edit-company"}, {text: "HandOver", callback_data: "hand-over-company"}]]
     }
 }
+export const startupEditHandOverKeyboard = {
+    reply_markup: {
+        inline_keyboard:[[{text: "Edit", callback_data: "edit-startup"}, {text: "HandOver", callback_data: "hand-over-startup"}]]
+    }
+}
 export const companyEditKeyboard = {
     reply_markup: {
         inline_keyboard: [
@@ -240,4 +245,14 @@ export const companyEditKeyboard = {
             [{ text: "Location", callback_data: "edit_location_of_company" }, { text: "Website", callback_data: "edit_websit_of_company" }],
         ]
     }
+}
+export const startupEditKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Name", callback_data: "edit_name_of_startup" }, { text: "Employee Size", callback_data: "edit_employee_of_startup" }],
+            [{ text: "Email", callback_data: "edit_email_of_startup" }, { text: "Phone No", callback_data: "edit_phone_of_startup" }],
+            [{ text: "Location", callback_data: "edit_location_of_startup" }, { text: "Website", callback_data: "edit_websit_of_startup" }],
+            [{ text: "Add License", callback_data: "add_license_startup"}]
+        ]
+    } 
 }

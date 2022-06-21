@@ -551,7 +551,11 @@ export const companySelectionActionHandler = async (ctx: any) => {
     console.log(ctx.session.selectedCompanyId); 
     companyNameBold = ctx.session.selectedCompanyName.bold();
   await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditHandOverKeyboard)
-   await ctx.replyWithHTML("*************************************", cancelKeyboard)
+   await ctx.replyWithHTML("*************************************", {
+    reply_markup: {
+        keyboard:[[{text: "Main Menu"}],], resize_keyboard: true, one_time_keyboard: true
+    }
+   })
     }    
 }
 }
@@ -567,6 +571,7 @@ export const comanyEditFieldHandler = async (ctx: any) => {
 }
 
 export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
+    ctx.deleteMessage();
 console.log(ctx.session.tobeEditedCompanyField)
 if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
    ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
@@ -602,7 +607,6 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
     }
   }
   ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
-  ctx.scene.leave();
 })
 
 export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
@@ -641,6 +645,5 @@ export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "conta
         }else if(ctx.message.text == "No"){
             ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
         }
-        ctx.scene.leave();
     }
 })

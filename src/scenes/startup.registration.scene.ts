@@ -1,6 +1,7 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
 import  {companyRegistraionCancel}  from "../handlers/callbacks"
+import { handOverStartupInitHandler, startupEditSpecificFieldInitHandler } from "../handlers"
 
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
@@ -105,6 +106,33 @@ export const startupRegistrationURscene = new CoreScene(
       hdlr.startupUREmailHandler,
       hdlr.startupUROfficialPhoneNoHandler,
       hdlr.startupURHeadQuarterLocationHandler,  
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+export const startupEditSpecificFieldScene = new CoreScene(
+  "startupEditSpecificFieldScene",
+  {
+    enter: startupEditSpecificFieldInitHandler,
+    handlers: [
+      hdlr.startupEditSpecificFieldInputHandler,
+      hdlr.startupEditSpecificFieldSumitHandler
+    ]
+  }, [
+    companyRegistraionCancel
+  ]
+)
+
+export const handOverStartupScene = new CoreScene(
+  "handOverStartupScene",
+  {
+    enter: handOverStartupInitHandler,
+    handlers: [
+      hdlr.handOverStartupPhoneHandler,
+      hdlr.handOverStartupYesNoHandler
+
     ]
   },
   [

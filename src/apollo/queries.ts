@@ -42,7 +42,13 @@ export const USER = gql`
           name
         }
       }
-      user_entities {
+      user_entities(where: {
+        entity: {
+          type: {
+            _eq: "COMPANY"
+          }
+        }
+      }){
         entity {
           name
           id

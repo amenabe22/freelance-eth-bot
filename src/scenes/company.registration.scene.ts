@@ -63,7 +63,9 @@ export const companyEditSpecificFieldScene = new CoreScene(
       hdlr.companyEditSpecificFieldInputHandler,
       hdlr.companyEditSpecificFieldSumitHandler
     ]
-  }
+  }, [
+    companyRegistraionCancel
+  ]
 )
 
 export const handOverCompanyScene = new CoreScene(

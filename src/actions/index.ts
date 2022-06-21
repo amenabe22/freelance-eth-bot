@@ -18,13 +18,25 @@ export const CompanyHandOverAction = {
     key: "hand-over-company",
     handler: hdlr.companyHandOverHandler
 }
+export const StartupHandOverAction = {
+    key: "hand-over-startup",
+    handler: hdlr.startupHandOverHandler
+}
 export const CompanyEditAction = {
     key: "edit-company",
     handler: hdlr.companyEditHandler
 }
+export const StartupEditAction = {
+    key: "edit-startup", 
+    handler: hdlr.startupEditHandler,
+}
 export const CompanyEditFieldAction = {
     key: ["edit_name_of_company", "edit_employee_of_company", "edit_email_of_company", "edit_phone_of_company", "edit_location_of_company", "edit_websit_of_company"],
     handler: hdlr.comanyEditFieldHandler
+}
+export const startupEditFieldAction = {
+    key: ["edit_name_of_startup", "edit_employee_of_startup", "edit_email_of_startup", "edit_phone_of_startup", "edit_location_of_startup", "edit_websit_of_startup", "license_of_startup"],
+    handler: hdlr.startupEditFieldHandler
 }
 export const LicensedStartupAction = {
     key: "LicensedStarup",
@@ -121,7 +133,10 @@ export const CompanySelectionAction = {
     key: /\b(3?[0-9]|4[0-9]|5[0-0])\b/g,
     handler: hdlr.companySelectionActionHandler
 }
-
+export const StartupSelectionAction = {
+    key: /\b(6?[0-9]|7[0-9]|8[0-0])\b/g,
+    handler: hdlr.startupSelectionActionHandler
+}
 export const EditProfileAction = {
     key: "EditProfile",
     handler: editProfileHandler
