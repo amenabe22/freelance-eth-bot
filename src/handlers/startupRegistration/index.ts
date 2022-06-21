@@ -1,5 +1,5 @@
+import FormData from "form-data"
 import { Telegraf } from "telegraf";
-import fetch from 'cross-fetch';
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
@@ -32,23 +32,23 @@ export const startupLGMNameHandler = Telegraf.on(["photo", "text", "contact", "d
     ctx.replyWithHTML(`Please enter a valid startup G/M name!`, cancelKeyboard);
     return;
   }
-}) 
+})
 export const startupLGMFoundersHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
-     if(ctx.message.text == "Done"){
+    if (ctx.message.text == "Done") {
       ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
       return ctx.wizard.next();
-    }else{
+    } else {
       totalAddedFounders++
       ctx.scene.state[`startupLGMFounder${totalAddedFounders}`] = ctx.message.text;
       console.log(ctx.scene.state[`startupLGMFounder${totalAddedFounders}`])
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
         return ctx.wizard.next();
-      }   
-    ctx.replyWithHTML(`please enter startup founder name`, starupFounderKeyboard);
-  } 
-}else {
+      }
+      ctx.replyWithHTML(`please enter startup founder name`, starupFounderKeyboard);
+    }
+  } else {
     ctx.replyWithHTML(`please enter a valid startup fundar name !`, starupFounderKeyboard);
     return;
   }
@@ -60,18 +60,18 @@ export const startupLGMTradeLicensePhotoHandler = Telegraf.on(["photo", "text", 
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-               console.log("done")
-               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
-               return ctx.wizard.next();
-            })
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+      console.log("done")
+      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else {
     ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
     return;
   }
 })
 export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if(ctx.update.message.photo) {
+  if (ctx.update.message.photo) {
     ctx.scene.state.startupIdPhoto = ctx.update.message.photo;
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
@@ -91,7 +91,7 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
         })
       }
       return ctx.wizard.next();
-    })   
+    })
   } else {
     ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
     return;
@@ -334,7 +334,6 @@ export const startupHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "
       return;
     } else {
       let hqId = cities[0].id;
-      console.log("bpt 2", hqId)
       ctx.session.startupLGMHeadQuarterLocation = hqId;
       ctx.scene.state.startupLGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
@@ -352,41 +351,47 @@ export const startupHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "
   }
 })
 
-export const confirmRegisterStartUpLGMHandler = async (ctx: any) =>{
-  let formDataObj = {
-    'name': globalState.startupLGMName,
-    'founder': globalState.startupLGMFounderName,
-    'phone': globalState.startupLGMPhoneNumber,
-    'sector': globalState.startupLGMSectorID,
-    'is_user_gm': globalState.statupLGMIsUserGm,
-    'user_first_name': globalState.startupLGMUFN,
-    'user_last_name':  globalState.startupLGMULN,
-    'employee_size': globalState.startupLGMEmployeeSize,
-    'website': globalState.startupLGMWebsite,
-    'email': globalState.startupLGMEmail,
-    'user_phone': globalState.startupLGMUP,
-    'head_quarter': globalState.startupLGMHeadQuarterLocation,
-    'facebook_link': globalState.startupLGMFacebookLink,
-    'telegram_link': globalState.startupLGMFacebookLink,
-    'youtube_link': globalState.startupLGMFacebookLink,
-    'tiktok_link': globalState.startupLGMFacebookLink,
-    'twitter_link': globalState.startupLGMFacebookLink,
-    'linkedin': globalState.startupLGMFacebookLink,
-    'other_link_one': globalState.startupLGMFacebookLink,
-    'other_link_two': globalState.startupLGMFacebookLink,
-    'other_link_three': globalState.startupLGMFacebookLink,
-    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
-    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
-    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
-    'folder': 'entity',
-    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
+  const formData = new FormData();
+  const payload: any = {
+    name: globalState.startupLGMName,
+    founder: globalState.startupLGMFounderName,
+    phone: globalState.startupLGMPhoneNumber,
+    sector: globalState.startupLGMSectorID,
+    is_user_gm: globalState.statupLGMIsUserGm,
+    user_first_name: globalState.startupLGMUFN,
+    user_last_name: globalState.startupLGMULN,
+    employee_size: globalState.startupLGMEmployeeSize,
+    website: globalState.startupLGMWebsite,
+    email: globalState.startupLGMEmail,
+    user_phone: globalState.startupLGMUP,
+    head_quarter: globalState.startupLGMHeadQuarterLocation,
+    facebook_link: globalState.startupLGMFacebookLink,
+    telegram_link: globalState.startupLGMFacebookLink,
+    youtube_link: globalState.startupLGMFacebookLink,
+    tiktok_link: globalState.startupLGMFacebookLink,
+    twitter_link: globalState.startupLGMFacebookLink,
+    linkedin: globalState.startupLGMFacebookLink,
+    other_link_one: globalState.startupLGMFacebookLink,
+    other_link_two: globalState.startupLGMFacebookLink,
+    other_link_three: globalState.startupLGMFacebookLink,
+    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: null,
+    folder: 'entity',
+    origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+  }
+  for (const key of Object.keys(payload)) {
+    if (payload[key])
+      formData.append(key, payload[key])
+  }
 
-    }
-    const { data } = await registerStartup(formDataObj)
-    if (data) {
-        console.log(data);
-        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-    }
+  const { data } = await registerStartup(formData)
+  if (data) {
+    console.log(data);
+    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+  }
 }
 
 
@@ -415,9 +420,9 @@ export const startupUGMNameHandler = Telegraf.on("text", (ctx: any) => {
 })
 export const startupUGMFirstFounderNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
-    if(ctx.message.text == "Done"){
+    if (ctx.message.text == "Done") {
       ctx.replyWithHTML(`please enter trade license photo of your startup`, startupRegisterOptionalKeyboard);
-    }else{
+    } else {
       totalAddedFounders++
       ctx.scene.state[`startupUGMFounder${totalAddedFounders}Name`] = ctx.message.text;
       console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders}Name`])
@@ -435,10 +440,10 @@ export const startupUGMTradeLicenseHandler = Telegraf.on(["photo", "text", "cont
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
-               return ctx.wizard.next();
-            })
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
     ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
     return ctx.wizard.next();
@@ -453,10 +458,10 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-            download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
-               ctx.replyWithHTML(`please enter employee size of your startup.`, startupRegisterOptionalKeyboard);
-               return ctx.wizard.next();
-            })
+    download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter employee size of your startup.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
+    })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
     ctx.replyWithHTML(`please enter employee size of your startup.`, startupRegisterOptionalKeyboard);
     return ctx.wizard.next();
@@ -507,28 +512,11 @@ export const startupUGMWebsiteHandler = Telegraf.on(["photo", "text", "contact",
 })
 export const startupUGMSectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
-      ctx.scene.state.startupUGMSectorName = ctx.message.text;
-      const { data, error } = await fetchSector({ name: ctx.scene.state.startupLGMSectorName })
-      const { sectors } = data
-      console.log(sectors.length, "bpt 1")
-      if (!sectors.length) {
-        ctx.replyWithHTML("please enter valid industry sector!", {
-          reply_markup: JSON.stringify({
-            keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
-          }),
-        })
-        return;
-      } else {
-        let sectorId = sectors[0].id;
-        console.log("bpt 2", sectorId)
-        ctx.session.startupUGMSectorID = sectorId;
-        ctx.scene.state.startupUGMSectorID = sectorId;
-        ctx.replyWithHTML(`please enter email of your startup.`, startupRegisterOptionalKeyboard);
-        return ctx.wizard.next();
-      }
-    } else {
+    ctx.scene.state.startupUGMSectorName = ctx.message.text;
+    const { data, error } = await fetchSector({ name: ctx.scene.state.startupLGMSectorName })
+    const { sectors } = data
+    console.log(sectors.length, "bpt 1")
+    if (!sectors.length) {
       ctx.replyWithHTML("please enter valid industry sector!", {
         reply_markup: JSON.stringify({
           keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -537,18 +525,35 @@ export const startupUGMSectorHandler = Telegraf.on(["photo", "text", "contact", 
         }),
       })
       return;
+    } else {
+      let sectorId = sectors[0].id;
+      console.log("bpt 2", sectorId)
+      ctx.session.startupUGMSectorID = sectorId;
+      ctx.scene.state.startupUGMSectorID = sectorId;
+      ctx.replyWithHTML(`please enter email of your startup.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     }
+  } else {
+    ctx.replyWithHTML("please enter valid industry sector!", {
+      reply_markup: JSON.stringify({
+        keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+          text: x,
+        }])), resize_keyboard: true, one_time_keyboard: true,
+      }),
+    })
+    return;
+  }
 })
 export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if(ctx.message.text){
-    if(ctx.message.text == "Skip"){
+  if (ctx.message.text) {
+    if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUGMEmail = " ";
-    }else{
+    } else {
       ctx.scene.state.startupUGMEmail = ctx.message.text;
     }
     ctx.replyWithHTML("please enter phone number of your startup", cancelKeyboard);
     return ctx.wizard.next();
-  }else{
+  } else {
     ctx.replyWithHTML("please enter valid email", startupRegisterOptionalKeyboard)
   }
 })
@@ -596,8 +601,8 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
       ctx.scene.state.startupLGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}`, registerStartupConfirmUGMKeyboard);
-  } 
-}else {
+    }
+  } else {
     ctx.replyWithHTML(`please enter a valid location of your startup.`, {
       reply_markup: JSON.stringify({
         keyboard: ctx.session.cityNames.map((x: string, _: string) => ([{
@@ -608,15 +613,16 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
   }
 })
 
-export const confirmRegisterStartUpUGMHandler = async (ctx: any) =>{
-  let formDataObj = {
+export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
+  const formData = new FormData()
+  const payload: any = {
     'name': globalState.startupUGMName,
     'founder': globalState.startupUGMFounderName,
     'phone': globalState.startupUGMPhoneNumber,
     'sector': globalState.startupUGMSectorID,
     'is_user_gm': globalState.statupUGMIsUserGm,
     'user_first_name': globalState.startupUGMUFN,
-    'user_last_name':  globalState.startupUGMULN,
+    'user_last_name': globalState.startupUGMULN,
     'employee_size': globalState.startupUGMEmployeeSize,
     'website': globalState.startupUGMWebsite,
     'email': globalState.startupUGMEmail,
@@ -637,12 +643,17 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) =>{
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 
-    }
-    const { data } = await registerStartup(formDataObj)
-    if (data) {
-        console.log(data);
-        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-    }
+  }
+  for (const key of Object.keys(payload)) {
+    if (payload[key])
+      formData.append(key, payload[key])
+  }
+
+  const { data } = await registerStartup(formData)
+  if (data) {
+    console.log(data);
+    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+  }
 
 }
 
@@ -656,7 +667,7 @@ export const editRegisterStartUpUGMHandler = async (ctx: any) => {
 
 
 //licensed startup registraion with Representative starts here...
-export const startupLRInitHandler = (ctx: any)=>{
+export const startupLRInitHandler = (ctx: any) => {
   ctx.replyWithHTML("please enter the name of your startup.", cancelKeyboard)
 }
 export const startupLRNameHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -690,10 +701,10 @@ export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
-               return ctx.wizard.next();
-            })
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
     ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
     return ctx.wizard.next();
@@ -999,15 +1010,16 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
     return;
   }
 });
-export const confirmRegisterStartUpLRHandler = async (ctx: any) =>{
-  let formDataObj = {
+export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
+  const formData = new FormData()
+  const payload: any = {
     'name': globalState.startupLRName,
     'founder': globalState.startupLRFounderName,
     'phone': globalState.startupLRPhoneNumber,
     'sector': globalState.startupLRSectorID,
     'is_user_gm': globalState.statupLRIsUserGm,
     'user_first_name': globalState.startupLRUFN,
-    'user_last_name':  globalState.startupLRULN,
+    'user_last_name': globalState.startupLRULN,
     'employee_size': globalState.startupLREmployeeSize,
     'website': globalState.startupLRWebsite,
     'email': globalState.startupLREmail,
@@ -1028,12 +1040,17 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) =>{
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 
-    }
-    const { data } = await registerStartup(formDataObj)
-    if (data) {
-        console.log(data);
-        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-    }
+  }
+  for (const key of Object.keys(payload)) {
+    if (payload[key])
+      formData.append(key, payload[key])
+  }
+
+  const { data } = await registerStartup(formData)
+  if (data) {
+    console.log(data);
+    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+  }
 
 }
 
@@ -1082,10 +1099,10 @@ export const startupURTradeLicensePhoto = Telegraf.on(["photo", "text", "contact
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-            download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-               ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
-               return ctx.wizard.next();
-            })
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+      return ctx.wizard.next();
+    })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
     ctx.replyWithHTML(`please enter representative id photo`, cancelKeyboard);
     return ctx.wizard.next();
@@ -1398,15 +1415,16 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
     return;
   }
 });
-export const confirmRegisterStartUpURHandler = async (ctx: any) =>{
-  let formDataObj = {
+export const confirmRegisterStartUpURHandler = async (ctx: any) => {
+  const formData = new FormData()
+  const payload: any = {
     'name': globalState.startupURName,
     'founder': globalState.startupURFounderName,
     'phone': globalState.startupURPhoneNumber,
     'sector': globalState.startupURSectorID,
     'is_user_gm': globalState.statupURIsUserGm,
     'user_first_name': globalState.startupURUFN,
-    'user_last_name':  globalState.startupURULN,
+    'user_last_name': globalState.startupURULN,
     'employee_size': globalState.startupUREmployeeSize,
     'website': globalState.startupURWebsite,
     'email': globalState.startupUREmail,
@@ -1427,12 +1445,17 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) =>{
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 
-    }
-    const { data } = await registerStartup(formDataObj)
-    if (data) {
-        console.log(data);
-        ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-    }
+  }
+  for (const key of Object.keys(payload)) {
+    if (payload[key])
+      formData.append(key, payload[key])
+  }
+
+  const { data } = await registerStartup(formData)
+  if (data) {
+    console.log(data);
+    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+  }
 
 }
 
