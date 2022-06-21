@@ -6,9 +6,9 @@ import { companyEditSpecificFieldInitHandler, handOverCompanyInitHandler } from 
 export const companyRegistrationEditScene = new CoreScene(
   "companyRegistrationEditScene",
   {
-    enter: hdlr.companyNameGHandler,
+    enter: hdlr.companyEditInitHandler,
     handlers: [
-      hdlr.companyNameGHandler
+      hdlr.companyEditValueHandler,
     ]
   }
 )
@@ -39,15 +39,15 @@ export const companyRegistrationRScene = new CoreScene(
   {
     enter: null,
     handlers: [
-        hdlr.companyNameRHandler,
-        hdlr.companyTradeLicensePhotoRHandler,
-        hdlr.companyIdPhotoRHandler,
-        hdlr.companyIndustrySectorRHandler,
-        hdlr.companyEmployeeSizeRHandler,
-        hdlr.companyWebsiteRHandler,
-        hdlr.companyEmailRHandler,
-        hdlr.companyOfficialPhoneNoRHandler,
-        hdlr.companyHeadQuarterLocationRHandler,
+      hdlr.companyNameRHandler,
+      hdlr.companyTradeLicensePhotoRHandler,
+      hdlr.companyIdPhotoRHandler,
+      hdlr.companyIndustrySectorRHandler,
+      hdlr.companyEmployeeSizeRHandler,
+      hdlr.companyWebsiteRHandler,
+      hdlr.companyEmailRHandler,
+      hdlr.companyOfficialPhoneNoRHandler,
+      hdlr.companyHeadQuarterLocationRHandler,
     ]
   },
   [

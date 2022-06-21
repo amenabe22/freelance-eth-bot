@@ -79,7 +79,7 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
                 break;
             case "er_age":
                 ctx.scene.state.chooseAgeInputStyle = ctx.message.text;
-                
+
                 if (ctx.scene.state.chooseAgeInputStyle == "Age") {
                     globalState.ageInputStyle = response
                     ctx.reply("updated")
@@ -122,7 +122,6 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
 
 export const editRegistrationInfoCallbackHandler = async (ctx: any) => {
     console.log("edit registration info triggered")
-    console.log(ctx.match)
     const target = ctx.match[0];
     ctx.scene.state.editTarget = target;
     ctx.session.editTarget = target
