@@ -14,7 +14,18 @@ export const RegisterCompanyRAction = {
     key: "Representative",
     handler: hdlr.companyRSelectionHandler,
 }
-
+export const CompanyHandOverAction = {
+    key: "hand-over-company",
+    handler: hdlr.companyHandOverHandler
+}
+export const CompanyEditAction = {
+    key: "edit-company",
+    handler: hdlr.companyEditHandler
+}
+export const CompanyEditFieldAction = {
+    key: ["edit_name_of_company", "edit_employee_of_company", "edit_email_of_company", "edit_phone_of_company", "edit_location_of_company", "edit_websit_of_company"],
+    handler: hdlr.comanyEditFieldHandler
+}
 export const LicensedStartupAction = {
     key: "LicensedStarup",
     handler: hdlr.startupLicensedActionHandler,

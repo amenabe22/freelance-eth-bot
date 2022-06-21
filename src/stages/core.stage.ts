@@ -7,7 +7,8 @@ import {
 import { companyRegistrationEditScene, 
     companyRegistrationGMScene, 
          companyRegistrationRScene,
-         handOverCompanyScene
+         handOverCompanyScene,
+         companyEditSpecificFieldScene
         } from "../scenes/company.registration.scene"
 import { startupRegistrationLGMscene, 
          startupRegistrationUGMscene,
@@ -32,6 +33,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         companyRegistrationRScene,
         editProfileRegistrationScene,
         companyRegistrationEditScene,
-        handOverCompanyScene
+        handOverCompanyScene,
+        companyEditSpecificFieldScene
     ]
 )

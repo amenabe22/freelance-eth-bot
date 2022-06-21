@@ -1,3 +1,4 @@
+import {companyEditKeyboard} from "../../keybaords/company.registration_kbs"
 export const companyGMSelectionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();

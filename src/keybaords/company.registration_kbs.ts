@@ -232,3 +232,12 @@ export const companyEditHandOverKeyboard = {
         inline_keyboard:[[{text: "Edit", callback_data: "edit-company"}, {text: "HandOver", callback_data: "hand-over-company"}]]
     }
 }
+export const companyEditKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Name", callback_data: "edit_name_of_company" }, { text: "Employee Size", callback_data: "edit_employee_of_company" }],
+            [{ text: "Email", callback_data: "edit_email_of_company" }, { text: "Phone No", callback_data: "edit_phone_of_company" }],
+            [{ text: "Location", callback_data: "edit_location_of_company" }, { text: "Website", callback_data: "edit_websit_of_company" }],
+        ]
+    }
+}

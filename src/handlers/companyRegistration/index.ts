@@ -14,11 +14,12 @@ import {
     registerCompanyConfirmKeyboard,
     registerCompanyConfirmGMKeyboard,
     registerCompanyEditKeyboard,
-    companyEditHandOverKeyboard
+    companyEditHandOverKeyboard,
+    companyEditKeyboard
 } from "../../keybaords/company.registration_kbs";
 import { registerCompany } from "../../services/company.registration";
 let globalState: any;
-
+var companyNameBold = "";
 const download = (url: any, path: any, callback: any) => {
     request.head(url, () => {
         request(url).pipe(fs.createWriteStream(path)).on('close', callback);
@@ -548,17 +549,70 @@ export const companySelectionActionHandler = async (ctx: any) => {
       }
     console.log(ctx.session.selectedCompanyName);
     console.log(ctx.session.selectedCompanyId); 
-   let companyNameBold = ctx.session.selectedCompanyName.bold();
-   ctx.replyWithHTML(`${companyNameBold}\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditHandOverKeyboard)
+    companyNameBold = ctx.session.selectedCompanyName.bold();
+  await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditHandOverKeyboard)
+   await ctx.replyWithHTML("*************************************", cancelKeyboard)
+    }    
+}
+}
+
+export const companyEditHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+   await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditKeyboard);
+}
+
+export const comanyEditFieldHandler = async (ctx: any) => {
+    ctx.session.tobeEditedCompanyField = ctx.match[0];
+    ctx.scene.enter("companyEditSpecificFieldScene")
+}
+
+export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
+console.log(ctx.session.tobeEditedCompanyField)
+if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+   ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
+    ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
+    ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
+    ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
+    ctx.replyWithHTML("please enter the new location of your company",cancelKeyboard);
+}else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
+    ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
+ }
+}
+export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+  if(ctx.message.text){
+    if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+        ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text; 
+    }else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
+        ctx.scene.state.tobeEditedCompanyEmployeeSizeField = ctx.message.text;
     }
-}
+    else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
+        ctx.scene.state.tobeEditedCompanyEmailField = ctx.message.text;
+    }
+    else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
+        ctx.scene.state.tobeEditedCompanyPhoneField = ctx.message.text;
+    }
+    else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
+        ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
+    }else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
+        ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
+    }
+  }
+  ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+  ctx.scene.leave();
+})
 
-}
+export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
 
-export const comapanyHandOverHandler = async (ctx: any)=>{
+})
+
+export const companyHandOverHandler = async (ctx: any)=>{
      ctx.scene.enter("handOverCompanyScene");
 }
- 
+  
 export const handOverCompanyInitHandler = async (ctx: any)=>{
     ctx.deleteMessage();
     ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
@@ -587,5 +641,6 @@ export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "conta
         }else if(ctx.message.text == "No"){
             ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
         }
+        ctx.scene.leave();
     }
 })
