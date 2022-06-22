@@ -1,3 +1,4 @@
+import fs from "fs"
 import { Telegraf, Context } from "telegraf";
 import FormData from "form-data";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
@@ -14,6 +15,9 @@ import {
 } from "../../keybaords/company.registration_kbs";
 import { registerCompany } from "../../services/company.registration";
 import { formatCompanyRegistrationMsg } from "../../utils.py/formatMessage";
+import path from "path";
+import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
+import { ve, vp, vw } from "../../utils.py/validation";
 let globalState: any;
 
 export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
@@ -30,7 +34,7 @@ export const editCompanyRegistringHandler = async (ctx: any) => {
 
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     ctx.answerCbQuery();
-    console.log(globalState,"state")
+    console.log(globalState, "state")
     const
         {
             companyGName,
@@ -44,11 +48,12 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
             companyGHeadQuarterLocation,
             companyGHeadQuarterLocationId
         } = globalState
+
     const formData = new FormData()
     const payload: any = {
         name: companyGName,
         phone: companyGPhoneNumber,
-        type: null,
+        type: "COMPANY",
         sector_id: companyGSectorID,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
         user_first_name: "",
@@ -57,20 +62,24 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         user_phone: null,
         website: companyRWebsite,
         email: companyGEmail,
-        is_user_gm: false,
+        is_user_gm: 'true',
         head_quarter: companyGHeadQuarterLocationId,
-        trade_license_photo: null,
-        rep_id_photo: null,
-        rep_letter_photo: null,
+        trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+        rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+        // rep_letter_photo:  fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
         folder: "entity",
+        telegram_id: JSON.stringify(ctx.from.id)
     }
-
+    console.log("****************************************************************************************")
+    console.log(payload)
+    console.log("****************************************************************************************")
     for (const key of Object.keys(payload)) {
         if (payload[key])
             formData.append(key, payload[key])
     }
 
     const { data } = await registerCompany(formData)
+    console.log(data, "\n>>>>>")
     if (data) {
         ctx.deleteMessage();
         ctx.reply("submitted")
@@ -102,17 +111,13 @@ export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "doc
 export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         console.log(ctx.update.message.photo[0])
+        const fname = `${ctx.from.id}.jpg`
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-        // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyTradeLicensePhoto}`);
-        //    console.log(res);
-        //    const res2 = await res.json();
-        //    const filePath = res2.result.file_path;
-        //    const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        //    console.log(downloadURL);
-        //    download(downloadURL, path.join(('companyTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
-        //    console.log('Done!')
-        //    )
-        ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
+        download(downloadURL, `files/companyTradeLicencePhotos/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+            return ctx.wizard.next();
+        })
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
@@ -122,16 +127,12 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
 export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
-        // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyIdPhoto}`);
-        // console.log(res);
-        // const res2 = await res.json();
-        // const filePath = res2.result.file_path;
-        // const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        // console.log(downloadURL);
-        // download(downloadURL, path.join(('companyRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
-        // console.log('Done!')
-        // )
-        ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
+        download(downloadURL, `files/companyRepOrGMidPhotos/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
+            return ctx.wizard.next();
+        })
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard);
@@ -141,19 +142,26 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
 export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         const companyStampedLetterPhoto = ctx.update.message.photo[0].file_id;
-        const { data, error } = await fetchSectors()
-        if (data) {
-            const { sectors } = data;
-            let snames = sectors.map((nm: any) => nm.name);
-            ctx.session.sectorNames = snames
-            ctx.replyWithHTML("please enter industry sector.", {
-                reply_markup: JSON.stringify({
-                    keyboard: snames.map((x: string, _: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
-                }),
-            })
-        }
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyStampedLetterPhoto)
+        download(downloadURL, `files/companyStampedLetterPhotos/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
+
+            const { data, error } = await fetchSectors()
+            if (data) {
+                const { sectors } = data;
+                let snames = sectors.map((nm: any) => nm.name);
+                ctx.session.sectorNames = snames
+                ctx.replyWithHTML("please enter industry sector.", {
+                    reply_markup: JSON.stringify({
+                        keyboard: snames.map((x: string, _: string) => ([{
+                            text: x,
+                        }])), resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+            }
+            return ctx.wizard.next();
+        })
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid stamped letter photo!`, cancelKeyboard);
@@ -346,7 +354,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
     const response = ctx.message.text
     const target = ctx.session.editTarget
     const confirmMsg = formatCompanyRegistrationMsg(globalState)
-    console.log(response, target,"dawg")
+    console.log(response, target, "dawg")
     if (response) {
         // validate and update state
         switch (target) {
@@ -521,7 +529,7 @@ export const companyEmployeeSizeGHandler = Telegraf.on(["photo", "text", "contac
     }
 })
 export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (vw(ctx.message.text)) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
         } else {
@@ -535,7 +543,7 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
     }
 })
 export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (ve(ctx.message.text)) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyGEmail = " ";
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
@@ -551,7 +559,7 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
     }
 })
 export const companyOfficialPhoneNoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (vp(ctx.message.text)) {
         ctx.scene.state.companyGPhoneNumber = ctx.message.text;
         const { data, error } = await fetchCities()
         if (data) {
@@ -620,76 +628,76 @@ export const companySelectionActionHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
-   if(data){
-    let checkUserEntity = data.users[0].user_entities;
-    if(checkUserEntity){
-        ctx.session.userCName = checkUserEntity.map((nam: any)=>(nam.entity["name"]))
-         console.log(ctx.session.userCName)
-        ctx.session.userCId = checkUserEntity.map((nam: any)=>nam.entity["id"])
+    if (data) {
+        let checkUserEntity = data.users[0].user_entities;
+        if (checkUserEntity) {
+            ctx.session.userCName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
+            console.log(ctx.session.userCName)
+            ctx.session.userCId = checkUserEntity.map((nam: any) => nam.entity["id"])
             console.log(ctx.session.userCId);
-      if(selectedCompany == 30){
-        ctx.session.selectedCompanyName = ctx.session.userCName[0];
-       ctx.session.selectedCompanyId = ctx.session.userCId[0];
-      }else if(selectedCompany == 31){
-        ctx.session.selectedCompanyName = ctx.session.userCName[1];
-        ctx.session.selectedCompanyId = ctx.session.userCId[1]; 
-      }else if(selectedCompany == 32){
-        ctx.session.selectedCompanyName = ctx.session.userCName[2];
-        ctx.session.selectedCompanyId = ctx.session.userCId[2]; 
-      }
-      else if(selectedCompany == 33){ 
-        ctx.session.selectedCompanyName = ctx.session.userCName[3];
-        ctx.session.selectedCompanyId = ctx.session.userCId[3]; 
-      }
-      else if(selectedCompany == 34){
-        ctx.session.selectedCompanyName = ctx.session.userCName[4];
-        ctx.session.selectedCompanyId = ctx.session.userCId[4]; 
-      }
-      else if(selectedCompany == 35){
-        ctx.session.selectedCompanyName = ctx.session.userCName[5];
-        ctx.session.selectedCompanyId = ctx.session.userCId[5]; 
-      }
-      else if(selectedCompany == 36){
-        ctx.session.selectedCompanyName = ctx.session.userCName[6];
-        ctx.session.selectedCompanyId = ctx.session.userCId[6]; 
-      }
-      else if(selectedCompany == 37){
-        ctx.session.selectedCompanyName = ctx.session.userCName[7];
-        ctx.session.selectedCompanyId = ctx.session.userCId[7]; 
-      }
-      else if(selectedCompany == 38){
-        ctx.session.selectedCompanyName = ctx.session.userCName[8];
-        ctx.session.selectedCompanyId = ctx.session.userCId[8]; 
-      }
-      else if(selectedCompany == 39){
-        ctx.session.selectedCompanyName = ctx.session.userCName[9];
-        ctx.session.selectedCompanyId = ctx.session.userCId[9]; 
-      }
-      else if(selectedCompany == 40){
-        ctx.session.selectedCompanyName = ctx.session.userCName[10];
-        ctx.session.selectedCompanyId = ctx.session.userCId[10]; 
-      }
-      else if(selectedCompany == 41){
-        ctx.session.selectedCompanyName = ctx.session.userCName[11];
-        ctx.session.selectedCompanyId = ctx.session.userCId[11]; 
-      }
-    console.log(ctx.session.selectedCompanyName);
-    console.log(ctx.session.selectedCompanyId); 
-    const companyNameBold = ctx.session.selectedCompanyName.bold();
-  await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditHandOverKeyboard)
-   await ctx.replyWithHTML("*************************************", {
-    reply_markup: {
-        keyboard:[[{text: "Main Menu"}],], resize_keyboard: true, one_time_keyboard: true
+            if (selectedCompany == 30) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[0];
+                ctx.session.selectedCompanyId = ctx.session.userCId[0];
+            } else if (selectedCompany == 31) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[1];
+                ctx.session.selectedCompanyId = ctx.session.userCId[1];
+            } else if (selectedCompany == 32) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[2];
+                ctx.session.selectedCompanyId = ctx.session.userCId[2];
+            }
+            else if (selectedCompany == 33) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[3];
+                ctx.session.selectedCompanyId = ctx.session.userCId[3];
+            }
+            else if (selectedCompany == 34) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[4];
+                ctx.session.selectedCompanyId = ctx.session.userCId[4];
+            }
+            else if (selectedCompany == 35) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[5];
+                ctx.session.selectedCompanyId = ctx.session.userCId[5];
+            }
+            else if (selectedCompany == 36) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[6];
+                ctx.session.selectedCompanyId = ctx.session.userCId[6];
+            }
+            else if (selectedCompany == 37) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[7];
+                ctx.session.selectedCompanyId = ctx.session.userCId[7];
+            }
+            else if (selectedCompany == 38) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[8];
+                ctx.session.selectedCompanyId = ctx.session.userCId[8];
+            }
+            else if (selectedCompany == 39) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[9];
+                ctx.session.selectedCompanyId = ctx.session.userCId[9];
+            }
+            else if (selectedCompany == 40) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[10];
+                ctx.session.selectedCompanyId = ctx.session.userCId[10];
+            }
+            else if (selectedCompany == 41) {
+                ctx.session.selectedCompanyName = ctx.session.userCName[11];
+                ctx.session.selectedCompanyId = ctx.session.userCId[11];
+            }
+            console.log(ctx.session.selectedCompanyName);
+            console.log(ctx.session.selectedCompanyId);
+            const companyNameBold = ctx.session.selectedCompanyName.bold();
+            await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, companyEditHandOverKeyboard)
+            await ctx.replyWithHTML("*************************************", {
+                reply_markup: {
+                    keyboard: [[{ text: "Main Menu" }],], resize_keyboard: true, one_time_keyboard: true
+                }
+            })
+        }
     }
-   })
-    }    
-}
 }
 
 export const companyEditHandler = async (ctx: any) => {
     ctx.deleteMessage();
     const companyNameBold = ctx.session.selectedCompanyName.bold();
-   await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,companyEditKeyboard);
+    await ctx.replyWithHTML(`${companyNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, companyEditKeyboard);
 }
 
 export const comanyEditFieldHandler = async (ctx: any) => {
@@ -699,77 +707,76 @@ export const comanyEditFieldHandler = async (ctx: any) => {
 
 export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
     ctx.deleteMessage();
-console.log(ctx.session.tobeEditedCompanyField)
-if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
-   ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
-}else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
-    ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard);
-}else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
-    ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard);
-}else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
-    ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
-}else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
-    ctx.replyWithHTML("please enter the new location of your company",cancelKeyboard);
-}else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
-    ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
- }
+    console.log(ctx.session.tobeEditedCompanyField)
+    if (ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+        ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_employee_of_company") {
+        ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_email_of_company") {
+        ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_phone_of_company") {
+        ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
+        ctx.replyWithHTML("please enter the new location of your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
+        ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
+    }
 }
-export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
-  if(ctx.message.text){
-    if(ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
-        ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text; 
-    }else if(ctx.session.tobeEditedCompanyField == "edit_employee_of_company"){
-        ctx.scene.state.tobeEditedCompanyEmployeeSizeField = ctx.message.text;
+export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if (ctx.message.text) {
+        if (ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
+            ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text;
+        } else if (ctx.session.tobeEditedCompanyField == "edit_employee_of_company") {
+            ctx.scene.state.tobeEditedCompanyEmployeeSizeField = ctx.message.text;
+        }
+        else if (ctx.session.tobeEditedCompanyField == "edit_email_of_company") {
+            ctx.scene.state.tobeEditedCompanyEmailField = ctx.message.text;
+        }
+        else if (ctx.session.tobeEditedCompanyField == "edit_phone_of_company") {
+            ctx.scene.state.tobeEditedCompanyPhoneField = ctx.message.text;
+        }
+        else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
+            ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
+        } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
+            ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
+        }
     }
-    else if(ctx.session.tobeEditedCompanyField == "edit_email_of_company"){
-        ctx.scene.state.tobeEditedCompanyEmailField = ctx.message.text;
-    }
-    else if(ctx.session.tobeEditedCompanyField == "edit_phone_of_company"){
-        ctx.scene.state.tobeEditedCompanyPhoneField = ctx.message.text;
-    }
-    else if(ctx.session.tobeEditedCompanyField == "edit_location_of_company"){
-        ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
-    }else if(ctx.session.tobeEditedCompanyField == "edit_websit_of_company"){
-        ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
-    }
-  }
-  ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+    ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
 })
 
-export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
 
 })
 
-export const companyHandOverHandler = async (ctx: any)=>{
-     ctx.scene.enter("handOverCompanyScene");
+export const companyHandOverHandler = async (ctx: any) => {
+    ctx.scene.enter("handOverCompanyScene");
 }
-  
-export const handOverCompanyInitHandler = async (ctx: any)=>{
+
+export const handOverCompanyInitHandler = async (ctx: any) => {
     ctx.deleteMessage();
     ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
 }
-export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any)=>{
-if(ctx.message.text){
-   ctx.scene.state.representativePhone = ctx.message.text;
-   console.log(ctx.scene.state.representativePhone);
-   let BoldRepNo = ctx.message.text.bold();
-   ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
-    reply_markup: {
-        keyboard: [
-            [{text: "Yes"}, {text: "No"}],
-        ],resize_keyboard: true, one_time_keyboard: true
+export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if (ctx.message.text) {
+        ctx.scene.state.representativePhone = ctx.message.text;
+        let BoldRepNo = ctx.message.text.bold();
+        ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+            reply_markup: {
+                keyboard: [
+                    [{ text: "Yes" }, { text: "No" }],
+                ], resize_keyboard: true, one_time_keyboard: true
+            }
+        })
+        return ctx.wizard.next();
+    } else {
+        ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
     }
-   })
-   return ctx.wizard.next();
-}else{ 
-    ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
-}
 })
 export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if(ctx.message.text){
-        if(ctx.message.text == "Yes"){
+    if (ctx.message.text) {
+        if (ctx.message.text == "Yes") {
             ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
-        }else if(ctx.message.text == "No"){
+        } else if (ctx.message.text == "No") {
             ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
         }
     }
