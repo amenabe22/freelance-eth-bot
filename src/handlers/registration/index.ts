@@ -9,6 +9,7 @@ import {
 } from "../../keybaords/registration_kbs";
 import { registerNewBotUser } from "../../services/registration";
 import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
+import { ve, vp } from "../../utils.py/validation";
 
 let globalState: any;
 
@@ -219,7 +220,7 @@ export const ageInitHandler = Telegraf.on(["text", "contact", "document", "photo
 
 export const phoneNumberRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
-        if (!ctx.update.message.contact) {
+        if (!vp(ctx.update.message.contact)) {
             ctx.replyWithHTML(`Please enter a valid phone number!`, shareContactKeyboard)
             return;
         } else {
@@ -267,8 +268,7 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
 export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.emailRegister = ctx.message.text;
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!re.test(ctx.message.text)) {
+        if (!ve(ctx.message.text)) {
             ctx.reply("Please enter a valid email!")
             return;
         } else {
