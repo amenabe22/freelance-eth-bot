@@ -35,7 +35,7 @@ export class CoreBot {
         // this.instance.hears(localizationProvider.allTr('common.mainmenu'), ctx => MyStage.router.push(ctx, '/', true, true))
         this.instance.catch((err, ctx) => {
             console.log("===============================BOT ERROR===============================");
-            console.log(err.response.data);
+            console.log(err);
             console.log("*******************************BOT ERROR*******************************");
             return;
         });
