@@ -20,6 +20,7 @@ import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import path from "path";
 import fs from "fs";
+import { ve, vp, vw } from "../../utils.py/validation";
 let globalState: any;
 
 let totalAddedFounders = 0
@@ -152,7 +153,7 @@ export const startupLGMEmployeeSizeHandler = Telegraf.on(["photo", "text", "cont
   }
 })
 export const startupLGMWebsiteHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMWebsite = " ";
     } else {
@@ -166,7 +167,7 @@ export const startupLGMWebsiteHandler = Telegraf.on(["photo", "text", "contact",
   }
 })
 export const startupLGMFacebookLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMFacebookLink = " ";
     } else {
@@ -181,7 +182,7 @@ export const startupLGMFacebookLinkHandler = Telegraf.on(["photo", "text", "cont
   }
 })
 export const startupLGMTelegramLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMTelegramLink = " ";
     } else {
@@ -196,7 +197,7 @@ export const startupLGMTelegramLinkHandler = Telegraf.on(["photo", "text", "cont
   }
 })
 export const startupLGMYouTubeLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMYouTubeLink = " ";
     } else {
@@ -211,7 +212,7 @@ export const startupLGMYouTubeLinkHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupLGMTikTokLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMTikTokLink = " ";
     } else {
@@ -226,7 +227,7 @@ export const startupLGMTikTokLinkHandler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLGMTwitterLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMTwitterLink = " ";
     } else {
@@ -241,7 +242,7 @@ export const startupLGMTwitterLinkHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupLGMOtherLink1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMOther1Link = " ";
     } else {
@@ -256,7 +257,7 @@ export const startupLGMOtherLink1Handler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLGMOtherLink2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMOther2Link = " ";
     } else {
@@ -271,7 +272,7 @@ export const startupLGMOtherLink2Handler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLGMOtherLink3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMOther3Link = " ";
     } else {
@@ -286,7 +287,7 @@ export const startupLGMOtherLink3Handler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (ve(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMEmail = " ";
     } else {
@@ -300,7 +301,7 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
   }
 })
 export const startupOfficialPhoneNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vp(ctx.message.text)) {
     ctx.scene.state.startupLGMPhoneNumber = ctx.message.text;
     console.log(ctx.scene.state.startupLGMPhoneNumber);
     const { data, error } = await fetchCities()
@@ -550,7 +551,7 @@ export const startupUGMSectorHandler = Telegraf.on(["photo", "text", "contact", 
   }
 })
 export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (ve(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUGMEmail = " ";
     } else {
@@ -563,7 +564,7 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
   }
 })
 export const startupUGMPhoneNumberHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vp(ctx.message.text)) {
     ctx.scene.state.startupUGMPhoneNumber = ctx.message.text;
     const { data, error } = await fetchCities()
     if (data) {
@@ -809,7 +810,7 @@ export const startupLREmployeeSizeHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupLRWebsiteHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRWebsite = " ";
     } else {
@@ -823,7 +824,7 @@ export const startupLRWebsiteHandler = Telegraf.on(["photo", "text", "contact", 
   }
 })
 export const startupLRFacebookLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRFacebookLink = " ";
     } else {
@@ -838,7 +839,7 @@ export const startupLRFacebookLinkHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupLRTelegramLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRTelegramLink = " ";
     } else {
@@ -853,7 +854,7 @@ export const startupLRTelegramLinkHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupLRYouTubeLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRYouTubeLink = " ";
     } else {
@@ -868,7 +869,7 @@ export const startupLRYouTubeLinkHandler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLRTikTokLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRTikTokLink = " ";
     } else {
@@ -883,7 +884,7 @@ export const startupLRTikTokLinkHandler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupLRTwitterLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRTwitterLink = " ";
     } else {
@@ -898,7 +899,7 @@ export const startupLRTwitterLinkHandler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupLROtherLink1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLROther1Link = " ";
     } else {
@@ -913,7 +914,7 @@ export const startupLROtherLink1Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupLROtherLink2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLROther2Link = " ";
     } else {
@@ -928,7 +929,7 @@ export const startupLROtherLink2Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupLROtherLink3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLROther3Link = " ";
     } else {
@@ -943,7 +944,7 @@ export const startupLROtherLink3Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (ve(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLREmail = " ";
     } else {
@@ -957,7 +958,7 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
   }
 })
 export const startupLROfficialPhoneNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vp(ctx.message.text)) {
     ctx.scene.state.startupLRPhoneNumber = ctx.message.text;
     console.log(ctx.scene.state.startupLRPhoneNumber);
     const { data, error } = await fetchCities()
@@ -1213,7 +1214,7 @@ export const startupUREmployeeSizeHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupURWebsiteHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupURWebsite = " ";
     } else {
@@ -1227,7 +1228,7 @@ export const startupURWebsiteHandler = Telegraf.on(["photo", "text", "contact", 
   }
 })
 export const startupURFacebookLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupURFacebookLink = " ";
     } else {
@@ -1257,7 +1258,7 @@ export const startupURTelegramLinkHandler = Telegraf.on(["photo", "text", "conta
   }
 })
 export const startupURYouTubeLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupURYouTubeLink = " ";
     } else {
@@ -1272,7 +1273,7 @@ export const startupURYouTubeLinkHandler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupURTikTokLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupURTikTokLink = " ";
     } else {
@@ -1287,7 +1288,7 @@ export const startupURTikTokLinkHandler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupURTwitterLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupURTwitterLink = " ";
     } else {
@@ -1302,7 +1303,7 @@ export const startupURTwitterLinkHandler = Telegraf.on(["photo", "text", "contac
   }
 })
 export const startupUROtherLink1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUROther1Link = " ";
     } else {
@@ -1317,7 +1318,7 @@ export const startupUROtherLink1Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupUROtherLink2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUROther2Link = " ";
     } else {
@@ -1332,7 +1333,7 @@ export const startupUROtherLink2Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupUROtherLink3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vw(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUROther3Link = " ";
     } else {
@@ -1347,7 +1348,7 @@ export const startupUROtherLink3Handler = Telegraf.on(["photo", "text", "contact
   }
 })
 export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (ve(ctx.message.text)) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUREmail = " ";
     } else {
@@ -1361,7 +1362,7 @@ export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "d
   }
 })
 export const startupUROfficialPhoneNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (vp(ctx.message.text)) {
     ctx.scene.state.startupURPhoneNumber = ctx.message.text;
     console.log(ctx.scene.state.startupURPhoneNumber);
     const { data, error } = await fetchCities()
@@ -1486,78 +1487,78 @@ export const startupSelectionActionHandler = async (ctx: any) => {
   const selectedStartup = ctx.match[0];
   console.log(selectedStartup);
   const { data, error } = await getUserByTelegramId({
-      telegram_id: JSON.stringify(ctx.from.id)
+    telegram_id: JSON.stringify(ctx.from.id)
   })
- if(data){
-  let checkUserEntity = data.users[0].user_entities;
-  if(checkUserEntity){
-      ctx.session.userSName = checkUserEntity.map((nam: any)=>(nam.entity["name"]))
-       console.log(ctx.session.userSName)
-      ctx.session.userSId = checkUserEntity.map((nam: any)=>nam.entity["id"])
-          console.log(ctx.session.userSId);
-    if(selectedStartup == 60){
-      ctx.session.selectedStartupName = ctx.session.userSName[0];
-     ctx.session.selectedStartupId = ctx.session.userSId[0];
-    }else if(selectedStartup == 61){
-      ctx.session.selectedStartupName = ctx.session.userSName[1];
-      ctx.session.selectedStartupId = ctx.session.userSId[1]; 
-    }else if(selectedStartup == 62){
-      ctx.session.selectedStartupName = ctx.session.userSName[2];
-      ctx.session.selectedStartupId = ctx.session.userSId[2]; 
+  if (data) {
+    let checkUserEntity = data.users[0].user_entities;
+    if (checkUserEntity) {
+      ctx.session.userSName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
+      console.log(ctx.session.userSName)
+      ctx.session.userSId = checkUserEntity.map((nam: any) => nam.entity["id"])
+      console.log(ctx.session.userSId);
+      if (selectedStartup == 60) {
+        ctx.session.selectedStartupName = ctx.session.userSName[0];
+        ctx.session.selectedStartupId = ctx.session.userSId[0];
+      } else if (selectedStartup == 61) {
+        ctx.session.selectedStartupName = ctx.session.userSName[1];
+        ctx.session.selectedStartupId = ctx.session.userSId[1];
+      } else if (selectedStartup == 62) {
+        ctx.session.selectedStartupName = ctx.session.userSName[2];
+        ctx.session.selectedStartupId = ctx.session.userSId[2];
+      }
+      else if (selectedStartup == 63) {
+        ctx.session.selectedStartupName = ctx.session.userSName[3];
+        ctx.session.selectedStartupId = ctx.session.userSId[3];
+      }
+      else if (selectedStartup == 64) {
+        ctx.session.selectedStartupName = ctx.session.userSName[4];
+        ctx.session.selectedStartupId = ctx.session.userSId[4];
+      }
+      else if (selectedStartup == 65) {
+        ctx.session.selectedStartupName = ctx.session.userSName[5];
+        ctx.session.selectedStartupId = ctx.session.userSId[5];
+      }
+      else if (selectedStartup == 66) {
+        ctx.session.selectedStartupName = ctx.session.userSName[6];
+        ctx.session.selectedStartupId = ctx.session.userSId[6];
+      }
+      else if (selectedStartup == 67) {
+        ctx.session.selectedStartupName = ctx.session.userSName[7];
+        ctx.session.selectedStartupId = ctx.session.userSId[7];
+      }
+      else if (selectedStartup == 68) {
+        ctx.session.selectedStartupName = ctx.session.userSName[8];
+        ctx.session.selectedStartupId = ctx.session.userSId[8];
+      }
+      else if (selectedStartup == 69) {
+        ctx.session.selectedStartupName = ctx.session.userSName[9];
+        ctx.session.selectedStartupId = ctx.session.userSId[9];
+      }
+      else if (selectedStartup == 60) {
+        ctx.session.selectedStartupName = ctx.session.userSName[10];
+        ctx.session.selectedStartupId = ctx.session.userSId[10];
+      }
+      else if (selectedStartup == 71) {
+        ctx.session.selectedStartupName = ctx.session.userSName[11];
+        ctx.session.selectedStartupId = ctx.session.userSId[11];
+      }
+      console.log(ctx.session.selectedStartupName);
+      console.log(ctx.session.selectedStartupId);
+      startupNameBold = ctx.session.selectedStartupName.bold();
+      await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditHandOverKeyboard)
+      await ctx.replyWithHTML("*************************************", {
+        reply_markup: {
+          keyboard: [[{ text: "Main Menu" }],], resize_keyboard: true, one_time_keyboard: true
+        }
+      })
     }
-    else if(selectedStartup == 63){ 
-      ctx.session.selectedStartupName = ctx.session.userSName[3];
-      ctx.session.selectedStartupId = ctx.session.userSId[3]; 
-    }
-    else if(selectedStartup == 64){
-      ctx.session.selectedStartupName = ctx.session.userSName[4];
-      ctx.session.selectedStartupId = ctx.session.userSId[4]; 
-    }
-    else if(selectedStartup == 65){
-      ctx.session.selectedStartupName = ctx.session.userSName[5];
-      ctx.session.selectedStartupId = ctx.session.userSId[5]; 
-    }
-    else if(selectedStartup == 66){
-      ctx.session.selectedStartupName = ctx.session.userSName[6];
-      ctx.session.selectedStartupId = ctx.session.userSId[6]; 
-    }
-    else if(selectedStartup == 67){
-      ctx.session.selectedStartupName = ctx.session.userSName[7];
-      ctx.session.selectedStartupId = ctx.session.userSId[7]; 
-    }
-    else if(selectedStartup == 68){
-      ctx.session.selectedStartupName = ctx.session.userSName[8];
-      ctx.session.selectedStartupId = ctx.session.userSId[8]; 
-    }
-    else if(selectedStartup == 69){
-      ctx.session.selectedStartupName = ctx.session.userSName[9];
-      ctx.session.selectedStartupId = ctx.session.userSId[9]; 
-    }
-    else if(selectedStartup == 60){
-      ctx.session.selectedStartupName = ctx.session.userSName[10];
-      ctx.session.selectedStartupId = ctx.session.userSId[10]; 
-    }
-    else if(selectedStartup == 71){
-      ctx.session.selectedStartupName = ctx.session.userSName[11];
-      ctx.session.selectedStartupId = ctx.session.userSId[11]; 
-    }
-  console.log(ctx.session.selectedStartupName);
-  console.log(ctx.session.selectedStartupId); 
-  startupNameBold = ctx.session.selectedStartupName.bold();
-await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,startupEditHandOverKeyboard)
- await ctx.replyWithHTML("*************************************",  {
-  reply_markup: {
-      keyboard:[[{text: "Main Menu"}],], resize_keyboard: true, one_time_keyboard: true
   }
- })
-  }    
-}
 }
 
 
 export const startupEditHandler = async (ctx: any) => {
   ctx.deleteMessage();
- await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`,startupEditKeyboard);
+  await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditKeyboard);
 }
 
 export const startupEditFieldHandler = async (ctx: any) => {
@@ -1568,44 +1569,44 @@ export const startupEditFieldHandler = async (ctx: any) => {
 
 export const startupEditSpecificFieldInitHandler = async (ctx: any) => {
   ctx.deleteMessage();
-console.log(ctx.session.tobeEditedStartupField, "hm")
-if(ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
- ctx.replyWithHTML("please enter the new name of your startup", cancelKeyboard);
-}else if(ctx.session.tobeEditedStartupField == "edit_employee_of_startup"){
-  ctx.replyWithHTML("please enter the new employee size of your startup", cancelKeyboard);
-}else if(ctx.session.tobeEditedStartupField == "edit_email_of_startup"){
-  ctx.replyWithHTML("please enter the new email of your startup", cancelKeyboard);
-}else if(ctx.session.tobeEditedStartupField == "edit_phone_of_startup"){
-  ctx.replyWithHTML("please enter the new phone no of your startup", cancelKeyboard);
-}else if(ctx.session.tobeEditedStartupField == "edit_location_of_startup"){
-  ctx.replyWithHTML("please enter the new location of your startup",cancelKeyboard);
-}else if(ctx.session.tobeEditedStartupField == "edit_websit_of_startup"){
-  ctx.replyWithHTML("please enter the new website of your startup", cancelKeyboard);
+  console.log(ctx.session.tobeEditedStartupField, "hm")
+  if (ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
+    ctx.replyWithHTML("please enter the new name of your startup", cancelKeyboard);
+  } else if (ctx.session.tobeEditedStartupField == "edit_employee_of_startup") {
+    ctx.replyWithHTML("please enter the new employee size of your startup", cancelKeyboard);
+  } else if (ctx.session.tobeEditedStartupField == "edit_email_of_startup") {
+    ctx.replyWithHTML("please enter the new email of your startup", cancelKeyboard);
+  } else if (ctx.session.tobeEditedStartupField == "edit_phone_of_startup") {
+    ctx.replyWithHTML("please enter the new phone no of your startup", cancelKeyboard);
+  } else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
+    ctx.replyWithHTML("please enter the new location of your startup", cancelKeyboard);
+  } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
+    ctx.replyWithHTML("please enter the new website of your startup", cancelKeyboard);
+  }
 }
-}
-export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
-if(ctx.message.text){
-  if(ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
-      ctx.scene.state.toBeEditedStartupNameField = ctx.message.text; 
-  }else if(ctx.session.tobeEditedStartupField == "edit_employee_of_startup"){
+export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    if (ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
+      ctx.scene.state.toBeEditedStartupNameField = ctx.message.text;
+    } else if (ctx.session.tobeEditedStartupField == "edit_employee_of_startup") {
       ctx.scene.state.tobeEditedStartupEmployeeSizeField = ctx.message.text;
-  }
-  else if(ctx.session.tobeEditedStartupField == "edit_email_of_startup"){
+    }
+    else if (ctx.session.tobeEditedStartupField == "edit_email_of_startup") {
       ctx.scene.state.tobeEditedStartupEmailField = ctx.message.text;
-  }
-  else if(ctx.session.tobeEditedStartupField == "edit_phone_of_startup"){
+    }
+    else if (ctx.session.tobeEditedStartupField == "edit_phone_of_startup") {
       ctx.scene.state.tobeEditedStartupPhoneField = ctx.message.text;
-  }
-  else if(ctx.session.tobeEditedStartupField == "edit_location_of_startup"){
+    }
+    else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
       ctx.scene.state.tobeEditedStartupLocationField = ctx.message.text;
-  }else if(ctx.session.tobeEditedStartupField == "edit_websit_of_startup"){
+    } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
       ctx.scene.state.tobeEditedStartupWebsiteField == ctx.message.text;
+    }
   }
-}
-ctx.replyWithHTML("you have successfully edited your startup", cancelKeyboard);
+  ctx.replyWithHTML("you have successfully edited your startup", cancelKeyboard);
 })
 
-export const startupEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"],async (ctx: any) => {
+export const startupEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
 
 })
 
@@ -1613,37 +1614,37 @@ export const startupEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text"
 
 
 
-export const startupHandOverHandler = async (ctx: any)=>{
+export const startupHandOverHandler = async (ctx: any) => {
   ctx.scene.enter("handOverStartupScene");
 }
 
-export const handOverStartupInitHandler = async (ctx: any)=>{
- ctx.deleteMessage();
- ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
+export const handOverStartupInitHandler = async (ctx: any) => {
+  ctx.deleteMessage();
+  ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
 }
-export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any)=>{
-if(ctx.message.text){
-ctx.scene.state.representativePhone = ctx.message.text;
-console.log(ctx.scene.state.representativePhone);
-let BoldRepNo = ctx.message.text.bold();
-ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
- reply_markup: {
-     keyboard: [
-         [{text: "Yes"}, {text: "No"}],
-     ],resize_keyboard: true, one_time_keyboard: true
- }
-})
-return ctx.wizard.next();
-}else{ 
- ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
-}
+export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.message.text) {
+    ctx.scene.state.representativePhone = ctx.message.text;
+    console.log(ctx.scene.state.representativePhone);
+    let BoldRepNo = ctx.message.text.bold();
+    ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+      reply_markup: {
+        keyboard: [
+          [{ text: "Yes" }, { text: "No" }],
+        ], resize_keyboard: true, one_time_keyboard: true
+      }
+    })
+    return ctx.wizard.next();
+  } else {
+    ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
+  }
 })
 export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
- if(ctx.message.text){
-     if(ctx.message.text == "Yes"){
-         ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
-     }else if(ctx.message.text == "No"){
-         ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
-     }
- }
+  if (ctx.message.text) {
+    if (ctx.message.text == "Yes") {
+      ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
+    } else if (ctx.message.text == "No") {
+      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
+    }
+  }
 })
