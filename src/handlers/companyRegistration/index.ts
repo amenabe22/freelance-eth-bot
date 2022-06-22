@@ -28,6 +28,10 @@ export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
     return ctx.scene.enter("companyRegistrationEditScene")
 }
 
+export const editCompanyRegistringGMHandler = async (ctx: any) => {
+    console.log(globalState, "state")
+    ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
+}
 export const editCompanyRegistringHandler = async (ctx: any) => {
     ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
 }
@@ -119,7 +123,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
-            return ctx.wizard.next();
+            // return ctx.wizard.next();
         })
         return ctx.wizard.next();
     } else {
@@ -128,6 +132,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
     }
 })
 export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    console.log(ctx.update.message.photo, "ddddd")
     if (ctx.update.message.photo) {
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
         const fname = `${ctx.from.id}.jpg`
@@ -341,7 +346,7 @@ export const companyEditInitHandler = async (ctx: any) => {
         case "hqs":
             const res = await fetchCities()
             if (res.data) {
-                const { cities } = data;
+                const { cities } = res.data;
                 let cnames = cities.map((nm: any) => nm.name);
                 ctx.session.cityNames = cnames
                 ctx.replyWithHTML("please enter location of your company head quarter.", {
