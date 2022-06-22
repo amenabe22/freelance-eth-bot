@@ -1646,4 +1646,4 @@ export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contac
          ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
      }
  }
-})
+}) 
