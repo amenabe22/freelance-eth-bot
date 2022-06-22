@@ -27,7 +27,7 @@ export const CompanyEditAction = {
     handler: hdlr.companyEditHandler
 }
 export const StartupEditAction = {
-    key: "edit-startup", 
+    key: "edit-startup",
     handler: hdlr.startupEditHandler,
 }
 export const CompanyEditFieldAction = {
@@ -180,5 +180,9 @@ export const editCompanyRegistrationCbAction = {
 
 export const editCompanyRegistringAction = {
     key: "editCompanyRegistring",
-    handler:hdlr.editCompanyRegistringHandler
+    handler: hdlr.editCompanyRegistringHandler
+}
+export const editCompanyRegistringGMAction = {
+    key: "editCompanyRegistringGM",
+    handler: hdlr.editCompanyRegistringGMHandler
 }
