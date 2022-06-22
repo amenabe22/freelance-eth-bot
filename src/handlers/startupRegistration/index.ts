@@ -1644,7 +1644,7 @@ export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contac
     if (ctx.message.text == "Yes") {
       ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
     } else if (ctx.message.text == "No") {
-      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
+      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard) 
     }
   }
 })
