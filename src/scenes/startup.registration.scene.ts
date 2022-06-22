@@ -86,7 +86,7 @@ export const startupRegistrationLRscene = new CoreScene(
 export const startupRegistrationURscene = new CoreScene(
   "startupRegistrationURscene",
   {
-  enter: hdlr.startupURNameHandler,
+    enter: hdlr.startupURInitHandler,
     handlers: [
       hdlr.startupURNameHandler,
       hdlr.startupURFoundersNameHandler,

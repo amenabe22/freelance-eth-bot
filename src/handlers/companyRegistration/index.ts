@@ -96,6 +96,9 @@ export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
     ctx.reply("submitted")
 }
 //register company with representative starts here
+export const companyRInitHandler = async (ctx: any) => {
+  ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
+}
 export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRName = ctx.message.text;
@@ -114,7 +117,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         const fname = `${ctx.from.id}.jpg`
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
-        download(downloadURL, `files/companyTradeLicencePhotos/${fname}`,).then(async () => {
+        download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
             return ctx.wizard.next();
         })
@@ -129,11 +132,10 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
-        download(downloadURL, `files/companyRepOrGMidPhotos/${fname}`,).then(async () => {
+        download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
             return ctx.wizard.next();
         })
-        return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard);
         return;
@@ -144,9 +146,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
         const companyStampedLetterPhoto = ctx.update.message.photo[0].file_id;
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyStampedLetterPhoto)
-        download(downloadURL, `files/companyStampedLetterPhotos/${fname}`,).then(async () => {
-            ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
-
+        download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
             const { data, error } = await fetchSectors()
             if (data) {
                 const { sectors } = data;
@@ -159,10 +159,10 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
                         }])), resize_keyboard: true, one_time_keyboard: true,
                     }),
                 })
+                return ctx.wizard.next();
             }
-            return ctx.wizard.next();
         })
-        return ctx.wizard.next();
+
     } else {
         ctx.replyWithHTML(`Please enter avalid stamped letter photo!`, cancelKeyboard);
         return;
@@ -209,11 +209,16 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
-        } else {
+            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            return ctx.wizard.next();
+        } else if(vw(ctx.message.text)) {
             ctx.scene.state.companyRWebsite = ctx.message.text;
+            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            return ctx.wizard.next();
+        } else{
+            ctx.replyWithHTML(`please enter a valid company website!`, companyRegisterOptionalKeyboard);
+            return;
         }
-        await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
-        return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
         return;
@@ -225,18 +230,22 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.scene.state.companyREmail = " ";
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        } else {
+        } else if(ve(ctx.message.text)) {
             ctx.scene.state.companyREmail = ctx.message.text;
             console.log(ctx.scene.state.companyREmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
+        } else{
+            ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+            return;
         }
     } else {
         ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+        return;
     }
 })
 export const companyOfficialPhoneNoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (vp(ctx.message.text)) {
         ctx.scene.state.companyRPhoneNumber = ctx.message.text;
         const { data, error } = await fetchCities()
         if (data) {
@@ -427,6 +436,9 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
         }
     }
 })
+export const companyGInitHandler = async (ctx: any) => {
+   ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
+}
 export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyGName = ctx.message.text;
@@ -528,13 +540,18 @@ export const companyEmployeeSizeGHandler = Telegraf.on(["photo", "text", "contac
     }
 })
 export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (vw(ctx.message.text)) {
+    if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
-        } else {
+            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+        } else if(vw(ctx.message.text)) {
             ctx.scene.state.companyGWebsite = ctx.message.text;
+            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+        }else{
+            ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
+            return; 
         }
-        await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+   
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
@@ -542,19 +559,23 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
     }
 })
 export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ve(ctx.message.text)) {
+    if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyGEmail = " ";
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        } else {
+        } else if(ve(ctx.message.text)) {
             ctx.scene.state.companyGEmail = ctx.message.text;
             console.log(ctx.scene.state.companyGEmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
+        }else{
+            ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+            return;  
         }
     } else {
         ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+        return;
     }
 })
 export const companyOfficialPhoneNoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {

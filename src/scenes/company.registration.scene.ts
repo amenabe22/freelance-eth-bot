@@ -16,7 +16,7 @@ export const companyRegistrationEditScene = new CoreScene(
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
   {
-    enter: hdlr.companyNameGHandler,
+    enter: hdlr.companyGInitHandler,
     handlers: [
       hdlr.companyNameGHandler,
       hdlr.companyTradeLicensePhotoGHandler,
@@ -37,11 +37,12 @@ export const companyRegistrationGMScene = new CoreScene(
 export const companyRegistrationRScene = new CoreScene(
   "companyRegistrationRScene",
   {
-    enter: null,
+    enter: hdlr.companyRInitHandler,
     handlers: [
       hdlr.companyNameRHandler,
       hdlr.companyTradeLicensePhotoRHandler,
       hdlr.companyIdPhotoRHandler,
+      hdlr.companyStampedLetterPhotoRHandler,
       hdlr.companyIndustrySectorRHandler,
       hdlr.companyEmployeeSizeRHandler,
       hdlr.companyWebsiteRHandler,
