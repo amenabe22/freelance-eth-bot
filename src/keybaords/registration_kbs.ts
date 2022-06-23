@@ -19,7 +19,7 @@ export const shareContactKeyboard = {
                 { text: "Cancel" }
             ],
         ],
-        one_time_keyboard: true,
+        resize_keyboard: true, one_time_keyboard: true,
     },
 }
 export const genderEditKeyboard = {
