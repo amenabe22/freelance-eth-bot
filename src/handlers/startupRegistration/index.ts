@@ -20,7 +20,7 @@ import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import path from "path";
 import fs from "fs";
-import { ve, vp, vw,vn } from "../../utils.py/validation";
+import { ve, vp, vw, vn } from "../../utils.py/validation";
 let globalState: any;
 
 let totalAddedFounders = 0
@@ -44,7 +44,7 @@ export const startupLGMFoundersHandler = Telegraf.on(["photo", "text", "contact"
     if (ctx.message.text == "Done") {
       ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
       return ctx.wizard.next();
-    } else if(vn(ctx.message.text)) {
+    } else if (vn(ctx.message.text)) {
       totalAddedFounders++
       ctx.scene.state[`startupLGMFounder${totalAddedFounders}`] = ctx.message.text;
       console.log(ctx.scene.state[`startupLGMFounder${totalAddedFounders}`])
@@ -53,7 +53,7 @@ export const startupLGMFoundersHandler = Telegraf.on(["photo", "text", "contact"
         return ctx.wizard.next();
       }
       ctx.replyWithHTML(`please enter startup founder name`, starupFounderKeyboard);
-    }else{
+    } else {
       ctx.replyWithHTML(`please enter a valid startup fundar name !`, starupFounderKeyboard);
       return;
     }
@@ -162,13 +162,13 @@ export const startupLGMWebsiteHandler = Telegraf.on(["photo", "text", "contact",
       ctx.scene.state.startupLGMWebsite = " ";
       ctx.replyWithHTML(`please enter Facebook link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if(vw(ctx.message.text)) {
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupLGMWebsite = ctx.message.text;
       ctx.replyWithHTML(`please enter Facebook link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else{
+    } else {
       ctx.replyWithHTML(`please enter a valid startup website!`, startupRegisterOptionalKeyboard);
-      return; 
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter a valid startup website!`, startupRegisterOptionalKeyboard);
@@ -181,15 +181,15 @@ export const startupLGMFacebookLinkHandler = Telegraf.on(["photo", "text", "cont
       ctx.scene.state.startupLGMFacebookLink = " ";
       ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if(vw(ctx.message.text)) {
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupLGMFacebookLink = ctx.message.text;
       console.log(ctx.scene.state.startupLGMFacebookLink);
       ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else{
+    } else {
       ctx.replyWithHTML(`please enter valid Facebook link of your startup!`, startupRegisterOptionalKeyboard);
       return;
-    }   
+    }
   } else {
     ctx.replyWithHTML(`please enter valid Facebook link of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -202,7 +202,7 @@ export const startupLGMTelegramLinkHandler = Telegraf.on(["photo", "text", "cont
       console.log(ctx.scene.state.startupLGMTelegramLink);
       ctx.replyWithHTML(`please enter YouTube link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if(vw(ctx.message.text)) {
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupLGMTelegramLink = ctx.message.text;
       console.log(ctx.scene.state.startupLGMTelegramLink);
       ctx.replyWithHTML(`please enter YouTube link of your startup.`, startupRegisterOptionalKeyboard);
@@ -210,7 +210,7 @@ export const startupLGMTelegramLinkHandler = Telegraf.on(["photo", "text", "cont
     } else {
       ctx.replyWithHTML(`please enter valid Telegram link of your startup!`, startupRegisterOptionalKeyboard);
       return;
-    }  
+    }
   } else {
     ctx.replyWithHTML(`please enter valid Telegram link of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -272,8 +272,8 @@ export const startupLGMTwitterLinkHandler = Telegraf.on(["photo", "text", "conta
       return ctx.wizard.next()
     } else {
       ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
-      return; 
-    }  
+      return;
+    }
   } else {
     ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -286,12 +286,12 @@ export const startupLGMOtherLink1Handler = Telegraf.on(["photo", "text", "contac
       console.log(ctx.scene.state.startupLGMOther1Link);
       ctx.replyWithHTML(`please enter other link 2 of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if (vw(ctx.message.text)){
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupLGMOther1Link = ctx.message.text;
       console.log(ctx.scene.state.startupLGMOther1Link);
       ctx.replyWithHTML(`please enter other link 2 of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else {
+    } else {
       ctx.replyWithHTML(`please enter valid link of your startup!`, startupRegisterOptionalKeyboard);
       return;
     }
@@ -333,10 +333,10 @@ export const startupLGMOtherLink3Handler = Telegraf.on(["photo", "text", "contac
       console.log(ctx.scene.state.startupLGMOther3Link);
       ctx.replyWithHTML(`please enter email of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else{
+    } else {
       ctx.replyWithHTML(`please enter valid other link 3 of your startup!`, startupRegisterOptionalKeyboard);
       return;
-    } 
+    }
   } else {
     ctx.replyWithHTML(`please enter valid other link 3 of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -354,7 +354,7 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       console.log(ctx.scene.state.startupLGMEmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
-    }else{
+    } else {
       ctx.replyWithHTML(`please enter valid email address of your startup!`, startupRegisterOptionalKeyboard);
     }
   } else {
@@ -418,6 +418,49 @@ export const startupHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "
   }
 })
 
+export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
+  const formData = new FormData();
+  const payload: any = {
+    name: globalState.startupUGMName,
+    founder: globalState.startupUGMFounder1,
+    phone: globalState.startupUGMPhoneNumber,
+    sector: globalState.startupLGMSectorID,
+    is_user_gm: globalState.statupLGMIsUserGm,
+    user_first_name: globalState.startupLGMUFN,
+    user_last_name: globalState.startupLGMULN,
+    employee_size: globalState.startupLGMEmployeeSize,
+    website: globalState.startupLGMWebsite,
+    email: globalState.startupLGMEmail,
+    user_phone: globalState.startupLGMUP,
+    head_quarter: globalState.startupLGMHeadQuarterLocation,
+    facebook_link: globalState.startupLGMFacebookLink,
+    telegram_link: globalState.startupLGMFacebookLink,
+    youtube_link: globalState.startupLGMFacebookLink,
+    tiktok_link: globalState.startupLGMFacebookLink,
+    twitter_link: globalState.startupLGMFacebookLink,
+    linkedin: globalState.startupLGMFacebookLink,
+    other_link_one: globalState.startupLGMFacebookLink,
+    other_link_two: globalState.startupLGMFacebookLink,
+    other_link_three: globalState.startupLGMFacebookLink,
+    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: null,
+    folder: 'entity',
+    origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+  }
+  for (const key of Object.keys(payload)) {
+    if (payload[key])
+      formData.append(key, payload[key])
+  }
+
+  const { data } = await registerStartup(formData)
+  if (data) {
+    console.log(data);
+    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+  }
+
+}
 export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
   const formData = new FormData();
   const payload: any = {
@@ -489,14 +532,14 @@ export const startupUGMFirstFounderNameHandler = Telegraf.on(["photo", "text", "
   if (ctx.message.text) {
     if (ctx.message.text == "Done") {
       ctx.replyWithHTML(`please enter trade license photo of your startup`, startupRegisterOptionalKeyboard);
-    } else if(vn(ctx.message.text)) {
+    } else if (vn(ctx.message.text)) {
       totalAddedFounders++
       ctx.scene.state[`startupUGMFounder${totalAddedFounders}Name`] = ctx.message.text;
       console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders}Name`])
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please enter trade license photo of your startup`, startupRegisterOptionalKeyboard);
         return ctx.wizard.next();
-      }else{
+      } else {
         ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
       }
     } else {
@@ -504,7 +547,7 @@ export const startupUGMFirstFounderNameHandler = Telegraf.on(["photo", "text", "
       return;
     }
 
-  }else{
+  } else {
     ctx.replyWithHTML("please enter a valid founder name!", starupFounderKeyboard);
     return;
   }
@@ -596,7 +639,7 @@ export const startupUGMWebsiteHandler = Telegraf.on(["photo", "text", "contact",
     } else {
       ctx.replyWithHTML(`please enter a valid website!`, startupRegisterOptionalKeyboard);
       return;
-    } 
+    }
   } else {
     ctx.replyWithHTML(`please enter a valid website!`, startupRegisterOptionalKeyboard);
     return;
@@ -653,7 +696,7 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
   }
 })
 export const startupUGMPhoneNumberHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  console.log(ctx.message.text, vp(ctx.message.text),"\n\n\n\n")
+  console.log(ctx.message.text, vp(ctx.message.text), "\n\n\n\n")
   if (vp(ctx.message.text)) {
     ctx.scene.state.startupUGMPhoneNumber = ctx.message.text;
     const { data, error } = await fetchCities()
@@ -733,9 +776,9 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     'other_link_one': globalState.startupUGMFacebookLink,
     'other_link_two': globalState.startupUGMFacebookLink,
     'other_link_three': globalState.startupUGMFacebookLink,
-    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
-    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
-    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'trade_license_photo': fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 
@@ -781,14 +824,14 @@ export const startupLRFoundersHandler = Telegraf.on(["photo", "text", "contact",
     if (ctx.message.text == "Done") {
       ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
       return ctx.wizard.next();
-    } else if(vn(ctx.message.text)){
+    } else if (vn(ctx.message.text)) {
       totalAddedFounders++
       ctx.scene.state[`startupLRFounder${totalAddedFounders}`] = ctx.message.text;
       console.log(ctx.scene.state[`startupLRFounder${totalAddedFounders}`]);
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
         return ctx.wizard.next();
-      }else {
+      } else {
         ctx.replyWithHTML(`please enter other founder name. `, starupFounderKeyboard);
       }
     } else {
@@ -918,7 +961,7 @@ export const startupLRWebsiteHandler = Telegraf.on(["photo", "text", "contact", 
       ctx.scene.state.startupLRWebsite = ctx.message.text;
       ctx.replyWithHTML(`please enter Facebook link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else {
+    } else {
       ctx.replyWithHTML(`please enter a valid startup website!`, startupRegisterOptionalKeyboard);
       return;
     }
@@ -942,7 +985,7 @@ export const startupLRFacebookLinkHandler = Telegraf.on(["photo", "text", "conta
       console.log(ctx.scene.state.startupLRFacebookLink);
       ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else {
+    } else {
       ctx.replyWithHTML(`please enter valid Facebook link of your startup!`, startupRegisterOptionalKeyboard);
       return;
     }
@@ -963,10 +1006,10 @@ export const startupLRTelegramLinkHandler = Telegraf.on(["photo", "text", "conta
       console.log(ctx.scene.state.startupLRTelegramLink);
       ctx.replyWithHTML(`please enter YouTube link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else {
+    } else {
       ctx.replyWithHTML(`please enter valid Telegram link of your startup!`, startupRegisterOptionalKeyboard);
       return;
-    } 
+    }
   } else {
     ctx.replyWithHTML(`please enter valid Telegram link of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -981,7 +1024,7 @@ export const startupLRYouTubeLinkHandler = Telegraf.on(["photo", "text", "contac
       console.log(ctx.scene.state.startupLRYouTubeLink);
       ctx.replyWithHTML(`please enter Tiktok link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if (vw(ctx.message.text)){
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupLRYouTubeLink = ctx.message.text;
       console.log(ctx.scene.state.startupLRYouTubeLink);
       ctx.replyWithHTML(`please enter Tiktok link of your startup.`, startupRegisterOptionalKeyboard);
@@ -1009,7 +1052,7 @@ export const startupLRTikTokLinkHandler = Telegraf.on(["photo", "text", "contact
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
-      return; 
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
@@ -1030,8 +1073,8 @@ export const startupLRTwitterLinkHandler = Telegraf.on(["photo", "text", "contac
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
-      return; 
-    } 
+      return;
+    }
   } else {
     ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -1072,7 +1115,7 @@ export const startupLROtherLink2Handler = Telegraf.on(["photo", "text", "contact
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter other link 2 of your startup!`, startupRegisterOptionalKeyboard);
-      return; 
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter other link 2 of your startup!`, startupRegisterOptionalKeyboard);
@@ -1114,7 +1157,7 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter valid email address of your startup!`, startupRegisterOptionalKeyboard);
-      return; 
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter valid email address of your startup!`, startupRegisterOptionalKeyboard);
@@ -1248,10 +1291,10 @@ export const startupURNameHandler = Telegraf.on(["photo", "text", "contact", "do
 })
 export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "contact", "document"], (ctx: any) => {
   if (ctx.message.text) {
-    if(ctx.message.text == "Done"){
+    if (ctx.message.text == "Done") {
       ctx.replyWithHTML("please enter startup trade license photo", startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    }else if (vn(ctx.message.text)){
+    } else if (vn(ctx.message.text)) {
       totalAddedFounders++
       ctx.scene.state[`startupURFounder${totalAddedFounders}Name`] = ctx.message.text;
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
@@ -1261,9 +1304,9 @@ export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "conta
       // increment total founders added
       ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
       return;
-    }else {
+    } else {
       ctx.replyWithHTML("please enter valid founder name!", starupFounderKeyboard);
-    return;
+      return;
     }
     // return ctx.wizard.next();
   } else {
@@ -1415,7 +1458,7 @@ export const startupURFacebookLinkHandler = Telegraf.on(["photo", "text", "conta
       console.log(ctx.scene.state.startupURFacebookLink);
       ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if (vw(ctx.message.text)){
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupURFacebookLink = ctx.message.text;
       console.log(ctx.scene.state.startupURFacebookLink);
       ctx.replyWithHTML(`please enter Telegram link of your startup.`, startupRegisterOptionalKeyboard);
@@ -1472,7 +1515,7 @@ export const startupURTikTokLinkHandler = Telegraf.on(["photo", "text", "contact
       console.log(ctx.scene.state.startupURTikTokLink);
       ctx.replyWithHTML(`please enter Twitter link of your startup.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } else if (vw(ctx.message.text)){
+    } else if (vw(ctx.message.text)) {
       ctx.scene.state.startupURTikTokLink = ctx.message.text;
       console.log(ctx.scene.state.startupURTikTokLink);
       ctx.replyWithHTML(`please enter Twitter link of your startup.`, startupRegisterOptionalKeyboard);
@@ -1500,7 +1543,7 @@ export const startupURTwitterLinkHandler = Telegraf.on(["photo", "text", "contac
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
-      return;   
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter valid TikTok link of your startup!`, startupRegisterOptionalKeyboard);
@@ -1563,7 +1606,7 @@ export const startupUROtherLink3Handler = Telegraf.on(["photo", "text", "contact
       return ctx.wizard.next();
     } else {
       ctx.replyWithHTML(`please enter valid other link 3 of your startup!`, startupRegisterOptionalKeyboard);
-      return;  
+      return;
     }
   } else {
     ctx.replyWithHTML(`please enter valid other link 3 of your startup!`, startupRegisterOptionalKeyboard);

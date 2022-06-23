@@ -72,7 +72,7 @@ export const confirmRegisteringStartupLGMAction = {
 }
 export const confirmRegisteringStartupUGMAction = {
     key: "confirmRegisteringStartupUGM",
-    handler: hdlr.confirmRegisterCompanyGMActionHanlder
+    handler: hdlr.confirmRegisterStartUpUGMHandler
 }
 export const confirmRegisterCompanyAction = {
     key: "confirmRegisterCompany",
