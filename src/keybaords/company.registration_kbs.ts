@@ -1,3 +1,12 @@
+export const registerCompanyREditKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Name", callback_data: "edr.name" }, { text: "Sector", callback_data: "edr.sector" }],
+            [{ text: "Phone", callback_data: "edr.phone" }, { text: "Website", callback_data: "edr.website" }],
+            [{ text: "Email", callback_data: "edr.email" }, { text: "HeadQuarters", callback_data: "edr.hqs" }]
+        ]
+    }
+}
 export const registerCompanyEditKeyboard = {
     reply_markup: {
         inline_keyboard: [

@@ -4,19 +4,22 @@ import {
     newCustomerRegistrationScene,
     registerJobSeekerScene
 } from "../scenes/registration.scene"
-import { companyRegistrationEditScene, 
-    companyRegistrationGMScene, 
-         companyRegistrationRScene,
-         handOverCompanyScene,
-         companyEditSpecificFieldScene
-        } from "../scenes/company.registration.scene"
-import { startupRegistrationLGMscene, 
-         startupRegistrationUGMscene,
-         startupRegistrationLRscene,
-         startupRegistrationURscene,
-         handOverStartupScene,
-         startupEditSpecificFieldScene,        
-      }from "../scenes/startup.registration.scene"
+import {
+    companyRegistrationEditScene,
+    companyRegistrationGMScene,
+    companyRegistrationRScene,
+    handOverCompanyScene,
+    companyEditSpecificFieldScene,
+    companyRegistrationREditScene
+} from "../scenes/company.registration.scene"
+import {
+    startupRegistrationLGMscene,
+    startupRegistrationUGMscene,
+    startupRegistrationLRscene,
+    startupRegistrationURscene,
+    handOverStartupScene,
+    startupEditSpecificFieldScene,
+} from "../scenes/startup.registration.scene"
 import { Scenes } from "telegraf"
 import { postAJobScene } from "../scenes/jobpost.scene"
 import { uploadCvScene } from "../scenes/uploadCv.scene"
@@ -35,6 +38,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         companyRegistrationRScene,
         editProfileRegistrationScene,
         companyRegistrationEditScene,
+        companyRegistrationREditScene,
         handOverCompanyScene,
         handOverStartupScene,
         companyEditSpecificFieldScene,
