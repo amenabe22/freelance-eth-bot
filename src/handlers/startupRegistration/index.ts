@@ -605,7 +605,7 @@ export const startupUGMWebsiteHandler = Telegraf.on(["photo", "text", "contact",
 export const startupUGMSectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupUGMSectorName = ctx.message.text;
-    const { data, error } = await fetchSector({ name: ctx.scene.state.startupLGMSectorName })
+    const { data, error } = await fetchSector({ name: ctx.scene.state.startupUGMSectorName })
     const { sectors } = data
     console.log(sectors.length, "bpt 1")
     if (!sectors.length) {
@@ -637,25 +637,23 @@ export const startupUGMSectorHandler = Telegraf.on(["photo", "text", "contact", 
   }
 })
 export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
-    if (ctx.message.text == "Skip") {
-      ctx.scene.state.startupUGMEmail = " ";
-      ctx.replyWithHTML("please enter phone number of your startup", cancelKeyboard);
-      return ctx.wizard.next();
-    } else if (ve(ctx.message.text)) {
-      ctx.scene.state.startupUGMEmail = ctx.message.text;
-      ctx.replyWithHTML("please enter phone number of your startup", cancelKeyboard);
-      return ctx.wizard.next();
-    } else {
-      ctx.replyWithHTML("please enter valid email!", startupRegisterOptionalKeyboard);
-      return;
-    }
+  console.log("\n", ctx.message.text, ve(ctx.message.text), "\nmessage\n")
+  if (ctx.message.text == "Skip") {
+    ctx.scene.state.startupUGMEmail = " ";
+    ctx.replyWithHTML("please enter phone number of your startup", cancelKeyboard);
+    return ctx.wizard.next();
+  }
+  else if (ve(ctx.message.text)) {
+    ctx.scene.state.startupUGMEmail = ctx.message.text;
+    ctx.replyWithHTML("please enter phone number of your startup", cancelKeyboard);
+    return ctx.wizard.next();
   } else {
     ctx.replyWithHTML("please enter valid email!", startupRegisterOptionalKeyboard);
     return;
   }
 })
 export const startupUGMPhoneNumberHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  console.log(ctx.message.text, vp(ctx.message.text),"\n\n\n\n")
   if (vp(ctx.message.text)) {
     ctx.scene.state.startupUGMPhoneNumber = ctx.message.text;
     const { data, error } = await fetchCities()
@@ -674,13 +672,13 @@ export const startupUGMPhoneNumberHandler = Telegraf.on(["photo", "text", "conta
     return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(`please enter a valid Phone No!`, cancelKeyboard);
-    return ctx.wizard.next();
+    return
   }
 })
 export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupUGMHeadQuarterLocation = ctx.message.text;
-    const { data, error } = await fetchCity({ name: ctx.scene.state.startupLGMHeadQuarterLocation })
+    const { data, error } = await fetchCity({ name: ctx.scene.state.startupUGMHeadQuarterLocation })
     const { cities } = data
     console.log(data, "bpt 1")
     if (!cities.length) {
@@ -1163,9 +1161,12 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       return;
     } else {
       let hqId = cities[0].id;
-      console.log("bpt 2", hqId)
       ctx.session.startupLRHeadQuarterLocation = hqId;
       ctx.scene.state.startupLRHeadQuarterLocation = hqId;
+      globalState = ctx.scene.state
+      console.log("****************************************************")
+      console.log(globalState)
+      console.log("****************************************************")
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterL}\nOther link: ${globalState.startupLROther1Link}`, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
@@ -1206,12 +1207,11 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     'other_link_one': globalState.startupLRFacebookLink,
     'other_link_two': globalState.startupLRFacebookLink,
     'other_link_three': globalState.startupLRFacebookLink,
-    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
-    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
-    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'trade_license_photo': fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-
   }
   for (const key of Object.keys(payload)) {
     if (payload[key])
@@ -1867,7 +1867,7 @@ export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contac
     if (ctx.message.text == "Yes") {
       ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
     } else if (ctx.message.text == "No") {
-      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard) 
+      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
     }
   }
 })

@@ -60,10 +60,10 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         type: "COMPANY",
         sector_id: companyGSectorID,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-        user_first_name: "",
-        user_last_name: "",
+        user_first_name: ctx.from.first_name,
+        user_last_name: ctx.from.first_name,
         employee_size: companyGEmployeeSize,
-        user_phone: null,
+        user_phone: companyGPhoneNumber,
         website: companyRWebsite,
         email: companyGEmail,
         is_user_gm: 'true',
@@ -74,23 +74,23 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         folder: "entity",
         telegram_id: JSON.stringify(ctx.from.id)
     }
-    console.log("****************************************************************************************")
-    console.log(payload)
-    console.log("****************************************************************************************")
+
     for (const key of Object.keys(payload)) {
         if (payload[key])
             formData.append(key, payload[key])
     }
 
-    const { data } = await registerCompany(formData)
-    console.log(data, "\n>>>>>")
-    if (data) {
-        ctx.deleteMessage();
-        ctx.reply("submitted")
-    } else {
-        ctx.reply("failed to register company")
-    }
-    console.log(globalState, "cr")
+    await registerCompany(formData).then(({ data }) => {
+        if (data) {
+            ctx.deleteMessage();
+            ctx.reply("submitted")
+        } else {
+            ctx.reply("failed to register company")
+        }
+        console.log(globalState, "cr")
+    }).catch(e => {
+        console.error(e)
+    })
 }
 export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
