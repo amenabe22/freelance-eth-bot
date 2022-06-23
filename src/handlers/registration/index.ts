@@ -9,7 +9,7 @@ import {
 } from "../../keybaords/registration_kbs";
 import { registerNewBotUser } from "../../services/registration";
 import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
-import { ve, vp } from "../../utils.py/validation";
+import { ve, vn } from "../../utils.py/validation";
 
 let globalState: any;
 
@@ -233,16 +233,18 @@ export const phoneNumberRegisterHandler = Telegraf.on(["text", "contact", "docum
 
 
 export const firstNameRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (vn(ctx.message.text)) {
         ctx.scene.state.firstNameRegister = ctx.message.text;
         console.warn("first", ctx.message.text)
         await ctx.replyWithHTML(`please enter your last name.`, cancelKeyboard);
         return ctx.wizard.next();
+    }else{
+        ctx.replyWithHTML('please enter a valid first name.', cancelKeyboard);
     }
 })
 
 export const lastNameRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (vn(ctx.message.text)) {
         ctx.scene.state.lastNameRegister = ctx.message.text;
         ctx.replyWithHTML("please enter your gender.", genderKeyboard);
         return ctx.wizard.next();
@@ -255,9 +257,14 @@ export const lastNameRegisterHandler = Telegraf.on(["text", "contact", "document
 export const genderRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
         if (ctx.message.text) {
-            ctx.scene.state.genderRegister = ctx.message.text;
-            ctx.reply("please enter your email.", skipKeyboard);
-            return ctx.wizard.next();
+            if(ctx.message.text == "male" && ctx.message.text == "female") {
+                ctx.scene.state.genderRegister = ctx.message.text;
+                ctx.reply("please enter your email.", skipKeyboard);
+                return ctx.wizard.next();
+            }else{
+                ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
+                return; 
+            }        
         } else {
             ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
             return;
