@@ -1677,7 +1677,7 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       console.log("bpt 2", hqId)
       ctx.session.startupURHeadQuarterLocation = hqId;
       ctx.scene.state.startupURHeadQuarterLocation = hqId;
-
+      globalState = ctx.scene.state
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterL}\nOther link: ${globalState.startupUROther1Link}`, registerStartupConfirmURKeyboard)
 
       ctx.reply("Finished here is your info please approve")
@@ -1718,9 +1718,9 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     'other_link_one': globalState.startupURFacebookLink,
     'other_link_two': globalState.startupURFacebookLink,
     'other_link_three': globalState.startupURFacebookLink,
-    'trade_license_photo': path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`),
-    'rep_id_photo': path.join(`files/GMIdphoto/${ctx.from.id}.jpg`),
-    'rep_letter_photo': path.join(`files/letterPhoto/${ctx.from.id}.jpg`),
+    'trade_license_photo': fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 
