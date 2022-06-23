@@ -221,13 +221,13 @@ export const ageInitHandler = Telegraf.on(["text", "contact", "document", "photo
 export const phoneNumberRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
         if (ctx.update.message.contact) {
-            ctx.replyWithHTML(`Please enter a valid phone number!`, shareContactKeyboard)
-            return;
-        } else {
             ctx.scene.state.phoneNumberRegister = ctx.update.message.contact.phone_number;
             console.log("condition passed: ", ctx.scene.state.phoneNumberRegister)
             await ctx.replyWithHTML("Please enter your first name.", cancelKeyboard);
-            return ctx.wizard.next();
+            return ctx.wizard.next();   
+        } else {
+            ctx.replyWithHTML(`Please enter a valid phone number!`, shareContactKeyboard)
+            return;
         }
     })
 
