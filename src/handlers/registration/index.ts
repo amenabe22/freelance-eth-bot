@@ -220,7 +220,7 @@ export const ageInitHandler = Telegraf.on(["text", "contact", "document", "photo
 
 export const phoneNumberRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
-        if (!vp(ctx.update.message.contact)) {
+        if (ctx.update.message.contact) {
             ctx.replyWithHTML(`Please enter a valid phone number!`, shareContactKeyboard)
             return;
         } else {
