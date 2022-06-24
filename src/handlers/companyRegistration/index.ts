@@ -49,7 +49,6 @@ export const editCompanyRegistringHandler = async (ctx: any) => {
 
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     ctx.answerCbQuery();
-    console.log(globalState, "state")
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
     })

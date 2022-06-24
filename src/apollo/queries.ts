@@ -63,7 +63,7 @@ export const USER = gql`
     }
   }
   `
-  export const USER_BY_PHONE = gql`
+export const USER_BY_PHONE = gql`
   query getUser($phone: String!) {
     users(where: { phone: { _eq: $phone } }) {
       id
@@ -72,7 +72,7 @@ export const USER = gql`
     }
   }
   `
-  export const USER_STARTUP = gql`
+export const USER_STARTUP = gql`
   query getUser($telegram_id: String!) {
     users(where: { telegram_id: { _eq: $telegram_id } }) {
       id
@@ -179,3 +179,31 @@ export const JOB_SEEKER = gql`
     }
   }
   `
+
+export const USER_EM = gql`query getUser($email: citext!) {
+    users(where: { email: { _eq: $email } }) {
+      id
+      first_name
+      last_name
+      phone
+      user_entities(where: { entity: { type: { _eq: "STARTUP" } } }) {
+        entity {
+          name
+        }
+      }
+  
+      job_seeker {
+        id
+        cv
+        availability_status
+        work_status {
+          id
+          name
+        }
+        education_level {
+          id
+          name
+        }
+      }
+    }
+  }`
