@@ -168,7 +168,7 @@ export const editCompanyRegistrationCbAction = {
 
 export const editCompanyRegistrationRCbAction = {
     key: ["edr.name", "edr.sector", "edr.phone", "edr.website", "edr.email", "edr.hqs"],
-    handler: hdlr.editCompanyRegistrationCbActionHandler
+    handler: hdlr.editCompanyRegistrationRCbActionHandler
 }
 export const editCompanyRegistringAction = {
     key: "editCompanyRegistring",
