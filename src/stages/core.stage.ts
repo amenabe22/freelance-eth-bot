@@ -45,7 +45,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         handOverStartupScene,
         companyEditSpecificFieldScene,
         startupEditSpecificFieldScene,
-        startupRegisteringEditLGMScene,
+        startupRegisteringEditLGMScene,        
         startupRegisteringEditLRScene,
         
     ]
