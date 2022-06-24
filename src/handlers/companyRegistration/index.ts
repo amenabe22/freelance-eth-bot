@@ -22,7 +22,6 @@ import { ve, vp, vw } from "../../utils.py/validation";
 let globalState: any;
 
 export const editCompanyRegistrationRCbActionHandler = async (ctx: any) => {
-    console.log("initiating edit RRRR scene")
     const target = ctx.match[0].split(".")[1];
     ctx.scene.state.editTarget = target;
     ctx.session.editTarget = target
@@ -545,7 +544,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
             case "name":
                 isG ? globalState.companyGName = response : globalState.companyRName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
             case "sector":
                 isG ? globalState.companyGSectorName = response : globalState.companyRSectorName = response
@@ -567,30 +566,32 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                     isG ? ctx.session.companyGSectorID = sectorId : ctx.session.companyRSectorID = sectorId;
                     isG ? ctx.scene.state.companyGSectorID = sectorId : ctx.scene.state.companyRSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                    ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                     break;
                 }
             case "phone":
                 isG ? globalState.companyGPhoneNumber = response : globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
             case "website":
                 isG ? globalState.companyGWebsite = response : globalState.companyRWebsite
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
             case "email":
                 isG ? globalState.companyGEmail = response : globalState.companyREmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
             case "hqs":
                 isG ? globalState.companyGHeadQuarterLocation = response : globalState.companyGHeadQuarterLocation = response
+                // console.log(globalState.companyGHeadQuarterLocation, "<====>", globalState.companyRHeadQuarterLocation)
+                console.log(globalState.companyGHeadQuarterLocation ?? globalState.companyRHeadQuarterLocation, "1")
                 const res = await fetchCity({
-                    name: isG ? ctx.scene.state.companyGHeadQuarterLocation
-                        : ctx.scene.state.companyRHeadQuarterLocation
+                    name: globalState.companyGHeadQuarterLocation ?? globalState.companyRHeadQuarterLocation
                 })
+                console.log(res, "2")
                 const { cities } = res.data
                 console.log(cities.length, "bpt 1")
                 if (!cities.length) {
@@ -605,10 +606,9 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                 } else {
                     let hqId = cities[0].id;
                     isG ? ctx.session.companyGHeadQuarterLocationId = hqId : ctx.session.companyRHeadQuarterLocationId = hqId;
-                    globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(isG? formatCompanyRegistrationMsg(globalState):formatCompanyRRegistrationMsg(globalState));
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
         }
     }
