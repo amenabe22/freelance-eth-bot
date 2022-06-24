@@ -21,6 +21,8 @@ import {
     startupEditSpecificFieldScene,
     startupRegisteringEditLGMScene,
     startupRegisteringEditLRScene,
+    startupRegisteringEditUGMScene,
+    startupRegisteringEditURScene,
 } from "../scenes/startup.registration.scene"
 import { Scenes } from "telegraf"
 import { postAJobScene } from "../scenes/jobpost.scene"
@@ -45,8 +47,11 @@ export const coreStage: any = new Scenes.Stage<any>(
         handOverStartupScene,
         companyEditSpecificFieldScene,
         startupEditSpecificFieldScene,
-        startupRegisteringEditLGMScene,        
+        startupRegisteringEditLGMScene,
+        startupRegisteringEditUGMScene,
         startupRegisteringEditLRScene,
+        startupRegisteringEditURScene,
+
         
     ]
 )

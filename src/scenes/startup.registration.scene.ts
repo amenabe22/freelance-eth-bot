@@ -31,15 +31,15 @@ export const startupRegisteringEditLRScene = new CoreScene(
    ]
   }
 )
-// export const startupRegisteringEditURScene = new CoreScene(
-//   "startupRegisteringEditURScene",
-//   {
-//    enter: hdlr.startupRegisteringEditURInitHandler,
-//    handlers: [
-//      hdlr.startupRegisteringEditURValueHandler
-//    ]
-//   }
-// )
+export const startupRegisteringEditURScene = new CoreScene(
+  "startupRegisteringEditURScene",
+  {
+   enter: hdlr.startupRegisteringEditURInitHandler,
+   handlers: [
+     hdlr.startupRegisteringEditURValueHandler
+   ]
+  }
+)
 
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
@@ -62,8 +62,8 @@ export const startupRegistrationLGMscene = new CoreScene(
       hdlr.startupLGMOtherLink2Handler,
       hdlr.startupLGMOtherLink3Handler,
       hdlr.startupLGMEmailHandler,
-      hdlr.startupOfficialPhoneNoHandler,
-      hdlr.startupHeadQuarterLocationHandler,
+      hdlr.startupLGMOfficialPhoneNoHandler,
+      hdlr.startupLGMHeadQuarterLocationHandler,
     ]
   },
   [
@@ -77,13 +77,22 @@ export const startupRegistrationUGMscene = new CoreScene(
   enter: hdlr.startupUGMInitHandler,
     handlers: [
       hdlr.startupUGMNameHandler,
-      hdlr.startupUGMFirstFounderNameHandler,
-      hdlr.startupUGMTradeLicenseHandler,
+      hdlr.startupUGMFoundersHandler,
+      hdlr.startupUGMTradeLicensePhotoHandler,
       hdlr.startupUGMIdPhotoHandler,
+      hdlr.startupUGMIndustrySectorHandler,
       hdlr.startupUGMEmployeeSizeHandler,
       hdlr.startupUGMWebsiteHandler,
-      hdlr.startupUGMSectorHandler,
-      hdlr.startupUGMPhoneNumberHandler,
+      hdlr.startupUGMFacebookLinkHandler,
+      hdlr.startupUGMTelegramLinkHandler,
+      hdlr.startupUGMYouTubeLinkHandler,
+      hdlr.startupUGMTikTokLinkHandler,
+      hdlr.startupUGMTwitterLinkHandler,
+      hdlr.startupUGMOtherLink1Handler,
+      hdlr.startupUGMOtherLink2Handler,
+      hdlr.startupUGMOtherLink3Handler,
+      hdlr.startupUGMEmailHandler,
+      hdlr.startupUGMOfficialPhoneNoHandler,
       hdlr.startupUGMHeadQuarterLocationHandler,
     ]
   },
