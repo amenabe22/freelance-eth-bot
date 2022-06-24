@@ -92,6 +92,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         console.error(e)
     })
 }
+
 export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
@@ -103,6 +104,8 @@ export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
 export const companyRInitHandler = async (ctx: any) => {
   ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
 }
+
+
 export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRName = ctx.message.text;
@@ -441,6 +444,8 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
         }
     }
 })
+
+
 export const companyGInitHandler = async (ctx: any) => {
    ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
 }

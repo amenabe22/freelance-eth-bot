@@ -143,74 +143,70 @@ export const registerCompanyToBeEditFieldGMKeyboard = {
     }
 }
 export const registerStartupToBeEditFieldLGMKeyboard = {
-
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Name", callback_data: "name_of_startupLGM" }, { text: "Founder Name 1", callback_data: "foundername1_of_startupLGM" }],
-            [{ text: "Founder Name 2", callback_data: "foundername2_of_startupLGM" }, { text: "Founder Name 3", callback_data: "foundername3_of_startupLGM" }],
-            [{ text: "Founder Name 4", callback_data: "foundername4_of_startupLGM" }, { text: "Founder Name 5", callback_data: "foundername5_of_startupLGM" }],
-            [{ text: "Employee Size", callback_data: "employee_Size_of_startupLGM" }, { text: "Sector", callback_data: "sector_of_startupLGM" }],
-            [{ text: "Facebook Link", callback_data: "facebook_link_of_startupLGM" }, { text: "Telegram Link", callback_data: "telegram_link_of_startupLGM" }],
-            [{ text: "YouTube Link", callback_data: "youtube_link_of_startupLGM" }, { text: "TikTok Link", callback_data: "tiktok_link_of_startupLGM" }],
-            [{ text: "TwitterLink", callback_data: "twitter_link_of_startupLGM" }, { text: "LinkedIn Link", callback_data: "linkedin_link_of_startupLGM" }],
-            [{ text: "Other Link 1", callback_data: "other_link1_of_startupLGM" }, { text: "Other Link 2", callback_data: "other_link2_of_startupLGM" }],
-            [{ text: "Other LInk 3", callback_data: "other_link3_of_startupLGM" }, { text: "Email", callback_data: "email_of_startupLGM" }],
-            [{ text: "Phone No", callback_data: "phone_no_of_startupLGM" }, { text: "Website", callback_data: "website_of_startupLGM" }],
-            [{ text: "Location", callback_data: "location_of_startupLGM" }],
+            [{ text: "Name", callback_data: "name.LGM" }, { text: "Founder Name 1", callback_data: "founderN1.LGM" }],
+            [{ text: "Founder Name 2", callback_data: "founderN2.LGM" }, { text: "Founder Name 3", callback_data: "founderN3.LGM" }],
+            [{ text: "Founder Name 4", callback_data: "founderN3.LGM" }, { text: "Founder Name 5", callback_data: "founderN5.LGM" }],
+            [{ text: "Employee Size", callback_data: "employee.LGM" }, { text: "Sector", callback_data: "sector.LGM" }],
+            [{ text: "Facebook Link", callback_data: "facebook.LGM" }, { text: "Telegram Link", callback_data: "telegram.LGM" }],
+            [{ text: "YouTube Link", callback_data: "youtube.LGM" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
+            [{ text: "TwitterLink", callback_data: "twitter.LGM" }, { text: "LinkedIn Link", callback_data: "linkedin.LGM" }],
+            [{ text: "Other Link 1", callback_data: "other1.LGM" }, { text: "Other Link 2", callback_data: "other2.LGM" }],
+            [{ text: "Other LInk 3", callback_data: "other3.LGM" }, { text: "Email", callback_data: "email.LGM" }],
+            [{ text: "Phone No", callback_data: "phone.LGM" }, { text: "Website", callback_data: "website.LGM" }],
+            [{ text: "Location", callback_data: "location.LGM" }],
         ]
     }
 }
 export const registerStartupToBeEditFieldUGMKeyboard = {
-
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Name", callback_data: "name_of_startupUGM" }, { text: "Founder Name 1", callback_data: "foundername1_of_startupUGM" }],
-            [{ text: "Founder Name 2", callback_data: "foundername2_of_startupUGM" }, { text: "Founder Name 3", callback_data: "foundername3_of_startupUGM" }],
-            [{ text: "Founder Name 4", callback_data: "foundername4_of_startupUGM" }, { text: "Founder Name 5", callback_data: "foundername5_of_startupUGM" }],
-            [{ text: "Employee Size", callback_data: "employee_Size_of_startupUGM" }, { text: "Sector", callback_data: "sector_of_startupUGM" }],
-            [{ text: "Facebook Link", callback_data: "facebook_link_of_startupUGM" }, { text: "Telegram Link", callback_data: "telegram_link_of_startupUGM" }],
-            [{ text: "YouTube Link", callback_data: "youtube_link_of_startupUGM" }, { text: "TikTok Link", callback_data: "tiktok_link_of_startupUGM" }],
-            [{ text: "TwitterLink", callback_data: "twitter_link_of_startupUGM" }, { text: "LinkedIn Link", callback_data: "linkedin_link_of_startupUGM" }],
-            [{ text: "Other Link 1", callback_data: "other_link1_of_startupUGM" }, { text: "Other Link 2", callback_data: "other_link2_of_startupUGM" }],
-            [{ text: "Other LInk 3", callback_data: "other_link3_of_startupUGM" }, { text: "Email", callback_data: "email_of_startupUGM" }],
-            [{ text: "Phone No", callback_data: "phone_no_of_startupUGM" }, { text: "Website", callback_data: "website_of_startupUGM" }],
-            [{ text: "Location", callback_data: "location_of_startupUGM" }],
+            [{ text: "Name", callback_data: "name.UGM" }, { text: "Founder Name 1", callback_data: "founderN1.UGM" }],
+            [{ text: "Founder Name 2", callback_data: "founderN2.UGM" }, { text: "Founder Name 3", callback_data: "founderN3.UGM" }],
+            [{ text: "Founder Name 4", callback_data: "founderN3.UGM" }, { text: "Founder Name 5", callback_data: "founderN5.UGM" }],
+            [{ text: "Employee Size", callback_data: "employee.UGM" }, { text: "Sector", callback_data: "sector.UGM" }],
+            [{ text: "Facebook Link", callback_data: "facebook.UGM" }, { text: "Telegram Link", callback_data: "telegram.UGM" }],
+            [{ text: "YouTube Link", callback_data: "youtube.UGM" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
+            [{ text: "TwitterLink", callback_data: "twitter.UGM" }, { text: "LinkedIn Link", callback_data: "linkedin.UGM" }],
+            [{ text: "Other Link 1", callback_data: "other1.UGM" }, { text: "Other Link 2", callback_data: "other2.UGM" }],
+            [{ text: "Other LInk 3", callback_data: "other3.UGM" }, { text: "Email", callback_data: "email.UGM" }],
+            [{ text: "Phone No", callback_data: "phone.UGM" }, { text: "Website", callback_data: "website.UGM" }],
+            [{ text: "Location", callback_data: "location.UGM" }],
         ]
     }
 }
 export const registerStartupToBeEditFieldLRKeyboard = {
-
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Name", callback_data: "name_of_startupLR" }, { text: "Founder Name 1", callback_data: "foundername1_of_startupLR" }],
-            [{ text: "Founder Name 2", callback_data: "foundername2_of_startupLR" }, { text: "Founder Name 3", callback_data: "foundername3_of_startupLR" }],
-            [{ text: "Founder Name 4", callback_data: "foundername4_of_startupLR" }, { text: "Founder Name 5", callback_data: "foundername5_of_startupLR" }],
-            [{ text: "Employee Size", callback_data: "employee_Size_of_startupLR" }, { text: "Sector", callback_data: "sector_of_startupLR" }],
-            [{ text: "Facebook Link", callback_data: "facebook_link_of_startupLR" }, { text: "Telegram Link", callback_data: "telegram_link_of_startupLR" }],
-            [{ text: "YouTube Link", callback_data: "youtube_link_of_startupLR" }, { text: "TikTok Link", callback_data: "tiktok_link_of_startupLR" }],
-            [{ text: "TwitterLink", callback_data: "twitter_link_of_startupLR" }, { text: "LinkedIn Link", callback_data: "linkedin_link_of_startupLR" }],
-            [{ text: "Other Link 1", callback_data: "other_link1_of_startupLR" }, { text: "Other Link 2", callback_data: "other_link2_of_startupLR" }],
-            [{ text: "Other LInk 3", callback_data: "other_link3_of_startupLR" }, { text: "Email", callback_data: "email_of_startupLR" }],
-            [{ text: "Phone No", callback_data: "phone_no_of_startupLR" }, { text: "Website", callback_data: "website_of_startupLR" }],
-            [{ text: "Location", callback_data: "location_of_startupLR" }],
+            [{ text: "Name", callback_data: "name.LR" }, { text: "Founder Name 1", callback_data: "founderN1.LR" }],
+            [{ text: "Founder Name 2", callback_data: "founderN2.LR" }, { text: "Founder Name 3", callback_data: "founderN3.LR" }],
+            [{ text: "Founder Name 4", callback_data: "founderN3.LR" }, { text: "Founder Name 5", callback_data: "founderN5.LR" }],
+            [{ text: "Employee Size", callback_data: "employee.LR" }, { text: "Sector", callback_data: "sector.LR" }],
+            [{ text: "Facebook Link", callback_data: "facebook.LR" }, { text: "Telegram Link", callback_data: "telegram.LR" }],
+            [{ text: "YouTube Link", callback_data: "youtube.LR" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
+            [{ text: "TwitterLink", callback_data: "twitter.LR" }, { text: "LinkedIn Link", callback_data: "linkedin.LR" }],
+            [{ text: "Other Link 1", callback_data: "other1.LR" }, { text: "Other Link 2", callback_data: "other2.LR" }],
+            [{ text: "Other LInk 3", callback_data: "other3.LR" }, { text: "Email", callback_data: "email.LR" }],
+            [{ text: "Phone No", callback_data: "phone.LR" }, { text: "Website", callback_data: "website.LR" }],
+            [{ text: "Location", callback_data: "location.LR" }],
         ]
     }
 }
 export const registerStartupToBeEditFieldURKeyboard = {
-
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Name", callback_data: "name_of_startupUR" }, { text: "Founder Name 1", callback_data: "foundername1_of_startupUR" }],
-            [{ text: "Founder Name 2", callback_data: "foundername2_of_startupUR" }, { text: "Founder Name 3", callback_data: "foundername3_of_startupUR" }],
-            [{ text: "Founder Name 4", callback_data: "foundername4_of_startupUR" }, { text: "Founder Name 5", callback_data: "foundername5_of_startupUR" }],
-            [{ text: "Employee Size", callback_data: "employee_Size_of_startupUR" }, { text: "Sector", callback_data: "sector_of_startupUR" }],
-            [{ text: "Facebook Link", callback_data: "facebook_link_of_startupUR" }, { text: "Telegram Link", callback_data: "telegram_link_of_startupUR" }],
-            [{ text: "YouTube Link", callback_data: "youtube_link_of_startupUR" }, { text: "TikTok Link", callback_data: "tiktok_link_of_startupUR" }],
-            [{ text: "TwitterLink", callback_data: "twitter_link_of_startupUR" }, { text: "LinkedIn Link", callback_data: "linkedin_link_of_startupUR" }],
-            [{ text: "Other Link 1", callback_data: "other_link1_of_startupUR" }, { text: "Other Link 2", callback_data: "other_link2_of_startupUR" }],
-            [{ text: "Other LInk 3", callback_data: "other_link3_of_startupUR" }, { text: "Email", callback_data: "email_of_startupUR" }],
-            [{ text: "Phone No", callback_data: "phone_no_of_startupUR" }, { text: "Website", callback_data: "website_of_startupUR" }],
-            [{ text: "Location", callback_data: "location_of_startupUR" }],
+            [{ text: "Name", callback_data: "name.UR" }, { text: "Founder Name 1", callback_data: "founderN1.UR" }],
+            [{ text: "Founder Name 2", callback_data: "founderN2.UR" }, { text: "Founder Name 3", callback_data: "founderN3.UR" }],
+            [{ text: "Founder Name 4", callback_data: "founderN3.UR" }, { text: "Founder Name 5", callback_data: "founderN5.UR" }],
+            [{ text: "Employee Size", callback_data: "employee.UR" }, { text: "Sector", callback_data: "sector.UR" }],
+            [{ text: "Facebook Link", callback_data: "facebook.UR" }, { text: "Telegram Link", callback_data: "telegram.UR" }],
+            [{ text: "YouTube Link", callback_data: "youtube.UR" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
+            [{ text: "TwitterLink", callback_data: "twitter.UR" }, { text: "LinkedIn Link", callback_data: "linkedin.UR" }],
+            [{ text: "Other Link 1", callback_data: "other1.UR" }, { text: "Other Link 2", callback_data: "other2.UR" }],
+            [{ text: "Other LInk 3", callback_data: "other3.UR" }, { text: "Email", callback_data: "email.UR" }],
+            [{ text: "Phone No", callback_data: "phone.UR" }, { text: "Website", callback_data: "website.UR" }],
+            [{ text: "Location", callback_data: "location.UR" }],
         ]
     }
 }

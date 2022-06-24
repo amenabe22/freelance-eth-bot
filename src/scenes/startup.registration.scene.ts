@@ -3,6 +3,44 @@ import { CoreScene } from "./scene"
 import  {companyRegistraionCancel}  from "../handlers/callbacks"
 import { handOverStartupInitHandler, startupEditSpecificFieldInitHandler } from "../handlers"
 
+
+export const startupRegisteringEditLGMScene = new CoreScene(
+             "startupRegisteringEditLGMScene",
+             {
+              enter: hdlr.startupRegisteringEditLGMInitHandler,
+              handlers: [
+                hdlr.startupRegisteringEditLGMValueHandler
+              ]
+             }
+)
+export const startupRegisteringEditUGMScene = new CoreScene(
+  "startupRegisteringEditUGMScene",
+  {
+   enter: hdlr.startupRegisteringEditUGMInitHandler,
+   handlers: [
+     hdlr.startupRegisteringEditUGMValueHandler
+   ]
+  }
+)
+export const startupRegisteringEditLRScene = new CoreScene(
+  "startupRegisteringEditLRScene",
+  {
+   enter: hdlr.startupRegisteringEditLRInitHandler,
+   handlers: [
+     hdlr.startupRegisteringEditLRValueHandler
+   ]
+  }
+)
+// export const startupRegisteringEditURScene = new CoreScene(
+//   "startupRegisteringEditURScene",
+//   {
+//    enter: hdlr.startupRegisteringEditURInitHandler,
+//    handlers: [
+//      hdlr.startupRegisteringEditURValueHandler
+//    ]
+//   }
+// )
+
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
   {

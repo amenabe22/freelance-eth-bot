@@ -27,17 +27,13 @@ export const bot = new CoreBot(
         act.CompanySelectionAction,
         act.UnlicensedStartupAction,
         act.RegisterStartupLGMAction,
-        act.RegisterStartupUGMAction,
+        act.RegisterStartupUGMAction, 
         act.RegisterStartupLRAction,
         act.RegisterStartupURAction,
         act.confirmRegisteringStartupLGMAction,
         act.confirmRegisteringStartupUGMAction,
         act.confirmRegisteringStartupLRAction,
         act.confirmRegisteringStartupURAction,
-        act.editRegisteringStartupLGMAction,
-        act.editRegisteringStartupUGMAction,
-        act.editRegisteringStartupLRAction,
-        act.editRegisteringStartupURAction,
         act.RegisterWithAgeAction,
         act.RegisterUserHandlerDob,
         act.AmharicSelectionAction,
@@ -52,13 +48,19 @@ export const bot = new CoreBot(
         act.confirmRegisterCompanyGMAction,
         act.editCompanyRegistringAction,
         act.editCompanyRegistrationCbAction,
-        act.editCompanyRegistringGMAction
+        act.editCompanyRegistringGMAction,
+        act.editStartupRegisteringLGMAction,
+        act.editStartupRegisteringUGMAction,
+        act.editStartupRegisteringLGMInitAction,
+        act.editStartupRegisteringLRInitAction,
+        act.editStartupRegisteringURInitAction
+        
     ],
     // register commands
-    [
+    [ 
         StartCommand
     ],
-    // register core callbacks 
+    // register core callbacks  
     [
         cb.companyStartup,
         cb.company,
@@ -78,6 +80,6 @@ export const bot = new CoreBot(
         cb.handleCvUploadSelection,
         cb.employerMenuSelection,
         cb.postJobMenuSelection
-    ]
+    ] 
 );
 
