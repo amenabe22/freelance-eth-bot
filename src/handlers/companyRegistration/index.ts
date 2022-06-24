@@ -604,7 +604,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                             keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
                                 text: x,
                             }])), resize_keyboard: true, one_time_keyboard: true,
-                        }),
+                        }), 
                     })
                     return;
                 } else {
