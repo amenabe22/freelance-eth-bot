@@ -9,14 +9,14 @@ import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
   registerStartupConfirmLRKeyboard,
-  registerStartupConfirmURKeyboard,
+  registerStartupConfirmURKeyboard, 
   startupRegisterOptionalKeyboard,
   starupFounderKeyboard,
   registerStartupToBeEditFieldLGMKeyboard,
   registerStartupToBeEditFieldUGMKeyboard,
   registerStartupToBeEditFieldLRKeyboard,
   registerStartupToBeEditFieldURKeyboard,
-  // startupCompanyEditKeyboard,
+  // startupCompanyEditKeyboard, 
   startupEditHandOverKeyboard,
   startupEditKeyboard
 } from "../../keybaords/company.registration_kbs"
@@ -155,12 +155,13 @@ export const startupLGMEmployeeSizeHandler = Telegraf.on(["photo", "text", "cont
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLGMEmployeeSize = " ";
       ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     } else {
       ctx.scene.state.startupLGMEmployeeSize = ctx.message.text;
+      console.log(ctx.scene.state.startupLGMEmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     }
-    console.log(ctx.scene.state.startupLGMEmployeeSize);
-    ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -907,12 +908,13 @@ export const startupUGMEmployeeSizeHandler = Telegraf.on(["photo", "text", "cont
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUGMEmployeeSize = " ";
       ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     } else {
       ctx.scene.state.startupUGMEmployeeSize = ctx.message.text;
-    }
-    console.log(ctx.scene.state.startupUGMEmployeeSize);
-    ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
+      console.log(ctx.scene.state.startupUGMEmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
+    } 
   } else {
     ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -1671,12 +1673,15 @@ export const startupLREmployeeSizeHandler = Telegraf.on(["photo", "text", "conta
   if (ctx.message.text) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLREmployeeSize = " ";
+      console.log(ctx.scene.state.startupLREmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     } else {
       ctx.scene.state.startupLREmployeeSize = ctx.message.text;
+      console.log(ctx.scene.state.startupLREmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     }
-    console.log(ctx.scene.state.startupLREmployeeSize);
-    ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -1743,8 +1748,6 @@ export const startupLRTelegramLinkHandler = Telegraf.on(["photo", "text", "conta
     return;
   }
 })
-
-
 export const startupLRYouTubeLinkHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     if (ctx.message.text == "Skip") {
@@ -2414,12 +2417,15 @@ export const startupUREmployeeSizeHandler = Telegraf.on(["photo", "text", "conta
   if (ctx.message.text) {
     if (ctx.message.text == "Skip") {
       ctx.scene.state.startupUREmployeeSize = " ";
+      console.log(ctx.scene.state.startupUREmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     } else {
       ctx.scene.state.startupUREmployeeSize = ctx.message.text;
+      console.log(ctx.scene.state.startupUREmployeeSize);
+      ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
+      return ctx.wizard.next();
     }
-    console.log(ctx.scene.state.startupUREmployeeSize);
-    ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
-    return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -2672,7 +2678,6 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       ctx.scene.state.startupURHeadQuarterLocation = hqId;
       globalState = ctx.scene.state
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link: ${globalState.startupUROther1Link}`, registerStartupConfirmURKeyboard)
-
       ctx.reply("Finished here is your info please approve")
       ctx.scene.leave()
     }
