@@ -55,6 +55,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
             companyGSectorID,
             companyGEmployeeSize,
             companyRWebsite,
+            companyGWebsite,
             companyGEmail,
             companyGPhoneNumber,
             companyGHeadQuarterLocation,
@@ -63,24 +64,23 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
 
     const formData = new FormData()
     const payload: any = {
-        name: companyGName.toString(),
-        phone: companyGPhoneNumber.toString(),
-        type: "COMPANY".toString(),
-        sector_id: companyGSectorID.toString(),
+        name: companyGName,
+        phone: companyGPhoneNumber,
+        sector_id: companyGSectorID,
+        is_user_gm: 'true',
+        type: 'COMPANY',
+        user_first_name: ctx.from.first_name,
+        user_last_name: ctx.from.first_name,
+        employee_size: companyGEmployeeSize,
+        website: companyGWebsite,
+        email: companyGEmail,
+        user_phone: `${companyGPhoneNumber}`,
+        head_quarter: companyGHeadQuarterLocationId,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-        user_first_name: ctx.from.first_name.toString(),
-        user_last_name: ctx.from.first_name.toString(),
-        employee_size: companyGEmployeeSize ? companyGEmployeeSize.toString() : null,
-        user_phone: companyGPhoneNumber ? companyGPhoneNumber.toString() : null,
-        website: companyRWebsite ? companyRWebsite.toString() : null,
-        email: companyGEmail ? companyGEmail.toString() : null,
-        is_user_gm: 'true'.toString(),
-        head_quarter: companyGHeadQuarterLocationId ? companyGHeadQuarterLocationId.toString() : null,
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
         rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-        // rep_letter_photo:  fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-        folder: "entity",
-        telegram_id: JSON.stringify(ctx.from.id)
+        rep_letter_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+        'folder': 'entity',
     }
 
     for (const key of Object.keys(payload)) {
@@ -290,7 +290,7 @@ export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", 
     if (ctx.message.text) {
         ctx.scene.state.companyRHeadQuarterLocation = ctx.message.text;
         console.log("..................................................")
-        console.log(ctx.scene.state.companyRHeadQuarterLocation,"dawww")
+        console.log(ctx.scene.state.companyRHeadQuarterLocation, "dawww")
         console.log("..................................................")
         const { data, error } = await fetchCity({ name: ctx.scene.state.companyRHeadQuarterLocation })
         const { cities } = data

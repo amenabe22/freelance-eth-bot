@@ -497,8 +497,7 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     other_link_three: globalState.startupLGMFacebookLink,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: null,
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1207,8 +1206,7 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     other_link_three: globalState.startupUGMFacebookLink,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: null,
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1250,8 +1248,7 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     other_link_three: globalState.startupUGMFacebookLink,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: null,
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -2719,8 +2716,8 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-
   }
+  
   for (const key of Object.keys(payload)) {
     if (payload[key])
       formData.append(key, payload[key])
