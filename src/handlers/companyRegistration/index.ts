@@ -14,7 +14,7 @@ import {
     companyEditKeyboard,
     registerCompanyREditKeyboard
 } from "../../keybaords/company.registration_kbs";
-import { companyHandOver, registerCompany } from "../../services/company.registration";
+import { companyHandOver, registerCompany , companyEdit} from "../../services/company.registration";
 import { formatCompanyRegistrationMsg, formatCompanyRRegistrationMsg } from "../../utils.py/formatMessage";
 import path from "path";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
@@ -905,6 +905,13 @@ export const companyEditHandler = async (ctx: any) => {
 
 export const comanyEditFieldHandler = async (ctx: any) => {
     ctx.session.tobeEditedCompanyField = ctx.match[0];
+    console.log(ctx.session.selectedCompanyId, "this is company id");
+    const { data, error } = await fetchCities()
+    if (data) {
+        const { cities } = data;
+        let cnames = cities.map((nm: any) => nm.name);
+        ctx.session.cityNames = cnames;
+    }
     ctx.scene.enter("companyEditSpecificFieldScene")
 }
 
@@ -920,7 +927,13 @@ export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
     } else if (ctx.session.tobeEditedCompanyField == "edit_phone_of_company") {
         ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
     } else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
-        ctx.replyWithHTML("please enter the new location of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new location of your company", {
+            reply_markup: JSON.stringify({
+                keyboard: ctx.session.cityNames.map((x: string, _: string) => ([{
+                    text: x,
+                }])), resize_keyboard: true, one_time_keyboard: true,
+            }),
+        });
     } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
         ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
     }
@@ -929,22 +942,119 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
     if (ctx.message.text) {
         if (ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
             ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text;
+            console.log(ctx.session.selectedCompanyId)
+            const { data, errors } = await companyEdit({
+                "id": ctx.session.selectedCompanyId,
+                "set": {
+                    "name": ctx.scene.state.toBeEditedCompanyNameField
+                }
+
+            })
+            if (errors) {
+                console.log(errors);
+            } else {
+                console.log(data);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            }
+
         } else if (ctx.session.tobeEditedCompanyField == "edit_employee_of_company") {
             ctx.scene.state.tobeEditedCompanyEmployeeSizeField = ctx.message.text;
+            const { data, errors } = await companyEdit({
+                "id": ctx.session.selectedCompanyId,
+                "set": {
+                    "employee_size": ctx.scene.state.tobeEditedCompanyEmployeeSizeField
+                }
+
+            })
+            if (errors) {
+                console.log(errors);
+            } else {
+                console.log(data);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            }
         }
         else if (ctx.session.tobeEditedCompanyField == "edit_email_of_company") {
             ctx.scene.state.tobeEditedCompanyEmailField = ctx.message.text;
+            const { data, errors } = await companyEdit({
+                "id": ctx.session.selectedCompanyId,
+                "set": {
+                    "email": ctx.scene.state.tobeEditedCompanyEmailField
+                }
+
+            })
+            if (errors) {
+                console.log(errors);
+            } else {
+                console.log(data);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            }
         }
+
         else if (ctx.session.tobeEditedCompanyField == "edit_phone_of_company") {
             ctx.scene.state.tobeEditedCompanyPhoneField = ctx.message.text;
-        }
-        else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
+            const { data, errors } = await companyEdit({
+                "id": ctx.session.selectedCompanyId,
+                "set": {
+                    "phone": ctx.scene.state.tobeEditedCompanyPhoneField
+                }
+
+            })
+            if (errors) {
+                console.log(errors);
+            } else {
+                console.log(data);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            }
+        } else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
             ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
+            const { data, error } = await fetchCity({ name: ctx.scene.state.tobeEditedCompanyLocationField })
+            const { cities } = data
+            console.log(cities.length, "bpt 1")
+            if (!cities.length) {
+                ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
+                    reply_markup: JSON.stringify({
+                        keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+                            text: x,
+                        }])), resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+                return;
+            } else {
+                let hqId = cities[0].id;
+                ctx.session.companyGHeadQuarterLocationId = hqId;
+                ctx.scene.state.companyGHeadQuarterLocationId = hqId;
+                const { data, errors } = await companyEdit({
+                    "id": ctx.session.selectedCompanyId,
+                    "set": {
+                        "head_quarter": ctx.scene.state.companyGHeadQuarterLocationId
+                    }
+    
+                })
+                if (errors) {
+                    console.log(errors);
+                } else {
+                    console.log(data);
+                    ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                }
+            }
+        }
+            
         } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
             ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
+            const { data, errors } = await companyEdit({
+                "id": ctx.session.selectedCompanyId,
+                "set": {
+                    "website": ctx.scene.state.tobeEditedCompanyWebsiteField
+                }
+
+            })
+            if (errors) {
+                console.log(errors);
+            } else {
+                console.log(data);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            }
         }
-    }
-    ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
 })
 
 export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {

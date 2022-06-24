@@ -28,6 +28,14 @@ export const COMPANY_HANDOVER = gql`mutation ($object: entity_handovers_insert_i
   }
 }`
 
+export const COMPANY_EDIT = gql`mutation($id: uuid!, $set: entities_set_input!) {
+  update_entity(pk_columns: {
+    id: $id
+  }, _set: $set) {
+    id
+  }
+}`
+
 export const USER = gql`
   query getUser($telegram_id: String!) {
     users(where: { telegram_id: { _eq: $telegram_id } }) {

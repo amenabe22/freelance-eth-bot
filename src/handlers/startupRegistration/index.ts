@@ -20,7 +20,7 @@ import {
   startupEditHandOverKeyboard,
   startupEditKeyboard
 } from "../../keybaords/company.registration_kbs"
-import { companyHandOver } from "../../services/company.registration";
+import { companyHandOver , companyEdit} from "../../services/company.registration";
 
 import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
@@ -3100,6 +3100,12 @@ export const startupEditHandler = async (ctx: any) => {
 export const startupEditFieldHandler = async (ctx: any) => {
   ctx.session.tobeEditedStartupField = ctx.match[0];
   console.log(ctx.session.tobeEditedStartupField);
+  const { data, error } = await fetchCities()
+  if (data) {
+      const { cities } = data;
+      let cnames = cities.map((nm: any) => nm.name);
+      ctx.session.cityNames = cnames;
+  }
   ctx.scene.enter("startupEditSpecificFieldScene")
 }
 
@@ -3115,7 +3121,13 @@ export const startupEditSpecificFieldInitHandler = async (ctx: any) => {
   } else if (ctx.session.tobeEditedStartupField == "edit_phone_of_startup") {
     ctx.replyWithHTML("please enter the new phone no of your startup", cancelKeyboard);
   } else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
-    ctx.replyWithHTML("please enter the new location of your startup", cancelKeyboard);
+    ctx.replyWithHTML("please enter the new location of your company", {
+      reply_markup: JSON.stringify({
+          keyboard: ctx.session.cityNames.map((x: string, _: string) => ([{
+              text: x,
+          }])), resize_keyboard: true, one_time_keyboard: true,
+      }),
+  });
   } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
     ctx.replyWithHTML("please enter the new website of your startup", cancelKeyboard);
   }
@@ -3124,22 +3136,117 @@ export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
   if (ctx.message.text) {
     if (ctx.session.tobeEditedStartupField == "edit_name_of_startup") {
       ctx.scene.state.toBeEditedStartupNameField = ctx.message.text;
+      console.log(ctx.session.selectedStartupId)
+      const { data, errors } = await companyEdit({
+          "id": ctx.session.selectedStartupId,
+          "set": {
+              "name": ctx.scene.state.toBeEditedStartupNameField
+          }
+
+      })
+      if (errors) {
+          console.log(errors);
+      } else {
+          console.log(data);
+          ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+      }
     } else if (ctx.session.tobeEditedStartupField == "edit_employee_of_startup") {
       ctx.scene.state.tobeEditedStartupEmployeeSizeField = ctx.message.text;
+      const { data, errors } = await companyEdit({
+          "id": ctx.session.selectedStartupId,
+          "set": {
+              "employee_size": ctx.scene.state.tobeEditedStartupEmployeeSizeField
+          }
+
+      })
+      if (errors) {
+          console.log(errors);
+      } else {
+          console.log(data);
+          ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+      }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_email_of_startup") {
       ctx.scene.state.tobeEditedStartupEmailField = ctx.message.text;
+      const { data, errors } = await companyEdit({
+        "id": ctx.session.selectedStartupId,
+        "set": {
+            "email": ctx.scene.state.tobeEditedStartupEmailField
+        }
+
+    })
+    if (errors) {
+        console.log(errors);
+    } else {
+        console.log(data);
+        ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+    }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_phone_of_startup") {
       ctx.scene.state.tobeEditedStartupPhoneField = ctx.message.text;
+      const { data, errors } = await companyEdit({
+        "id": ctx.session.selectedStartupId,
+        "set": {
+            "phone": ctx.scene.state.tobeEditedStartupPhoneField
+        }
+
+    })
+    if (errors) {
+        console.log(errors);
+    } else {
+        console.log(data);
+        ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+    }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
       ctx.scene.state.tobeEditedStartupLocationField = ctx.message.text;
+      const { data, error } = await fetchCity({ name: ctx.scene.state.tobeEditedStartupLocationField })
+      const { cities } = data
+      console.log(cities.length, "bpt 1")
+      if (!cities.length) {
+          ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
+              reply_markup: JSON.stringify({
+                  keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+                      text: x,
+                  }])), resize_keyboard: true, one_time_keyboard: true,
+              }),
+          })
+          return;
+      } else {
+          let hqId = cities[0].id;
+          ctx.session.startupHeadQuarterLocationId = hqId;
+          ctx.scene.state.startupHeadQuarterLocationId = hqId;
+          const { data, errors } = await companyEdit({
+              "id": ctx.session.selectedStartupId,
+              "set": {
+                  "head_quarter": ctx.scene.state.startupHeadQuarterLocationId
+              }
+
+          })
+          if (errors) {
+              console.log(errors);
+          } else {
+              console.log(data);
+              ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+          }
+      }
     } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
       ctx.scene.state.tobeEditedStartupWebsiteField == ctx.message.text;
+      const { data, errors } = await companyEdit({
+        "id": ctx.session.selectedStartupId,
+        "set": {
+            "website": ctx.scene.state.tobeEditedStartupWebsiteField
+        }
+
+    })
+    if (errors) {
+        console.log(errors);
+    } else {
+        console.log(data);
+        ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+    }
     }
   }
-  ctx.replyWithHTML("you have successfully edited your startup", cancelKeyboard);
 })
 
 export const startupEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
