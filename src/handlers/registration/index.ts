@@ -279,6 +279,11 @@ export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", 
             ctx.reply("Please enter a valid email!")
             return;
         } else {
+            const rs = await verifyEmail(ctx.message.text)
+            if (rs.data.users.length) {
+                ctx.reply("Sorry email is already taken !")
+                return;
+            }
             const res = await verifyEmail(ctx.message.text)
             if (res.data.users.length) {
                 ctx.reply("Sorry email is already taken !")

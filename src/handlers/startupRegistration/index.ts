@@ -4,7 +4,7 @@ import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
-import { getUserByPhone, getUserByTelegramId } from "../../services/registration";
+import { getUserByPhone, getUserByTelegramId, verifyEmail } from "../../services/registration";
 import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
@@ -363,6 +363,12 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
+      const rs = await verifyEmail(ctx.message.text)
+      if (rs.data.users.length) {
+          ctx.reply("Sorry email is already taken !")
+          return;
+      }
+
       ctx.scene.state.startupLGMEmail = ctx.message.text;
       console.log(ctx.scene.state.startupLGMEmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
@@ -1116,6 +1122,11 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
+      const rs = await verifyEmail(ctx.message.text)
+      if (rs.data.users.length) {
+          ctx.reply("Sorry email is already taken !")
+          return;
+      }
       ctx.scene.state.startupUGMEmail = ctx.message.text;
       console.log(ctx.scene.state.startupUGMEmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
@@ -1884,8 +1895,12 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
+      const rs = await verifyEmail(ctx.message.text)
+      if (rs.data.users.length) {
+          ctx.reply("Sorry email is already taken !")
+          return;
+      }
       ctx.scene.state.startupLREmail = ctx.message.text;
-      console.log(ctx.scene.state.startupLREmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else {
@@ -2622,8 +2637,12 @@ export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
+      const rs = await verifyEmail(ctx.message.text)
+      if (rs.data.users.length) {
+          ctx.reply("Sorry email is already taken !")
+          return;
+      }
       ctx.scene.state.startupUREmail = ctx.message.text;
-      console.log(ctx.scene.state.startupUREmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else {

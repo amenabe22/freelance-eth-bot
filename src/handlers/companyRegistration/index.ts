@@ -4,7 +4,7 @@ import FormData from "form-data";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
-import { getUserByTelegramId, getUserByPhone } from "../../services/registration";
+import { getUserByTelegramId, getUserByPhone, verifyEmail } from "../../services/registration";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
@@ -257,6 +257,11 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
+            const res = await verifyEmail(ctx.message.text)
+            if (res.data.users.length) {
+                ctx.reply("Sorry email is already taken !")
+                return;
+            }
             ctx.scene.state.companyREmail = ctx.message.text;
             console.log(ctx.scene.state.companyREmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
@@ -623,7 +628,7 @@ export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "doc
         console.log(ctx.scene.state.companyGName);
         ctx.scene.state.companyGNameBold = ctx.scene.state.companyGName.bold();
         ctx.replyWithHTML(`please send the photo of company trade license scanned photo.`, cancelKeyboard);
-        return ctx.wizard.next(); 
+        return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
         return;
@@ -743,6 +748,11 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
+            const res = await verifyEmail(ctx.message.text)
+            if (res.data.users.length) {
+                ctx.reply("Sorry email is already taken !")
+                return;
+            }
             ctx.scene.state.companyGEmail = ctx.message.text;
             console.log(ctx.scene.state.companyGEmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
@@ -967,8 +977,8 @@ export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contac
         if (!users.length) {
             ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
             return;
-        }else{
-           let destId =users[0].id;
+        } else {
+            let destId = users[0].id;
             ctx.session.destinationCompanyId = destId;
             let BoldRepNo = ctx.message.text.bold();
             ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
@@ -979,7 +989,7 @@ export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contac
                 }
             })
             return ctx.wizard.next();
-        }     
+        }
     } else {
         ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
     }
@@ -991,18 +1001,18 @@ export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "conta
         console.log(ctx.session.destinationCompanyId);
         if (ctx.message.text == "Yes") {
             const { data, errors } = await companyHandOver({
-                    "object": {
-                        "entity_id": `${ctx.session.selectedCompanyId}`, 
-                        "from_user_id": `${ctx.session.sourceCompanyUserId}`, 
-                        "to_user_id": `${ctx.session.destinationCompanyId}`,
-                        "created_by": `${ctx.session.sourceCompanyUserId}`
-                    }
-                
+                "object": {
+                    "entity_id": `${ctx.session.selectedCompanyId}`,
+                    "from_user_id": `${ctx.session.sourceCompanyUserId}`,
+                    "to_user_id": `${ctx.session.destinationCompanyId}`,
+                    "created_by": `${ctx.session.sourceCompanyUserId}`
+                }
+
             })
-            if(errors){
+            if (errors) {
                 console.log(errors);
                 ctx.replyWithHTML(`Error cease you from handing over your company`, cancelKeyboard);
-            }else{
+            } else {
                 console.log(data);
                 ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
             }
