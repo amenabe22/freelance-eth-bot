@@ -22,17 +22,20 @@ import { ve, vp, vw } from "../../utils.py/validation";
 let globalState: any;
 
 export const editCompanyRegistrationRCbActionHandler = async (ctx: any) => {
-    console.log("initiating edit RRRR scene")
     const target = ctx.match[0].split(".")[1];
     ctx.scene.state.editTarget = target;
     ctx.session.editTarget = target
-    return ctx.scene.enter("companyRegistrationREditScene")
+    ctx.session.editType = "R"
+    ctx.scene.state.editType = "G";
+    return ctx.scene.enter("companyRegistrationEditScene")
 }
 export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
     console.log("initiating edit scene")
     const target = ctx.match[0].split(".")[1];
     ctx.scene.state.editTarget = target;
     ctx.session.editTarget = target
+    ctx.session.editType = "G"
+    ctx.scene.state.editType = "G";
     return ctx.scene.enter("companyRegistrationEditScene")
 }
 
@@ -47,6 +50,9 @@ export const editCompanyRegistringHandler = async (ctx: any) => {
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     ctx.answerCbQuery();
     console.log(globalState, "state")
+    const { data: { users } } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
     const
         {
             companyGName,
@@ -61,7 +67,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
             companyGHeadQuarterLocation,
             companyGHeadQuarterLocationId
         } = globalState
-
+    const [{ phone, first_name, last_name }] = users
     const formData = new FormData()
     const payload: any = {
         name: companyGName,
@@ -69,12 +75,13 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         sector_id: companyGSectorID,
         is_user_gm: 'true',
         type: 'COMPANY',
-        user_first_name: ctx.from.first_name,
-        user_last_name: ctx.from.first_name,
+        user_first_name: first_name,
+        user_last_name: last_name,
         employee_size: companyGEmployeeSize,
         website: companyGWebsite,
         email: companyGEmail,
-        user_phone: `${companyGPhoneNumber}`,
+        user_phone: phone,
+        telegram_id: JSON.stringify(ctx.from.id),
         head_quarter: companyGHeadQuarterLocationId,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
@@ -289,9 +296,6 @@ export const companyOfficialPhoneNoRHandler = Telegraf.on(["photo", "text", "con
 export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRHeadQuarterLocation = ctx.message.text;
-        console.log("..................................................")
-        console.log(ctx.scene.state.companyRHeadQuarterLocation, "dawww")
-        console.log("..................................................")
         const { data, error } = await fetchCity({ name: ctx.scene.state.companyRHeadQuarterLocation })
         const { cities } = data
         console.log(cities.length, "bpt 1")
@@ -452,11 +456,10 @@ export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact",
         }
     }
 })
-export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    // ctx.scene.state.firstNameRegister = ctx.message.text;
+export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     const response = ctx.message.text
     const target = ctx.session.editTarget
-    console.log(response, target, "dawg")
+    console.log("Target: ", target)
     if (response) {
         // validate and update state
         switch (target) {
@@ -526,6 +529,86 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                 }
                 ctx.reply("Updated HeadQuarters")
                 ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                break;
+        }
+    }
+})
+export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    const response = ctx.message.text
+    const target = ctx.session.editTarget
+    const isG = ctx.session.editType == "G"
+    console.log(response, target, "dawg")
+    if (response) {
+        // validate and update state
+        switch (target) {
+            case "name":
+                isG ? globalState.companyGName = response : globalState.companyRName = response
+                ctx.reply("Name Updated")
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
+                break;
+            case "sector":
+                isG ? globalState.companyGSectorName = response : globalState.companyRSectorName = response
+                isG ? ctx.scene.state.companyGSectorName = response : ctx.scene.state.companyRSectorName = response;
+                const { data } = await fetchSector({ name: response })
+                const { sectors } = data
+                console.log(data)
+                if (!sectors) {
+                    ctx.replyWithHTML("please enter valid industry sector!", {
+                        reply_markup: JSON.stringify({
+                            keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+                                text: x,
+                            }])), resize_keyboard: true, one_time_keyboard: true,
+                        }),
+                    })
+                    return;
+                } else {
+                    let sectorId = sectors[0].id;
+                    isG ? ctx.session.companyGSectorID = sectorId : ctx.session.companyRSectorID = sectorId;
+                    isG ? ctx.scene.state.companyGSectorID = sectorId : ctx.scene.state.companyRSectorID = sectorId;
+                    ctx.reply("Sector Updated")
+                    ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
+                    break;
+                }
+            case "phone":
+                isG ? globalState.companyGPhoneNumber = response : globalState.companyGPhoneNumber = response
+                ctx.reply("Phone Updated")
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
+                break;
+            case "website":
+                isG ? globalState.companyGWebsite = response : globalState.companyRWebsite
+                ctx.reply("Website Updated")
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
+                break;
+            case "email":
+                isG ? globalState.companyGEmail = response : globalState.companyREmail = response
+                ctx.reply("updated")
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
+                break;
+            case "hqs":
+                isG ? globalState.companyGHeadQuarterLocation = response : globalState.companyGHeadQuarterLocation = response
+                // console.log(globalState.companyGHeadQuarterLocation, "<====>", globalState.companyRHeadQuarterLocation)
+                console.log(globalState.companyGHeadQuarterLocation ?? globalState.companyRHeadQuarterLocation, "1")
+                const res = await fetchCity({
+                    name: globalState.companyGHeadQuarterLocation ?? globalState.companyRHeadQuarterLocation
+                })
+                console.log(res, "2")
+                const { cities } = res.data
+                console.log(cities.length, "bpt 1")
+                if (!cities.length) {
+                    ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
+                        reply_markup: JSON.stringify({
+                            keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+                                text: x,
+                            }])), resize_keyboard: true, one_time_keyboard: true,
+                        }),
+                    })
+                    return;
+                } else {
+                    let hqId = cities[0].id;
+                    isG ? ctx.session.companyGHeadQuarterLocationId = hqId : ctx.session.companyRHeadQuarterLocationId = hqId;
+                }
+                ctx.reply("Updated HeadQuarters")
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState));
                 break;
         }
     }

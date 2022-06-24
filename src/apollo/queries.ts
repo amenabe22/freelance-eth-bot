@@ -34,6 +34,7 @@ export const USER = gql`
       id
       first_name
       last_name
+      phone
       job_seeker{
         id
         cv
