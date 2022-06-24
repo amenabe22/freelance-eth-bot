@@ -4,7 +4,7 @@ import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
-import { getUserByTelegramId } from "../../services/registration";
+import { getUserByPhone, getUserByTelegramId } from "../../services/registration";
 import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
@@ -20,6 +20,8 @@ import {
   startupEditHandOverKeyboard,
   startupEditKeyboard
 } from "../../keybaords/company.registration_kbs"
+import { companyHandOver } from "../../services/company.registration";
+
 import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import path from "path";
@@ -3020,6 +3022,10 @@ export const startupSelectionActionHandler = async (ctx: any) => {
     telegram_id: JSON.stringify(ctx.from.id)
   })
   if (data) {
+    let userId = data.users[0].id;
+    console.log(userId);
+    ctx.session.sourceStartupUserId = userId;
+    console.log(ctx.session.sourceStartpUserId, "hm");
     let checkUserEntity = data.users[0].user_entities;
     if (checkUserEntity) {
       ctx.session.userSName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
@@ -3156,15 +3162,26 @@ export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contac
   if (ctx.message.text) {
     ctx.scene.state.representativePhone = ctx.message.text;
     console.log(ctx.scene.state.representativePhone);
-    let BoldRepNo = ctx.message.text.bold();
-    ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
-      reply_markup: {
-        keyboard: [
-          [{ text: "Yes" }, { text: "No" }],
-        ], resize_keyboard: true, one_time_keyboard: true
-      }
+    ctx.scene.state.representativeCompanyPhone = ctx.message.text;
+    const { data: { users } } = await getUserByPhone({
+        phone: ctx.scene.state.representativeCompanyPhone
     })
-    return ctx.wizard.next();
+    if (!users.length) {
+        ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
+        return;
+    }else{
+      let destId =users[0].id;
+      ctx.session.destinationStartupId = destId;
+      let BoldRepNo = ctx.message.text.bold();
+      ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+          reply_markup: {
+              keyboard: [
+                  [{ text: "Yes" }, { text: "No" }],
+              ], resize_keyboard: true, one_time_keyboard: true
+          }
+      })
+      return ctx.wizard.next();
+      }   
   } else {
     ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
   }
@@ -3172,9 +3189,31 @@ export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contac
 export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     if (ctx.message.text == "Yes") {
-      ctx.replyWithHTML("You have successfully handed over your startup", cancelKeyboard);
+      console.log(ctx.session.selectedStartupId)
+      console.log(ctx.session.sourceStartupUserId)
+      console.log(ctx.session.destinationStartupId);
+      if (ctx.message.text == "Yes") {
+          const { data, errors } = await companyHandOver({
+                  "object": {
+                      "entity_id": `${ctx.session.selectedStartupId}`, 
+                      "from_user_id": `${ctx.session.sourceStartupUserId}`, 
+                      "to_user_id": `${ctx.session.destinationStartupId}`,
+                      "created_by": `${ctx.session.sourceStartupUserId}`
+                  }
+              
+          })
+          if(errors){
+              console.log(errors);
+              ctx.replyWithHTML(`Error cease you from handing over your Startup`, cancelKeyboard);
+          }else{
+            console.log(data)
+              ctx.replyWithHTML("You have successfully handed over your Startup", cancelKeyboard);
+          }
+          // ctx.scene.leave();
     } else if (ctx.message.text == "No") { 
       ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
     }
+    // ctx.scene.leave()
   }
+}
 })

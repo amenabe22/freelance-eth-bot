@@ -1,6 +1,6 @@
 import { fetchSectors } from "../../services/basic";
 import { employerKeyboard, englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard, chooseCompanyStartupKeyboard } from "../../keybaords/menu_kbs";
-import { getUserByTelegramId } from "../../services/registration";
+import { getUserByTelegramId, getUserByTelegramIdStartup } from "../../services/registration";
 import {
     changeToAmharicKeyboard,
     editDetailProfileInlineKeyboard,
@@ -55,7 +55,7 @@ export const addMoreCompanyHandler = async (ctx: any) => {
    ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
 }
 export const startupHandler = async (ctx: any) => {
-    const { data, error } = await getUserByTelegramId({
+    const { data, error } = await getUserByTelegramIdStartup({
         telegram_id: JSON.stringify(ctx.from.id)
     })
    if(data){

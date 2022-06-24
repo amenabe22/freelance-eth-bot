@@ -1,4 +1,4 @@
-import { REGISTER_USER } from "../apollo/queries"
+import { REGISTER_USER, COMPANY_HANDOVER } from "../apollo/queries"
 import { client } from "../apollo"
 import { ENT_CREATE_ENDPT } from "../constants"
 import axios from "axios"
@@ -19,3 +19,11 @@ export const registerCompany = async (formDataObj: FormData) => {
     })
     return res
 }  
+
+export const companyHandOver = async (variables: any) => {
+    const res = await client.mutate({
+        mutation: COMPANY_HANDOVER,
+        variables
+    })
+    return res
+}

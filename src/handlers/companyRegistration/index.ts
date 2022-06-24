@@ -4,7 +4,7 @@ import FormData from "form-data";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
-import { getUserByTelegramId } from "../../services/registration";
+import { getUserByTelegramId, getUserByPhone } from "../../services/registration";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
@@ -14,7 +14,7 @@ import {
     companyEditKeyboard,
     registerCompanyREditKeyboard
 } from "../../keybaords/company.registration_kbs";
-import { registerCompany } from "../../services/company.registration";
+import { companyHandOver, registerCompany } from "../../services/company.registration";
 import { formatCompanyRegistrationMsg, formatCompanyRRegistrationMsg } from "../../utils.py/formatMessage";
 import path from "path";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
@@ -429,7 +429,7 @@ export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact",
                 break;
             case "hqs":
                 globalState.companyRHeadQuarterLocation = response
-                const res = await fetchCity({ name: response })
+                const res = await fetchCity({ name: globalState.companyRHeadQuarterLocation })
                 const { cities } = res.data
                 console.log(cities.length, "bpt 1")
                 if (!cities.length) {
@@ -506,7 +506,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                 break;
             case "hqs":
                 globalState.companyGHeadQuarterLocation = response
-                const res = await fetchCity({ name: ctx.scene.state.companyGHeadQuarterLocation })
+                const res = await fetchCity({ name: globalState.companyGHeadQuarterLocation })
                 const { cities } = res.data
                 console.log(cities.length, "bpt 1")
                 if (!cities.length) {
@@ -541,7 +541,7 @@ export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "doc
         console.log(ctx.scene.state.companyGName);
         ctx.scene.state.companyGNameBold = ctx.scene.state.companyGName.bold();
         ctx.replyWithHTML(`please send the photo of company trade license scanned photo.`, cancelKeyboard);
-        return ctx.wizard.next();
+        return ctx.wizard.next(); 
     } else {
         ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
         return;
@@ -745,6 +745,10 @@ export const companySelectionActionHandler = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id)
     })
     if (data) {
+        let userId = data.users[0].id;
+        console.log(userId);
+        ctx.session.sourceCompanyUserId = userId;
+        console.log(ctx.session.sourceCompanyUserId, "hm");
         let checkUserEntity = data.users[0].user_entities;
         if (checkUserEntity) {
             ctx.session.userCName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
@@ -874,26 +878,57 @@ export const handOverCompanyInitHandler = async (ctx: any) => {
 }
 export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
-        ctx.scene.state.representativePhone = ctx.message.text;
-        let BoldRepNo = ctx.message.text.bold();
-        ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
-            reply_markup: {
-                keyboard: [
-                    [{ text: "Yes" }, { text: "No" }],
-                ], resize_keyboard: true, one_time_keyboard: true
-            }
+        ctx.scene.state.representativeCompanyPhone = ctx.message.text;
+        const { data: { users } } = await getUserByPhone({
+            phone: ctx.scene.state.representativeCompanyPhone
         })
-        return ctx.wizard.next();
+        if (!users.length) {
+            ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
+            return;
+        }else{
+           let destId =users[0].id;
+            ctx.session.destinationCompanyId = destId;
+            let BoldRepNo = ctx.message.text.bold();
+            ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
+                reply_markup: {
+                    keyboard: [
+                        [{ text: "Yes" }, { text: "No" }],
+                    ], resize_keyboard: true, one_time_keyboard: true
+                }
+            })
+            return ctx.wizard.next();
+        }     
     } else {
         ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
     }
 })
 export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
+        console.log(ctx.session.selectedCompanyId)
+        console.log(ctx.session.sourceCompanyUserId)
+        console.log(ctx.session.destinationCompanyId);
         if (ctx.message.text == "Yes") {
-            ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
+            const { data, errors } = await companyHandOver({
+                    "object": {
+                        "entity_id": `${ctx.session.selectedCompanyId}`, 
+                        "from_user_id": `${ctx.session.sourceCompanyUserId}`, 
+                        "to_user_id": `${ctx.session.destinationCompanyId}`,
+                        "created_by": `${ctx.session.sourceCompanyUserId}`
+                    }
+                
+            })
+            if(errors){
+                console.log(errors);
+                ctx.replyWithHTML(`Error cease you from handing over your company`, cancelKeyboard);
+            }else{
+                console.log(data);
+                ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
+            }
+            // ctx.scene.leave();
+
         } else if (ctx.message.text == "No") {
             ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
         }
+        // ctx.scene.leave();
     }
 })

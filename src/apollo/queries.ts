@@ -22,6 +22,11 @@ export const REGISTER_USER = gql`mutation($obj: RegisterUserInput!) {
   }
 }
 `
+export const COMPANY_HANDOVER = gql`mutation ($object: entity_handovers_insert_input = {}) {
+  insert_entity_handover(object: $object) {
+    id
+  }
+}`
 
 export const USER = gql`
   query getUser($telegram_id: String!) {
@@ -46,6 +51,49 @@ export const USER = gql`
         entity: {
           type: {
             _eq: "COMPANY"
+          }
+        }
+      }){
+        entity {
+          name
+          id
+        }
+      }
+    }
+  }
+  `
+  export const USER_BY_PHONE = gql`
+  query getUser($phone: String!) {
+    users(where: { phone: { _eq: $phone } }) {
+      id
+      first_name
+      last_name
+    }
+  }
+  `
+  export const USER_STARTUP = gql`
+  query getUser($telegram_id: String!) {
+    users(where: { telegram_id: { _eq: $telegram_id } }) {
+      id
+      first_name
+      last_name
+      job_seeker{
+        id
+        cv
+        availability_status
+        work_status{
+          id
+          name
+        }
+        education_level{
+          id
+          name
+        }
+      }
+      user_entities(where: {
+        entity: {
+          type: {
+            _eq: "STARTUP"
           }
         }
       }){
