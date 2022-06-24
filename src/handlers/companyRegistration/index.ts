@@ -11,15 +11,23 @@ import {
     registerCompanyConfirmGMKeyboard,
     registerCompanyEditKeyboard,
     companyEditHandOverKeyboard,
-    companyEditKeyboard
+    companyEditKeyboard,
+    registerCompanyREditKeyboard
 } from "../../keybaords/company.registration_kbs";
 import { registerCompany } from "../../services/company.registration";
-import { formatCompanyRegistrationMsg } from "../../utils.py/formatMessage";
+import { formatCompanyRegistrationMsg, formatCompanyRRegistrationMsg } from "../../utils.py/formatMessage";
 import path from "path";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import { ve, vp, vw } from "../../utils.py/validation";
 let globalState: any;
 
+export const editCompanyRegistrationRCbActionHandler = async (ctx: any) => {
+    console.log("initiating edit RRRR scene")
+    const target = ctx.match[0].split(".")[1];
+    ctx.scene.state.editTarget = target;
+    ctx.session.editTarget = target
+    return ctx.scene.enter("companyRegistrationREditScene")
+}
 export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
     console.log("initiating edit scene")
     const target = ctx.match[0].split(".")[1];
@@ -33,7 +41,7 @@ export const editCompanyRegistringGMHandler = async (ctx: any) => {
     ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
 }
 export const editCompanyRegistringHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
+    ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sectory: ${globalState.companyRSectorName}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyREditKeyboard);
 }
 
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
@@ -55,19 +63,19 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
 
     const formData = new FormData()
     const payload: any = {
-        name: companyGName,
-        phone: companyGPhoneNumber,
-        type: "COMPANY",
-        sector_id: companyGSectorID,
+        name: companyGName.toString(),
+        phone: companyGPhoneNumber.toString(),
+        type: "COMPANY".toString(),
+        sector_id: companyGSectorID.toString(),
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-        user_first_name: ctx.from.first_name,
-        user_last_name: ctx.from.first_name,
-        employee_size: companyGEmployeeSize,
-        user_phone: companyGPhoneNumber,
-        website: companyRWebsite,
-        email: companyGEmail,
-        is_user_gm: 'true',
-        head_quarter: companyGHeadQuarterLocationId,
+        user_first_name: ctx.from.first_name.toString(),
+        user_last_name: ctx.from.first_name.toString(),
+        employee_size: companyGEmployeeSize ? companyGEmployeeSize.toString() : null,
+        user_phone: companyGPhoneNumber ? companyGPhoneNumber.toString() : null,
+        website: companyRWebsite ? companyRWebsite.toString() : null,
+        email: companyGEmail ? companyGEmail.toString() : null,
+        is_user_gm: 'true'.toString(),
+        head_quarter: companyGHeadQuarterLocationId ? companyGHeadQuarterLocationId.toString() : null,
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
         rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
         // rep_letter_photo:  fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
@@ -79,7 +87,9 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         if (payload[key])
             formData.append(key, payload[key])
     }
-
+    console.log("------------------------------------------------------------")
+    console.log(payload)
+    console.log("------------------------------------------------------------")
     await registerCompany(formData).then(({ data }) => {
         if (data) {
             ctx.deleteMessage();
@@ -88,8 +98,10 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
             ctx.reply("failed to register company")
         }
         console.log(globalState, "cr")
-    }).catch(e => {
-        console.error(e)
+    }).catch((e) => {
+        const message = e.response.data
+        console.error(JSON.stringify(message))
+        console.log(message.graphQLErrors)
     })
 }
 
@@ -102,7 +114,7 @@ export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
 }
 //register company with representative starts here
 export const companyRInitHandler = async (ctx: any) => {
-  ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
+    ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
 }
 
 
@@ -219,11 +231,11 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
             ctx.scene.state.companyRWebsite = " ";
             await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
             return ctx.wizard.next();
-        } else if(vw(ctx.message.text)) {
+        } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyRWebsite = ctx.message.text;
             await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
             return ctx.wizard.next();
-        } else{
+        } else {
             ctx.replyWithHTML(`please enter a valid company website!`, companyRegisterOptionalKeyboard);
             return;
         }
@@ -238,12 +250,12 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.scene.state.companyREmail = " ";
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        } else if(ve(ctx.message.text)) {
+        } else if (ve(ctx.message.text)) {
             ctx.scene.state.companyREmail = ctx.message.text;
             console.log(ctx.scene.state.companyREmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        } else{
+        } else {
             ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
             return;
         }
@@ -277,6 +289,9 @@ export const companyOfficialPhoneNoRHandler = Telegraf.on(["photo", "text", "con
 export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRHeadQuarterLocation = ctx.message.text;
+        console.log("..................................................")
+        console.log(ctx.scene.state.companyRHeadQuarterLocation,"dawww")
+        console.log("..................................................")
         const { data, error } = await fetchCity({ name: ctx.scene.state.companyRHeadQuarterLocation })
         const { cities } = data
         console.log(cities.length, "bpt 1")
@@ -366,6 +381,77 @@ export const companyEditInitHandler = async (ctx: any) => {
     }
 }
 
+export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    // ctx.scene.state.firstNameRegister = ctx.message.text;
+    const response = ctx.message.text
+    const target = ctx.session.editTarget
+    console.log(response, target, "dawg")
+    if (response) {
+        // validate and update state
+        switch (target) {
+            case "name":
+                globalState.companyRSectorName = response
+                ctx.reply("Name Updated")
+                break;
+            case "sector":
+                globalState.companyRSectorName = response
+                ctx.scene.state.companyRSectorName = response;
+                const { data } = await fetchSector({ name: response })
+                const { sectors } = data
+                console.log(data)
+                if (!sectors) {
+                    ctx.replyWithHTML("please enter valid industry sector!", {
+                        reply_markup: JSON.stringify({
+                            keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
+                                text: x,
+                            }])), resize_keyboard: true, one_time_keyboard: true,
+                        }),
+                    })
+                    return;
+                } else {
+                    let sectorId = sectors[0].id;
+                    ctx.session.companyRSectorID = sectorId;
+                    ctx.scene.state.companyRSectorID = sectorId;
+                    ctx.reply("Sector Updated")
+                    break;
+                }
+            case "phone":
+                globalState.companyRPhoneNumber = response
+                ctx.reply("Phone Updated")
+                break;
+            case "website":
+                globalState.companyRWebsite = response
+                ctx.reply("Website Updated")
+                break;
+            case "email":
+                globalState.companyREmail = response
+                ctx.reply("Email Updated")
+                break;
+            case "hqs":
+                globalState.companyRHeadQuarterLocation = response
+                const res = await fetchCity({ name: response })
+                const { cities } = res.data
+                console.log(cities.length, "bpt 1")
+                if (!cities.length) {
+                    ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
+                        reply_markup: JSON.stringify({
+                            keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+                                text: x,
+                            }])), resize_keyboard: true, one_time_keyboard: true,
+                        }),
+                    })
+                    return;
+                } else {
+                    let hqId = cities[0].id;
+                    ctx.session.companyRHeadQuarterLocationId = hqId;
+                    ctx.scene.state.companyRHeadQuarterLocationId = hqId;
+                    globalState = ctx.scene.state;
+                }
+                ctx.reply("Updated HeadQuarters")
+                break;
+        }
+    }
+})
 export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     // ctx.scene.state.firstNameRegister = ctx.message.text;
     const response = ctx.message.text
@@ -377,7 +463,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
             case "name":
                 globalState.companyGName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                 break;
             case "sector":
                 globalState.companyGSectorName = response
@@ -399,24 +485,24 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                     ctx.session.companyGSectorID = sectorId;
                     ctx.scene.state.companyGSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                     break;
                 }
             case "phone":
                 globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                 break;
             case "website":
                 globalState.companyRWebsite = response
                 globalState.companyGWebsite = response
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                 break;
             case "email":
                 globalState.companyGEmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                 break;
             case "hqs":
                 globalState.companyGHeadQuarterLocation = response
@@ -439,7 +525,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                     globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
                 break;
         }
     }
@@ -447,7 +533,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
 
 
 export const companyGInitHandler = async (ctx: any) => {
-   ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
+    ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
 }
 export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
@@ -554,14 +640,14 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
             await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
-        } else if(vw(ctx.message.text)) {
+        } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyGWebsite = ctx.message.text;
             await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
-        }else{
+        } else {
             ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
-            return; 
+            return;
         }
-   
+
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
@@ -574,14 +660,14 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.scene.state.companyGEmail = " ";
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        } else if(ve(ctx.message.text)) {
+        } else if (ve(ctx.message.text)) {
             ctx.scene.state.companyGEmail = ctx.message.text;
             console.log(ctx.scene.state.companyGEmail);
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
-        }else{
+        } else {
             ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
-            return;  
+            return;
         }
     } else {
         ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);

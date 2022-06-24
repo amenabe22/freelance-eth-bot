@@ -48,13 +48,8 @@ export const bot = new CoreBot(
         act.confirmRegisterCompanyGMAction,
         act.editCompanyRegistringAction,
         act.editCompanyRegistrationCbAction,
-        act.editCompanyRegistringGMAction,
-        act.editStartupRegisteringLGMAction,
-        act.editStartupRegisteringUGMAction,
-        act.editStartupRegisteringLGMInitAction,
-        act.editStartupRegisteringLRInitAction,
-        act.editStartupRegisteringURInitAction
-        
+        act.editCompanyRegistrationRCbAction,
+        act.editCompanyRegistringGMAction
     ],
     // register commands
     [ 

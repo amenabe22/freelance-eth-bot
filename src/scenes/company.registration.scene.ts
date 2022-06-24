@@ -12,6 +12,15 @@ export const companyRegistrationEditScene = new CoreScene(
     ]
   }
 )
+export const companyRegistrationREditScene = new CoreScene(
+  "companyRegistrationREditScene",
+  {
+    enter: hdlr.companyEditInitHandler,
+    handlers: [
+      hdlr.companyEditValueHandler,
+    ]
+  }
+)
 
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
