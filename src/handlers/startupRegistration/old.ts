@@ -282,7 +282,6 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
     } else {
       ctx.scene.state.startupLGMEmail = ctx.message.text;
     }
-    console.log(ctx.scene.state.startupLGMEmail);
     ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
     return ctx.wizard.next();
   } else {

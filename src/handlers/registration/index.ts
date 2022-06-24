@@ -7,7 +7,7 @@ import {
     registerUserKeyboard,
     registerUserWithAgeKeyboard, shareContactKeyboard
 } from "../../keybaords/registration_kbs";
-import { registerNewBotUser } from "../../services/registration";
+import { registerNewBotUser, verifyEmail } from "../../services/registration";
 import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
 import { ve, vn } from "../../utils.py/validation";
 
@@ -224,7 +224,7 @@ export const phoneNumberRegisterHandler = Telegraf.on(["text", "contact", "docum
             ctx.scene.state.phoneNumberRegister = ctx.update.message.contact.phone_number;
             console.log("condition passed: ", ctx.scene.state.phoneNumberRegister)
             await ctx.replyWithHTML("Please enter your first name.", cancelKeyboard);
-            return ctx.wizard.next();   
+            return ctx.wizard.next();
         } else {
             ctx.replyWithHTML(`Please enter a valid phone number!`, shareContactKeyboard)
             return;
@@ -238,7 +238,7 @@ export const firstNameRegisterHandler = Telegraf.on(["text", "contact", "documen
         console.warn("first", ctx.message.text)
         await ctx.replyWithHTML(`please enter your last name.`, cancelKeyboard);
         return ctx.wizard.next();
-    }else{
+    } else {
         ctx.replyWithHTML('please enter a valid first name.', cancelKeyboard);
     }
 })
@@ -257,14 +257,14 @@ export const lastNameRegisterHandler = Telegraf.on(["text", "contact", "document
 export const genderRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
         if (ctx.message.text) {
-            if(ctx.message.text == "male" && ctx.message.text == "female") {
+            if (ctx.message.text == "male" && ctx.message.text == "female") {
                 ctx.scene.state.genderRegister = ctx.message.text;
                 ctx.reply("please enter your email.", skipKeyboard);
                 return ctx.wizard.next();
-            }else{
+            } else {
                 ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
-                return; 
-            }        
+                return;
+            }
         } else {
             ctx.replyWithHTML("Please enter a valid gender!", genderKeyboard);
             return;
@@ -279,7 +279,18 @@ export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", 
             ctx.reply("Please enter a valid email!")
             return;
         } else {
-            const { data, error } = await fetchCities()
+            const rs = await verifyEmail(ctx.message.text)
+            if (rs.data.users.length) {
+                ctx.reply("Sorry email is already taken !")
+                return;
+            }
+            const res = await verifyEmail(ctx.message.text)
+            if (res.data.users.length) {
+                ctx.reply("Sorry email is already taken !")
+                return;
+            }
+            // check email first
+            const { data } = await fetchCities()
             if (data) {
                 const { cities } = data;
                 let cnames = cities.map((nm: any) => nm.name);
