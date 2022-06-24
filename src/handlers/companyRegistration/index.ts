@@ -47,6 +47,9 @@ export const editCompanyRegistringHandler = async (ctx: any) => {
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     ctx.answerCbQuery();
     console.log(globalState, "state")
+    const { data: { users } } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
     const
         {
             companyGName,
@@ -61,7 +64,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
             companyGHeadQuarterLocation,
             companyGHeadQuarterLocationId
         } = globalState
-
+    const [{ phone, first_name, last_name }] = users
     const formData = new FormData()
     const payload: any = {
         name: companyGName,
@@ -69,12 +72,13 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         sector_id: companyGSectorID,
         is_user_gm: 'true',
         type: 'COMPANY',
-        user_first_name: ctx.from.first_name,
-        user_last_name: ctx.from.first_name,
+        user_first_name: first_name,
+        user_last_name: last_name,
         employee_size: companyGEmployeeSize,
         website: companyGWebsite,
         email: companyGEmail,
-        user_phone: `${companyGPhoneNumber}`,
+        user_phone: phone,
+        telegram_id: JSON.stringify(ctx.from.id),
         head_quarter: companyGHeadQuarterLocationId,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
