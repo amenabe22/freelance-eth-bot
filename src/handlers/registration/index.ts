@@ -257,7 +257,7 @@ export const lastNameRegisterHandler = Telegraf.on(["text", "contact", "document
 export const genderRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"],
     async (ctx: any) => {
         if (ctx.message.text) {
-            if (ctx.message.text == "male" && ctx.message.text == "female") {
+            if (ctx.message.text == "male" || ctx.message.text == "female") {
                 ctx.scene.state.genderRegister = ctx.message.text;
                 ctx.reply("please enter your email.", skipKeyboard);
                 return ctx.wizard.next();

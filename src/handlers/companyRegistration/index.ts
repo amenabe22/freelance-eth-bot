@@ -633,7 +633,7 @@ export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "doc
         ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
         return;
     }
-})
+}) 
 export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         console.log(ctx.update.message.photo[0])
