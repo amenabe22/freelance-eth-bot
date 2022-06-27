@@ -1,6 +1,6 @@
 import FormData from "form-data";
 import axios from "axios"
-import { UPLOAD_ENDPOINT } from "../constants";
+import { ENTITY_ENDPOINT } from "../constants";
 import request from "request"
 
 // export const registerStartup = async (formDataObj: FormData) => {
@@ -13,5 +13,5 @@ import request from "request"
 
 
 export const registerStartup = (formData: any, cb: any) => {
-    request.post({ url: UPLOAD_ENDPOINT, formData: formData }, cb);
+    request.post({ url: ENTITY_ENDPOINT, formData: formData }, cb);
 }

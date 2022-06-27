@@ -1,6 +1,6 @@
 import { REGISTER_USER, COMPANY_HANDOVER, COMPANY_EDIT } from "../apollo/queries"
 import { client } from "../apollo"
-import { ENT_CREATE_ENDPT } from "../constants"
+import { ENTITY_ENDPOINT, ENT_CREATE_ENDPT } from "../constants"
 import axios from "axios"
 import FormData from "form-data";
 
@@ -14,7 +14,7 @@ export const registerNewBotUser = async (variables: any) => {
 
 export const registerCompany = async (formDataObj: FormData) => {
     const formData = new FormData();
-    const res = await axios.post(ENT_CREATE_ENDPT, formDataObj, {
+    const res = await axios.post(ENTITY_ENDPOINT, formDataObj, {
         headers: formData.getHeaders()
     })
     return res

@@ -447,7 +447,7 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
   // const formData = new FormData();
   const payload: any = {
     name: globalState.startupLGMName,
-    founders: ['asdf', 'asdf', 'asdf'],
+    founder: globalState.startupLGMFounder1,
     phone: globalState.startupLGMPhoneNumber,
     sector: globalState.startupLGMSectorID,
     is_user_gm: 'true',
@@ -1236,7 +1236,7 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
   const formData = new FormData();
   const payload: any = {
     name: globalState.startupUGMName,
-    founder: globalState.startupUGMFounderName,
+    founders: globalState.startupUGMFounder1,
     phone: globalState.startupUGMPhoneNumber,
     sector: globalState.startupUGMSectorID,
     is_user_gm: globalState.statupUGMIsUserGm,

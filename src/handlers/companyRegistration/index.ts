@@ -78,7 +78,8 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         user_last_name: last_name,
         employee_size: companyGEmployeeSize,
         website: companyGWebsite,
-        email: companyGEmail,
+        // email: companyGEmail,
+
         user_phone: phone,
         telegram_id: JSON.stringify(ctx.from.id),
         head_quarter: companyGHeadQuarterLocationId,
@@ -99,7 +100,8 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     await registerCompany(formData).then(({ data }) => {
         if (data) {
             ctx.deleteMessage();
-            ctx.reply("submitted")
+            console.log(data)
+            ctx.reply("sucessfully submitted", cancelKeyboard)
         } else {
             ctx.reply("failed to register company")
         }
