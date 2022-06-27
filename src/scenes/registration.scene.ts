@@ -58,7 +58,6 @@ export const registerJobSeekerScene = new CoreScene(
     enter: hdlr.jobSeekerInitHandler,
     // steps handler
     handlers: [
-      hdlr.availablityHandler,
       hdlr.educationalLevelHandler,
       hdlr.workStatusHandler
     ]
