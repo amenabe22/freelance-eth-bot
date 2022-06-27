@@ -80,7 +80,6 @@ export const editProfileRegistrationInfoHandler = Telegraf.on(["text", "contact"
                 break;
             case "er_age":
                 ctx.scene.state.chooseAgeInputStyle = ctx.message.text;
-
                 if (ctx.scene.state.chooseAgeInputStyle == "Age") {
                     globalState.ageInputStyle = response
                     ctx.reply("updated")
@@ -142,6 +141,7 @@ export const registerUserHandler = async (ctx: any) => {
         firstNameRegister,
         lastNameRegister,
         genderRegister,
+        // emailRegister,
         residentCityRegister,
         chooseAgeInputStyle,
         calanderType,
@@ -157,12 +157,13 @@ export const registerUserHandler = async (ctx: any) => {
             last_name: lastNameRegister,
             gender: genderRegister,
             date_of_birth: dob,
-            //  "email": `${email}`,
+            // email: emailRegister,
             phone: phoneNumberRegister,
             telegram_id: JSON.stringify(ctx.from.id),
             residence_city_id: residentCityRegister
         }
     })
+    console.log(data);
     if (!errors) {
         ctx.replyWithHTML("you have successfully registered", chooseLanguageKeyboard)
     } else {
@@ -179,6 +180,7 @@ export const ageRegistrationHandlder = async (ctx: any) => {
         phoneNumberRegister,
         firstNameRegister,
         lastNameRegister,
+        // emailRegister,
         genderRegister,
         residentCityRegister,
         chooseAgeInputStyle,
@@ -186,19 +188,24 @@ export const ageRegistrationHandlder = async (ctx: any) => {
     } = globalState;
     const { data, errors } = await registerNewBotUser({
         obj: {
-            "first_name": firstNameRegister,
-            "last_name": lastNameRegister,
-            "gender": genderRegister,
-            "age": 25,
-            //  "email": `${email}`,
-            "phone": phoneNumberRegister,
-            "telegram_id": JSON.stringify(ctx.from.id),
-            "residence_city_id": residentCityRegister
+            first_name: firstNameRegister,
+            last_name: lastNameRegister,
+            gender: genderRegister,
+            age: 25,
+            // email: emailRegister,
+            phone: phoneNumberRegister,
+            telegram_id: JSON.stringify(ctx.from.id),
+            residence_city_id: residentCityRegister
         }
     })
     if (!errors) {
         ctx.replyWithHTML("you have successfully registered", chooseLanguageKeyboard)
     } else {
+        console.log(data, "data is")
+        console.log(data.data.errors[0].message, "hmm")
+        console.log(errors[0])
+        console.log(errors[0].message, "error is") 
+
         const [{ message }] = errors
         ctx.replyWithHTML(`you haven't registered because of ${message}. please start the bot again using /start command`);
     }

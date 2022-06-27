@@ -123,7 +123,6 @@ export const companyRInitHandler = async (ctx: any) => {
     ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
 }
 
-
 export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRName = ctx.message.text;
@@ -471,7 +470,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
             case "name":
                 globalState.companyGName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                 break;
             case "sector":
                 globalState.companyGSectorName = response
@@ -493,24 +492,24 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     ctx.session.companyGSectorID = sectorId;
                     ctx.scene.state.companyGSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                     break;
                 }
             case "phone":
                 globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                 break;
             case "website":
                 globalState.companyRWebsite = response
                 globalState.companyGWebsite = response
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                 break;
             case "email":
                 globalState.companyGEmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                 break;
             case "hqs":
                 globalState.companyGHeadQuarterLocation = response
@@ -533,7 +532,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState));
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
                 break;
         }
     }
@@ -549,7 +548,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
             case "name":
                 isG ? globalState.companyGName = response : globalState.companyRName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "sector":
                 isG ? globalState.companyGSectorName = response : globalState.companyRSectorName = response
