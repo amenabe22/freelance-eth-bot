@@ -274,39 +274,54 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
 // user email registration handler
 export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
+        if(ctx.message.text == "Skip"){
+         ctx.scene.state.emailRegister = " ";
+         const { data } = await fetchCities()
+         if (data) {
+             const { cities } = data;
+             let cnames = cities.map((nm: any) => nm.name);
+             ctx.session.cityNames = cnames
+         ctx.replyWithHTML("please enter your residence city.", {
+            reply_markup: JSON.stringify({
+                keyboard: cnames.map((x: string, _: string) => ([{
+                    text: x,
+                }])), resize_keyboard: true, one_time_keyboard: true,
+            }),
+        })
+        return ctx.wizard.next();
+    }
+    }else{
         ctx.scene.state.emailRegister = ctx.message.text;
         if (!ve(ctx.message.text)) {
             ctx.reply("Please enter a valid email!")
             return;
         } else {
-            const rs = await verifyEmail(ctx.message.text)
+            const rs = await verifyEmail({email: ctx.scene.state.emailRegister})
+            console.log(rs)
             if (rs.data.users.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;
+            }else{
+                const { data } = await fetchCities()
+                if (data) {
+                    const { cities } = data;
+                    let cnames = cities.map((nm: any) => nm.name);
+                    ctx.session.cityNames = cnames
+                    ctx.replyWithHTML("please enter your residence city.", {
+                        reply_markup: JSON.stringify({
+                            keyboard: cnames.map((x: string, _: string) => ([{
+                                text: x,
+                            }])), resize_keyboard: true, one_time_keyboard: true,
+                        }),
+                    })
+                    return ctx.wizard.next();
+                }
             }
-            const res = await verifyEmail(ctx.message.text)
-            if (res.data.users.length) {
-                ctx.reply("Sorry email is already taken !")
-                return;
-            }
-            // check email first
-            const { data } = await fetchCities()
-            if (data) {
-                const { cities } = data;
-                let cnames = cities.map((nm: any) => nm.name);
-                ctx.session.cityNames = cnames
-                ctx.replyWithHTML("please enter your residence city.", {
-                    reply_markup: JSON.stringify({
-                        keyboard: cnames.map((x: string, _: string) => ([{
-                            text: x,
-                        }])), resize_keyboard: true, one_time_keyboard: true,
-                    }),
-                })
-                return ctx.wizard.next();
-            }
+            // check email first            
         }
+    }      
     }
-})
+    })
 
 export const residentCityRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
@@ -386,7 +401,7 @@ export const ageInputStyleHandler = Telegraf.on(["text", "contact", "document", 
         } = globalState;
         console.log(globalState)
         // userEmailRegister is removed because email isn't being handled yet
-        ctx.replyWithHTML(`\n\nFirstName: ${globalState.firstNameRegister}\nLastName: ${lastNameRegister}\nEmail: ${emailRegister}\nGender: ${genderRegister}\Age: ${ageInputStyle}`, registerUserWithAgeKeyboard);
+        ctx.replyWithHTML(`\n\nFirstName: ${globalState.firstNameRegister}\nLastName: ${lastNameRegister}\nEmail: ${globalState.emailRegister}\nGender: ${genderRegister}\nAge: ${ageInputStyle}`, registerUserWithAgeKeyboard);
         ctx.scene.leave();
     } else {
         ctx.replyWithHTML("Please enter a valid age number", cancelKeyboard);

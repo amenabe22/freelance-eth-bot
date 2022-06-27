@@ -257,7 +257,7 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmail(ctx.message.text)
+            const res = await verifyEmail({email:ctx.message.text})
             if (res.data.users.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;
@@ -748,7 +748,7 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmail(ctx.message.text)
+            const res = await verifyEmail({email:ctx.message.text})
             if (res.data.users.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;

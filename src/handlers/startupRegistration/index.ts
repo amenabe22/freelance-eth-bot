@@ -363,7 +363,7 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail(ctx.message.text)
+      const rs = await verifyEmail({email: ctx.message.text})
       if (rs.data.users.length) {
           ctx.reply("Sorry email is already taken !")
           return;
@@ -1122,7 +1122,7 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail(ctx.message.text)
+      const rs = await verifyEmail({email: ctx.message.text})
       if (rs.data.users.length) {
           ctx.reply("Sorry email is already taken !")
           return;
@@ -1895,7 +1895,7 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail(ctx.message.text)
+      const rs = await verifyEmail({email: ctx.message.text})
       if (rs.data.users.length) {
           ctx.reply("Sorry email is already taken !")
           return;
@@ -2637,7 +2637,7 @@ export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail(ctx.message.text)
+      const rs = await verifyEmail({email: ctx.message.text})
       if (rs.data.users.length) {
           ctx.reply("Sorry email is already taken !")
           return;

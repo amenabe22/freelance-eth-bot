@@ -4,7 +4,7 @@ import { englishMainMenuKeyboard } from "../keybaords/menu_kbs"
 export const startCommandHand = async (ctx: any) => {
     console.log(ctx.from.id)
     const { data: { users } } = await getUserByTelegramId({
-        telegram_id: JSON.stringify(ctx.from.id)
+        telegram_id: JSON.stringify(11)
     })
     console.log(users)
     if (!users.length) {
