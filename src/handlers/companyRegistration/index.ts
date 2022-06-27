@@ -14,7 +14,7 @@ import {
     companyEditKeyboard,
     registerCompanyREditKeyboard
 } from "../../keybaords/company.registration_kbs";
-import { companyHandOver, registerCompany , companyEdit} from "../../services/company.registration";
+import { companyHandOver, registerCompany, companyEdit } from "../../services/company.registration";
 import { formatCompanyRegistrationMsg, formatCompanyRRegistrationMsg } from "../../utils.py/formatMessage";
 import path from "path";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
@@ -256,7 +256,7 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmailEntity({email:ctx.message.text})
+            const res = await verifyEmailEntity({ email: ctx.message.text })
             console.log(res)
             if (res.data.entities.length) {
                 ctx.reply("Sorry email is already taken !")
@@ -283,11 +283,13 @@ export const companyOfficialPhoneNoRHandler = Telegraf.on(["photo", "text", "con
             const { cities } = data;
             let cnames = cities.map((nm: any) => nm.name);
             ctx.session.cityNames = cnames
+            let fkbs = cnames.map((x: string, _: string) => ([{
+                text: x,
+            }]))
+            fkbs.push({ text: "Back" })
             ctx.replyWithHTML("please enter location of your company head quarter.", {
                 reply_markup: JSON.stringify({
-                    keyboard: cnames.map((x: string, _: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
+                    keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
                 }),
             })
         }
@@ -317,7 +319,7 @@ export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", 
             console.log("bpt 2", hqId)
             ctx.session.companyRHeadQuarterLocationId = hqId;
             ctx.scene.state.companyRHeadQuarterLocationId = hqId;
-                 globalState = ctx.scene.state;
+            globalState = ctx.scene.state;
             await ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sectory: ${globalState.companyRSectorName}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyConfirmKeyboard);
         }
     } else {
@@ -470,7 +472,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
             case "name":
                 globalState.companyGName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "sector":
                 globalState.companyGSectorName = response
@@ -492,24 +494,24 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     ctx.session.companyGSectorID = sectorId;
                     ctx.scene.state.companyGSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                     break;
                 }
             case "phone":
                 globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "website":
                 globalState.companyRWebsite = response
                 globalState.companyGWebsite = response
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "email":
                 globalState.companyGEmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "hqs":
                 globalState.companyGHeadQuarterLocation = response
@@ -532,7 +534,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState),registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
         }
     }
@@ -604,7 +606,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                             keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
                                 text: x,
                             }])), resize_keyboard: true, one_time_keyboard: true,
-                        }), 
+                        }),
                     })
                     return;
                 } else {
@@ -633,7 +635,7 @@ export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "doc
         ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
         return;
     }
-}) 
+})
 export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         console.log(ctx.update.message.photo[0])
@@ -748,7 +750,7 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmailEntity({email:ctx.message.text})
+            const res = await verifyEmailEntity({ email: ctx.message.text })
             if (res.data.entities.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;
@@ -774,11 +776,14 @@ export const companyOfficialPhoneNoGHandler = Telegraf.on(["photo", "text", "con
             const { cities } = data;
             let cnames = cities.map((nm: any) => nm.name);
             ctx.session.cityNames = cnames
+            let fkbs = cnames.map((x: string, _: string) => ([{
+                text: x,
+            }]))
+            fkbs.push([{ text: "Back" }])
+
             ctx.replyWithHTML("please enter location of your company head quarter.", {
                 reply_markup: JSON.stringify({
-                    keyboard: cnames.map((x: string, _: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
+                    keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
                 }),
             })
         }
@@ -1037,7 +1042,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                     "set": {
                         "head_quarter": ctx.scene.state.companyGHeadQuarterLocationId
                     }
-    
+
                 })
                 if (errors) {
                     console.log(errors);
@@ -1047,23 +1052,23 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 }
             }
         }
-            
-        } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
-            ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
-            const { data, errors } = await companyEdit({
-                "id": ctx.session.selectedCompanyId,
-                "set": {
-                    "website": ctx.scene.state.tobeEditedCompanyWebsiteField
-                }
 
-            })
-            if (errors) {
-                console.log(errors);
-            } else {
-                console.log(data);
-                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+    } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
+        ctx.scene.state.tobeEditedCompanyWebsiteField == ctx.message.text;
+        const { data, errors } = await companyEdit({
+            "id": ctx.session.selectedCompanyId,
+            "set": {
+                "website": ctx.scene.state.tobeEditedCompanyWebsiteField
             }
+
+        })
+        if (errors) {
+            console.log(errors);
+        } else {
+            console.log(data);
+            ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
         }
+    }
 })
 
 export const companyEditSpecificFieldSumitHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -1127,7 +1132,7 @@ export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "conta
                 ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
             }
             // ctx.scene.leave();
- 
+
         } else if (ctx.message.text == "No") {
             ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
         }
