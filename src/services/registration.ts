@@ -1,4 +1,4 @@
-import { REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_STARTUP } from "../apollo/queries"
+import { REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_EMAIL_ENTITY, USER_STARTUP } from "../apollo/queries"
 import { client } from "../apollo"
 
 export const registerNewBotUser = async (variables: any) => {
@@ -40,6 +40,14 @@ export const getUserByTelegramIdStartup = async (variables: any) => {
 export const verifyEmail = async (variables: any) => {
     const res = await client.query({
         query: USER_EM,
+        fetchPolicy: "network-only",
+        variables
+    })
+    return res
+}
+export const verifyEmailEntity = async (variables: any) => {
+    const res = await client.query({
+        query: USER_EMAIL_ENTITY,
         fetchPolicy: "network-only",
         variables
     })

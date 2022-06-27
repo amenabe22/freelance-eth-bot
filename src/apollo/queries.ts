@@ -190,7 +190,12 @@ export const JOB_SEEKER = gql`
 
 export const USER_EM = gql`query getUser($email: citext!) {
     users(where: { email: { _eq: $email } }) {
-    email
-    
+    email    
+    }
+  }`
+
+  export const USER_EMAIL_ENTITY = gql`query getUser($email: citext!) {
+    entities(where: { email: { _eq: $email } }) {
+    email    
     }
   }`

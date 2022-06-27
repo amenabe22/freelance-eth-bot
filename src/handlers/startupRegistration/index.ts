@@ -4,7 +4,7 @@ import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
-import { getUserByPhone, getUserByTelegramId, verifyEmail } from "../../services/registration";
+import { getUserByPhone, getUserByTelegramId, verifyEmailEntity } from "../../services/registration";
 import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
@@ -363,8 +363,8 @@ export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail({email: ctx.message.text})
-      if (rs.data.users.length) {
+      const rs = await verifyEmailEntity({email: ctx.message.text})
+      if (rs.data.entities.length) {
           ctx.reply("Sorry email is already taken !")
           return;
       }
@@ -1122,8 +1122,8 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail({email: ctx.message.text})
-      if (rs.data.users.length) {
+      const rs = await verifyEmailEntity({email: ctx.message.text})
+      if (rs.data.entities.length) {
           ctx.reply("Sorry email is already taken !")
           return;
       }
@@ -1895,8 +1895,8 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail({email: ctx.message.text})
-      if (rs.data.users.length) {
+      const rs = await verifyEmailEntity({email: ctx.message.text})
+      if (rs.data.entities.length) {
           ctx.reply("Sorry email is already taken !")
           return;
       }
@@ -2637,8 +2637,8 @@ export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmail({email: ctx.message.text})
-      if (rs.data.users.length) {
+      const rs = await verifyEmailEntity({email: ctx.message.text})
+      if (rs.data.entities.length) {
           ctx.reply("Sorry email is already taken !")
           return;
       }

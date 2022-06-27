@@ -4,7 +4,7 @@ import FormData from "form-data";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
-import { getUserByTelegramId, getUserByPhone, verifyEmail } from "../../services/registration";
+import { getUserByTelegramId, getUserByPhone, verifyEmailEntity } from "../../services/registration";
 import {
     companyRegisterOptionalKeyboard,
     registerCompanyConfirmKeyboard,
@@ -257,8 +257,9 @@ export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmail({email:ctx.message.text})
-            if (res.data.users.length) {
+            const res = await verifyEmailEntity({email:ctx.message.text})
+            console.log(res)
+            if (res.data.entities.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;
             }
@@ -748,8 +749,8 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
-            const res = await verifyEmail({email:ctx.message.text})
-            if (res.data.users.length) {
+            const res = await verifyEmailEntity({email:ctx.message.text})
+            if (res.data.entities.length) {
                 ctx.reply("Sorry email is already taken !")
                 return;
             }
