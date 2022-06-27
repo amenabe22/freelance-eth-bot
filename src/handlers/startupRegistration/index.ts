@@ -105,11 +105,13 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -466,7 +468,7 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     youtube_link: globalState.startupLGMFacebookLink,
     tiktok_link: globalState.startupLGMFacebookLink,
     twitter_link: globalState.startupLGMFacebookLink,
-    linkedin_link: globalState.startupLGMFacebookLink, 
+    linkedin_link: globalState.startupLGMFacebookLink,
     other_link_one: globalState.startupLGMFacebookLink,
     other_link_two: globalState.startupLGMFacebookLink,
     other_link_three: globalState.startupLGMFacebookLink,
@@ -475,34 +477,34 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-  } 
+  }
   console.log(".................................................................................")
   console.log(payload)
   console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-        formData.append(key, payload[key])
-}
-console.log("------------------------------------------------------------")
-console.log(payload)
-console.log("------------------------------------------------------------")
-await registerStartup(formData).then(({ data }) => {
+      formData.append(key, payload[key])
+  }
+  console.log("------------------------------------------------------------")
+  console.log(payload)
+  console.log("------------------------------------------------------------")
+  await registerStartup(formData).then(({ data }) => {
     if (data) {
-        ctx.deleteMessage();
-        console.log(data)
-        ctx.reply("sucessfully submitted", cancelKeyboard) 
+      ctx.deleteMessage();
+      console.log(data)
+      ctx.reply("sucessfully submitted", cancelKeyboard)
     } else {
 
     }
     console.log(globalState, "cr")
-}).catch((e) => {
+  }).catch((e) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
     ctx.reply("failed to register company", cancelKeyboard)
-})
+  })
 }
- 
+
 
 
 
@@ -553,11 +555,13 @@ export const startupRegisteringEditLGMInitHandler = async (ctx: any) => {
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -843,11 +847,13 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -1213,26 +1219,26 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
   console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-        formData.append(key, payload[key])
-}
-console.log("------------------------------------------------------------")
-console.log(payload)
-console.log("------------------------------------------------------------")
-await registerStartup(formData).then(({ data }) => {
+      formData.append(key, payload[key])
+  }
+  console.log("------------------------------------------------------------")
+  console.log(payload)
+  console.log("------------------------------------------------------------")
+  await registerStartup(formData).then(({ data }) => {
     if (data) {
-        ctx.deleteMessage();
-        console.log(data)
-        ctx.reply("sucessfully submitted", cancelKeyboard) 
+      ctx.deleteMessage();
+      console.log(data)
+      ctx.reply("sucessfully submitted", cancelKeyboard)
     } else {
 
     }
     console.log(globalState, "cr")
-}).catch((e) => {
+  }).catch((e) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
     ctx.reply("failed to register company", cancelKeyboard)
-})
+  })
 }
 export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
   const formData = new FormData();
@@ -1324,11 +1330,13 @@ export const startupRegisteringEditUGMInitHandler = async (ctx: any) => {
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -1632,11 +1640,13 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = ctx.session.sectorNames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: ctx.session.sectorNames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -2009,26 +2019,26 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
   console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-        formData.append(key, payload[key])
-}
-console.log("------------------------------------------------------------")
-console.log(payload)
-console.log("------------------------------------------------------------")
-await registerStartup(formData).then(({ data }) => {
+      formData.append(key, payload[key])
+  }
+  console.log("------------------------------------------------------------")
+  console.log(payload)
+  console.log("------------------------------------------------------------")
+  await registerStartup(formData).then(({ data }) => {
     if (data) {
-        ctx.deleteMessage();
-        console.log(data)
-        ctx.reply("sucessfully submitted", cancelKeyboard) 
+      ctx.deleteMessage();
+      console.log(data)
+      ctx.reply("sucessfully submitted", cancelKeyboard)
     } else {
 
     }
     console.log(globalState, "cr")
-}).catch((e) => {
+  }).catch((e) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
     ctx.reply("failed to register company", cancelKeyboard)
-})
+  })
 }
 //licensed startup registration with representative ends here...
 
@@ -2077,11 +2087,14 @@ export const startupRegisteringEditLRInitHandler = async (ctx: any) => {
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
+
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -2397,11 +2410,14 @@ export const startupURStampedLetterHandler = Telegraf.on(["photo", "text", "cont
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = ctx.session.sectorNames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
+
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: ctx.session.sectorNames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }
@@ -2766,26 +2782,26 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
   console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-        formData.append(key, payload[key])
-}
-console.log("------------------------------------------------------------")
-console.log(payload)
-console.log("------------------------------------------------------------")
-await registerStartup(formData).then(({ data }) => {
+      formData.append(key, payload[key])
+  }
+  console.log("------------------------------------------------------------")
+  console.log(payload)
+  console.log("------------------------------------------------------------")
+  await registerStartup(formData).then(({ data }) => {
     if (data) {
-        ctx.deleteMessage();
-        console.log(data)
-        ctx.reply("sucessfully submitted", cancelKeyboard) 
+      ctx.deleteMessage();
+      console.log(data)
+      ctx.reply("sucessfully submitted", cancelKeyboard)
     } else {
 
     }
     console.log(globalState, "cr")
-}).catch((e) => {
+  }).catch((e) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
     ctx.reply("failed to register company", cancelKeyboard)
-})
+  })
 }
 
 export const editRegisterStartUpURHandler = async (ctx: any) => {
@@ -2840,11 +2856,13 @@ export const startupRegisteringEditURInitHandler = async (ctx: any) => {
         const { sectors } = data;
         let snames = sectors.map((nm: any) => nm.name);
         ctx.session.sectorNames = snames
+        let secs = snames.map((x: string, _: string) => ([{
+          text: x,
+        }]))
+        secs.push([{ text: "Back" }])
         ctx.replyWithHTML("please enter industry sector.", {
           reply_markup: JSON.stringify({
-            keyboard: snames.map((x: string, _: string) => ([{
-              text: x,
-            }])), resize_keyboard: true, one_time_keyboard: true,
+            keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
           }),
         })
       }

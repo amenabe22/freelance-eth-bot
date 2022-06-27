@@ -55,34 +55,38 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     const
         {
             companyGName,
+            companyRName,
             companyGNameBold,
             companyGSectorName,
             companyGSectorID,
+            companyRSectorID,
             companyGEmployeeSize,
+            companyREmployeeSize,
             companyRWebsite,
             companyGWebsite,
             companyGEmail,
             companyGPhoneNumber,
+            companyRPhoneNumber,
             companyGHeadQuarterLocation,
-            companyGHeadQuarterLocationId
+            companyGHeadQuarterLocationId,
+            companyRHeadQuarterLocationId
         } = globalState
     const [{ phone, first_name, last_name }] = users
     const formData = new FormData()
     const payload: any = {
-        name: companyGName,
-        phone: companyGPhoneNumber,
-        sector_id: companyGSectorID,
+        name: companyGName ?? companyRName,
+        phone: companyGPhoneNumber ?? companyRPhoneNumber,
+        sector_id: companyGSectorID ?? companyRSectorID,
         is_user_gm: 'true',
         type: 'COMPANY',
         user_first_name: first_name,
         user_last_name: last_name,
-        employee_size: companyGEmployeeSize,
-        website: companyGWebsite,
+        employee_size: companyGEmployeeSize ?? companyREmployeeSize,
+        website: companyGWebsite ?? companyRWebsite,
         // email: companyGEmail,
-
         user_phone: phone,
         telegram_id: JSON.stringify(ctx.from.id),
-        head_quarter: companyGHeadQuarterLocationId,
+        head_quarter: companyGHeadQuarterLocationId ?? companyRHeadQuarterLocationId,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
         rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
@@ -101,7 +105,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         if (data) {
             ctx.deleteMessage();
             console.log(data)
-            ctx.reply("sucessfully submitted", cancelKeyboard) 
+            ctx.reply("sucessfully submitted", cancelKeyboard)
         } else {
             ctx.reply("failed to register company")
         }
@@ -177,13 +181,15 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
             const { data, error } = await fetchSectors()
             if (data) {
                 const { sectors } = data;
-                let snames = sectors.map((nm: any) => nm.name);
+                const snames = sectors.map((nm: any) => nm.name);
+                let secs = snames.map((x: string, _: string) => ([{
+                    text: x,
+                }]))
+                secs.push([{ text: "Back" }])
                 ctx.session.sectorNames = snames
                 ctx.replyWithHTML("please enter industry sector.", {
                     reply_markup: JSON.stringify({
-                        keyboard: snames.map((x: string, _: string) => ([{
-                            text: x,
-                        }])), resize_keyboard: true, one_time_keyboard: true,
+                        keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
                     }),
                 })
                 return ctx.wizard.next();
@@ -288,7 +294,7 @@ export const companyOfficialPhoneNoRHandler = Telegraf.on(["photo", "text", "con
             let fkbs = cnames.map((x: string, _: string) => ([{
                 text: x,
             }]))
-            fkbs.push({ text: "Back" })
+            fkbs.push([{ text: "Back" }])
             ctx.replyWithHTML("please enter location of your company head quarter.", {
                 reply_markup: JSON.stringify({
                     keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
@@ -355,11 +361,14 @@ export const companyEditInitHandler = async (ctx: any) => {
             if (data) {
                 const { sectors } = data;
                 let snames = sectors.map((nm: any) => nm.name);
+                let secs = snames.map((x: string, _: string) => ([{
+                    text: x,
+                }]))
+                secs.push([{ text: "Back" }])
+
                 ctx.replyWithHTML("please enter industry sector.", {
                     reply_markup: JSON.stringify({
-                        keyboard: snames.map((x: string, _: string) => ([{
-                            text: x,
-                        }])), resize_keyboard: true, one_time_keyboard: true,
+                        keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
                     }),
                 })
             }
@@ -674,11 +683,14 @@ export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "
             const { sectors } = data;
             let snames = sectors.map((nm: any) => nm.name);
             ctx.session.sectorNames = snames
+            let secs = snames.map((x: string, _: string) => ([{
+                text: x,
+            }]))
+            secs.push([{ text: "Back" }])
+            
             ctx.replyWithHTML("please enter industry sector.", {
                 reply_markup: JSON.stringify({
-                    keyboard: snames.map((x: string, _: string) => ([{
-                        text: x,
-                    }])), resize_keyboard: true, one_time_keyboard: true,
+                    keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
                 }),
             })
         }

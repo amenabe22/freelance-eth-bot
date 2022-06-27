@@ -1,6 +1,6 @@
 import { REGISTER_USER, COMPANY_HANDOVER, COMPANY_EDIT } from "../apollo/queries"
 import { client } from "../apollo"
-import { ENTITY_ENDPOINT, ENT_CREATE_ENDPT } from "../constants"
+import { ENTITY_ENDPOINT } from "../constants"
 import axios from "axios"
 import FormData from "form-data";
 
