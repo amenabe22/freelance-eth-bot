@@ -953,11 +953,10 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
             ctx.scene.state.toBeEditedCompanyNameField = ctx.message.text;
             console.log(ctx.session.selectedCompanyId)
             const { data, errors } = await companyEdit({
-                "id": ctx.session.selectedCompanyId,
-                "set": {
-                    "name": ctx.scene.state.toBeEditedCompanyNameField
+                id: ctx.session.selectedCompanyId,
+                set: {
+                    name: ctx.scene.state.toBeEditedCompanyNameField
                 }
-
             })
             if (errors) {
                 console.log(errors);
