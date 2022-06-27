@@ -101,7 +101,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         if (data) {
             ctx.deleteMessage();
             console.log(data)
-            ctx.reply("sucessfully submitted", cancelKeyboard)
+            ctx.reply("sucessfully submitted", cancelKeyboard) 
         } else {
             ctx.reply("failed to register company")
         }

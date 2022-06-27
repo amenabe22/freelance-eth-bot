@@ -11,8 +11,12 @@ export const startupRegisteringEditLGMScene = new CoreScene(
               handlers: [
                 hdlr.startupRegisteringEditLGMValueHandler
               ]
-             }
-)
+            },
+            [
+              companyRegistraionCancel
+            ]
+          )
+
 export const startupRegisteringEditUGMScene = new CoreScene(
   "startupRegisteringEditUGMScene",
   {
@@ -20,7 +24,10 @@ export const startupRegisteringEditUGMScene = new CoreScene(
    handlers: [
      hdlr.startupRegisteringEditUGMValueHandler
    ]
-  }
+  },
+  [
+    companyRegistraionCancel
+  ]
 )
 export const startupRegisteringEditLRScene = new CoreScene(
   "startupRegisteringEditLRScene",
@@ -29,7 +36,10 @@ export const startupRegisteringEditLRScene = new CoreScene(
    handlers: [
      hdlr.startupRegisteringEditLRValueHandler
    ]
-  }
+  },
+  [
+    companyRegistraionCancel
+  ]
 )
 export const startupRegisteringEditURScene = new CoreScene(
   "startupRegisteringEditURScene",
@@ -38,9 +48,11 @@ export const startupRegisteringEditURScene = new CoreScene(
    handlers: [
      hdlr.startupRegisteringEditURValueHandler
    ]
-  }
+  },
+  [
+    companyRegistraionCancel
+  ]
 )
-
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
   {

@@ -444,12 +444,13 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     telegram_id: JSON.stringify(ctx.from.id)
   })
   const [{ phone, first_name, last_name }] = users
-  // const formData = new FormData();
+  console.log(phone, first_name, last_name)
+  const formData = new FormData();
   const payload: any = {
     name: globalState.startupLGMName,
     founder: globalState.startupLGMFounder1,
     phone: globalState.startupLGMPhoneNumber,
-    sector: globalState.startupLGMSectorID,
+    sector_id: globalState.startupLGMSectorID,
     is_user_gm: 'true',
     user_first_name: first_name,
     user_last_name: last_name,
@@ -457,66 +458,50 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     website: globalState.startupLGMWebsite,
     // email: globalState.startupLGMEmail,
     user_phone: phone,
+    type: 'STARTUP',
     head_quarter: globalState.startupLGMHeadQuarterLocation,
     facebook_link: globalState.startupLGMFacebookLink,
     telegram_link: globalState.startupLGMFacebookLink,
     youtube_link: globalState.startupLGMFacebookLink,
     tiktok_link: globalState.startupLGMFacebookLink,
     twitter_link: globalState.startupLGMFacebookLink,
-    linkedin: globalState.startupLGMFacebookLink,
+    linkedin_link: globalState.startupLGMFacebookLink, 
     other_link_one: globalState.startupLGMFacebookLink,
     other_link_two: globalState.startupLGMFacebookLink,
     other_link_three: globalState.startupLGMFacebookLink,
-    trade_license_photo: {
-      value: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-      options: {
-        filename: `files/tradeLPhoto/${ctx.from.id}.jpg`,
-        contentType: null
-      }
-    },
-    rep_id_photo: {
-      value: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-      options: {
-        filename: `files/GMIdphoto/${ctx.from.id}.jpg`,
-        contentType: null
-      }
-    },
-    rep_letter_photo: {
-      value: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-      options: {
-        filename: `files/letterPhoto/${ctx.from.id}.jpg`,
-        contentType: null
-      }
-    },
-    // trade_license_photo: fs.createReadStream(path.join(`files/ tradeLPhoto / ${ ctx.from.id }.jpg`)),
-    // rep_id_photo: fs.createReadStream(path.join(`files / GMIdphoto / ${ ctx.from.id }.jpg`)),
-    // rep_letter_photo: fs.createReadStream(path.join(`files / letterPhoto / ${ ctx.from.id }.jpg`)),
+    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-  }
-
-
+  } 
   console.log(".................................................................................")
   console.log(payload)
   console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
-    if (!payload[key])
-      delete payload[key]
-  }
-  try {
-    registerStartup(payload, (err: any, httpResponse: any, body: any) => {
-      if (err) {
-        console.log("crashed", err)
-        return;
-      }
-      console.log("Response: ", body, httpResponse);
-      ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-
-    })
-  } catch (error) {
-    console.log(error)
-  }
+    if (payload[key])
+        formData.append(key, payload[key])
 }
+console.log("------------------------------------------------------------")
+console.log(payload)
+console.log("------------------------------------------------------------")
+await registerStartup(formData).then(({ data }) => {
+    if (data) {
+        ctx.deleteMessage();
+        console.log(data)
+        ctx.reply("sucessfully submitted", cancelKeyboard) 
+    } else {
+
+    }
+    console.log(globalState, "cr")
+}).catch((e) => {
+    const message = e.response.data
+    console.error(JSON.stringify(message))
+    console.log(message.graphQLErrors, "errroooooor")
+    ctx.reply("failed to register company", cancelKeyboard)
+})
+}
+ 
 
 
 
@@ -1220,23 +1205,37 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
+  console.log(".................................................................................")
+  console.log(payload)
+  console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-      formData.append(key, payload[key])
-  }
+        formData.append(key, payload[key])
+}
+console.log("------------------------------------------------------------")
+console.log(payload)
+console.log("------------------------------------------------------------")
+await registerStartup(formData).then(({ data }) => {
+    if (data) {
+        ctx.deleteMessage();
+        console.log(data)
+        ctx.reply("sucessfully submitted", cancelKeyboard) 
+    } else {
 
-  const { data } = await registerStartup(formData)
-  if (data) {
-    console.log(data);
-    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-  }
-
+    }
+    console.log(globalState, "cr")
+}).catch((e) => {
+    const message = e.response.data
+    console.error(JSON.stringify(message))
+    console.log(message.graphQLErrors, "errroooooor")
+    ctx.reply("failed to register company", cancelKeyboard)
+})
 }
 export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
   const formData = new FormData();
   const payload: any = {
     name: globalState.startupUGMName,
-    founders: globalState.startupUGMFounder1,
+    founder: globalState.startupUGMFounder1,
     phone: globalState.startupUGMPhoneNumber,
     sector: globalState.startupUGMSectorID,
     is_user_gm: globalState.statupUGMIsUserGm,
@@ -1999,16 +1998,31 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
+  console.log(".................................................................................")
+  console.log(payload)
+  console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-      formData.append(key, payload[key])
-  }
+        formData.append(key, payload[key])
+}
+console.log("------------------------------------------------------------")
+console.log(payload)
+console.log("------------------------------------------------------------")
+await registerStartup(formData).then(({ data }) => {
+    if (data) {
+        ctx.deleteMessage();
+        console.log(data)
+        ctx.reply("sucessfully submitted", cancelKeyboard) 
+    } else {
 
-  const { data } = await registerStartup(formData)
-  if (data) {
-    console.log(data);
-    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-  }
+    }
+    console.log(globalState, "cr")
+}).catch((e) => {
+    const message = e.response.data
+    console.error(JSON.stringify(message))
+    console.log(message.graphQLErrors, "errroooooor")
+    ctx.reply("failed to register company", cancelKeyboard)
+})
 }
 //licensed startup registration with representative ends here...
 
@@ -2739,17 +2753,31 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
 
+  console.log(".................................................................................")
+  console.log(payload)
+  console.log(".................................................................................")
   for (const key of Object.keys(payload)) {
     if (payload[key])
-      formData.append(key, payload[key])
-  }
+        formData.append(key, payload[key])
+}
+console.log("------------------------------------------------------------")
+console.log(payload)
+console.log("------------------------------------------------------------")
+await registerStartup(formData).then(({ data }) => {
+    if (data) {
+        ctx.deleteMessage();
+        console.log(data)
+        ctx.reply("sucessfully submitted", cancelKeyboard) 
+    } else {
 
-  const { data } = await registerStartup(formData)
-  if (data) {
-    console.log(data);
-    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-  }
-
+    }
+    console.log(globalState, "cr")
+}).catch((e) => {
+    const message = e.response.data
+    console.error(JSON.stringify(message))
+    console.log(message.graphQLErrors, "errroooooor")
+    ctx.reply("failed to register company", cancelKeyboard)
+})
 }
 
 export const editRegisterStartUpURHandler = async (ctx: any) => {

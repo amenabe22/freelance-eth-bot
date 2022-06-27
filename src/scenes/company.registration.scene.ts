@@ -10,7 +10,10 @@ export const companyRegistrationEditScene = new CoreScene(
     handlers: [
       hdlr.companyEditValueHandler,
     ]
-  }
+  },
+  [
+    companyRegistraionCancel
+  ]
 )
 export const companyRegistrationREditScene = new CoreScene(
   "companyRegistrationREditScene",
@@ -19,9 +22,11 @@ export const companyRegistrationREditScene = new CoreScene(
     handlers: [
       hdlr.companyEditRValueHandler,
     ]
-  }
+  },
+  [
+    companyRegistraionCancel
+  ]
 )
-
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
   {
