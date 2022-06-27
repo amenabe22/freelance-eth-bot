@@ -9,7 +9,7 @@ import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
   registerStartupConfirmLRKeyboard,
-  registerStartupConfirmURKeyboard, 
+  registerStartupConfirmURKeyboard,
   startupRegisterOptionalKeyboard,
   starupFounderKeyboard,
   registerStartupToBeEditFieldLGMKeyboard,
@@ -20,15 +20,17 @@ import {
   startupEditHandOverKeyboard,
   startupEditKeyboard
 } from "../../keybaords/company.registration_kbs"
-import { companyHandOver , companyEdit} from "../../services/company.registration";
+import { companyHandOver, companyEdit } from "../../services/company.registration";
 
 import { MAX_ST_FOUNDERS_LIMIT } from "../../constants";
 import { download, fetchTelegramDownloadLink } from "../../utils.py/uploads";
 import path from "path";
 import fs from "fs";
 import { ve, vp, vw, vn } from "../../utils.py/validation";
-let globalState: any;
+import request from "request"
 
+
+let globalState: any;
 let totalAddedFounders = 0
 var startupNameBold = "";
 
@@ -358,15 +360,15 @@ export const startupLGMOtherLink3Handler = Telegraf.on(["photo", "text", "contac
 export const startupLGMEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     if (ctx.message.text == "Skip") {
-      ctx.scene.state.startupLGMEmail = " ";
+      ctx.scene.state.startupLGMEmail = null;
       console.log(ctx.scene.state.startupLGMEmail);
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmailEntity({email: ctx.message.text})
+      const rs = await verifyEmailEntity({ email: ctx.message.text })
       if (rs.data.entities.length) {
-          ctx.reply("Sorry email is already taken !")
-          return;
+        ctx.reply("Sorry email is already taken !")
+        return;
       }
 
       ctx.scene.state.startupLGMEmail = ctx.message.text;
@@ -437,63 +439,24 @@ export const startupLGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
   }
 })
 
-// export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
-//   const formData = new FormData();
-//   const payload: any = {
-//     name: globalState.startupUGMName,
-//     founder: globalState.startupUGMFounder1,
-//     phone: globalState.startupUGMPhoneNumber,
-//     sector: globalState.startupLGMSectorID,
-//     is_user_gm: globalState.statupLGMIsUserGm,
-//     user_first_name: globalState.startupLGMUFN,
-//     user_last_name: globalState.startupLGMULN,
-//     employee_size: globalState.startupLGMEmployeeSize,
-//     website: globalState.startupLGMWebsite,
-//     email: globalState.startupLGMEmail,
-//     user_phone: globalState.startupLGMUP,
-//     head_quarter: globalState.startupLGMHeadQuarterLocation,
-//     facebook_link: globalState.startupLGMFacebookLink,
-//     telegram_link: globalState.startupLGMFacebookLink,
-//     youtube_link: globalState.startupLGMFacebookLink,
-//     tiktok_link: globalState.startupLGMFacebookLink,
-//     twitter_link: globalState.startupLGMFacebookLink,
-//     linkedin: globalState.startupLGMFacebookLink,
-//     other_link_one: globalState.startupLGMFacebookLink,
-//     other_link_two: globalState.startupLGMFacebookLink,
-//     other_link_three: globalState.startupLGMFacebookLink,
-//     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-//     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-//     // rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-//     rep_letter_photo: null,
-//     folder: 'entity',
-//     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-//   }
-//   for (const key of Object.keys(payload)) {
-//     if (payload[key])
-//       formData.append(key, payload[key])
-//   }
-
-//   const { data } = await registerStartup(formData)
-//   if (data) {
-//     console.log(data);
-//     ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-//   }
-
-// }
 export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
-  const formData = new FormData();
+  const { data: { users } } = await getUserByTelegramId({
+    telegram_id: JSON.stringify(ctx.from.id)
+  })
+  const [{ phone, first_name, last_name }] = users
+  // const formData = new FormData();
   const payload: any = {
     name: globalState.startupLGMName,
-    founder: globalState.startupLGMFounderName,
+    founders: ['asdf', 'asdf', 'asdf'],
     phone: globalState.startupLGMPhoneNumber,
     sector: globalState.startupLGMSectorID,
-    is_user_gm: globalState.statupLGMIsUserGm,
-    user_first_name: globalState.startupLGMUFN,
-    user_last_name: globalState.startupLGMULN,
+    is_user_gm: 'true',
+    user_first_name: first_name,
+    user_last_name: last_name,
     employee_size: globalState.startupLGMEmployeeSize,
     website: globalState.startupLGMWebsite,
-    email: globalState.startupLGMEmail,
-    user_phone: globalState.startupLGMUP,
+    // email: globalState.startupLGMEmail,
+    user_phone: phone,
     head_quarter: globalState.startupLGMHeadQuarterLocation,
     facebook_link: globalState.startupLGMFacebookLink,
     telegram_link: globalState.startupLGMFacebookLink,
@@ -504,21 +467,54 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     other_link_one: globalState.startupLGMFacebookLink,
     other_link_two: globalState.startupLGMFacebookLink,
     other_link_three: globalState.startupLGMFacebookLink,
-    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    trade_license_photo: {
+      value: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+      options: {
+        filename: `files/tradeLPhoto/${ctx.from.id}.jpg`,
+        contentType: null
+      }
+    },
+    rep_id_photo: {
+      value: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+      options: {
+        filename: `files/GMIdphoto/${ctx.from.id}.jpg`,
+        contentType: null
+      }
+    },
+    rep_letter_photo: {
+      value: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+      options: {
+        filename: `files/letterPhoto/${ctx.from.id}.jpg`,
+        contentType: null
+      }
+    },
+    // trade_license_photo: fs.createReadStream(path.join(`files/ tradeLPhoto / ${ ctx.from.id }.jpg`)),
+    // rep_id_photo: fs.createReadStream(path.join(`files / GMIdphoto / ${ ctx.from.id }.jpg`)),
+    // rep_letter_photo: fs.createReadStream(path.join(`files / letterPhoto / ${ ctx.from.id }.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
-  for (const key of Object.keys(payload)) {
-    if (payload[key])
-      formData.append(key, payload[key])
-  }
 
-  const { data, status, statusText } = await registerStartup(formData)
-  if (data) {
-    console.log(data, status, statusText);
-    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+
+  console.log(".................................................................................")
+  console.log(payload)
+  console.log(".................................................................................")
+  for (const key of Object.keys(payload)) {
+    if (!payload[key])
+      delete payload[key]
+  }
+  try {
+    registerStartup(payload, (err: any, httpResponse: any, body: any) => {
+      if (err) {
+        console.log("crashed", err)
+        return;
+      }
+      console.log("Response: ", body, httpResponse);
+      ctx.reply("You have successfully registered your startup.", cancelKeyboard)
+
+    })
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -647,37 +643,37 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
       case "name":
         globalState.startupLGMName = response
         ctx.reply("Name Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "founderN1":
         globalState.startupLGMFounder1 = response
         ctx.replyWithHTML("Founder one Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "founderN2":
         globalState.startupLGMFounder2 = response
         ctx.replyWithHTML("Founder two Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "founderN3":
         globalState.startupLGMFounder3 = response
         ctx.replyWithHTML("Founder three Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "founderN4":
         globalState.startupLGMFounder4 = response
         ctx.replyWithHTML("Founder four Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "founderN5":
         globalState.startupLGMFounder5 = response
         ctx.replyWithHTML("Founder five Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "employee":
         globalState.startupLGMEmployeeSize = response
         ctx.replyWithHTML("Employee Size updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         return
       case "sector":
         globalState.startupLGMSectorName = response
@@ -699,68 +695,68 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
           ctx.session.startupLGMSectorID = sectorId;
           ctx.scene.state.startupLGMSectorID = sectorId;
           ctx.reply("Sector Updated")
-          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
           break;
         }
       case "facebook":
         globalState.startupLGMFacebookLink = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "telegram":
         globalState.startupLGMTelegramLink = response
         ctx.replyWithHTML("telegram link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "youtube":
         globalState.startupLGMYouTubeLink = response
         ctx.replyWithHTML("youtube link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "twitter":
         globalState.startupLGMTwitterLink = response
         ctx.replyWithHTML("twitter link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "tiktok":
         globalState.startupLGMTikTokLink = response
         ctx.replyWithHTML("tiktok link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "linkedin":
         globalState.startupLGMLinkedInLink = response
         ctx.replyWithHTML("linkedin link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "other1":
         globalState.startupLGMOther1Link = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "other2":
         globalState.startupLGMOtherLink2 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "other3":
         globalState.startupLGMOtherLink3 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "phone":
         globalState.startupLGMPhoneNumber = response
         ctx.reply("Phone Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "website":
         globalState.startupLGMWebsite = response
         ctx.reply("Website Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "email":
         globalState.startupLGMEmail = response
         ctx.reply("updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
       case "location":
         globalState.startupLGMHeadQuarterLocation = response
@@ -784,7 +780,7 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
           globalState = ctx.scene.state;
         }
         ctx.reply("Updated HeadQuarters")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nnWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nnWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard)
         break;
     }
   }
@@ -802,7 +798,7 @@ export const startupUGMNameHandler = Telegraf.on(["photo", "text", "contact", "d
     ctx.replyWithHTML(`please enter startup founder name`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
-    ctx.replyWithHTML(`Please enter a valid startup G/M name!`, cancelKeyboard);
+    ctx.replyWithHTML(`Please enter a valid startup G / M name!`, cancelKeyboard);
     return;
   }
 })
@@ -817,19 +813,19 @@ export const startupUGMFoundersHandler = Telegraf.on(["photo", "text", "contact"
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupUGMFounder${totalAddedFounders}`] = ctx.message.text;
-      console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders}`])
+      ctx.scene.state[`startupUGMFounder${totalAddedFounders} `] = ctx.message.text;
+      console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders} `])
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
         return ctx.wizard.next();
       }
       ctx.replyWithHTML(`please enter startup founder name`, starupFounderKeyboard);
     } else {
-      ctx.replyWithHTML(`please enter a valid startup fundar name !`, starupFounderKeyboard);
+      ctx.replyWithHTML(`please enter a valid startup fundar name!`, starupFounderKeyboard);
       return;
     }
   } else {
-    ctx.replyWithHTML(`please enter a valid startup fundar name !`, starupFounderKeyboard);
+    ctx.replyWithHTML(`please enter a valid startup fundar name!`, starupFounderKeyboard);
     return;
   }
 })
@@ -840,9 +836,8 @@ export const startupUGMTradeLicensePhotoHandler = Telegraf.on(["photo", "text", 
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-      console.log("done")
-      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+    download(downloadURL, `files / tradeLPhoto / ${fname} `,).then(async () => {
+      ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
     })
   } else {
@@ -856,7 +851,7 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files / GMIdPhoto / ${fname} `,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -873,7 +868,7 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
       return ctx.wizard.next();
     })
   } else {
-    ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
+    ctx.replyWithHTML(`Please enter avalid G / M id photo!`, cancelKeyboard);
     return;
   }
 })
@@ -922,7 +917,7 @@ export const startupUGMEmployeeSizeHandler = Telegraf.on(["photo", "text", "cont
       console.log(ctx.scene.state.startupUGMEmployeeSize);
       ctx.replyWithHTML(`please enter startup website.`, startupRegisterOptionalKeyboard);
       return ctx.wizard.next();
-    } 
+    }
   } else {
     ctx.replyWithHTML(`please enter valid employee size of your startup!`, startupRegisterOptionalKeyboard);
     return;
@@ -1122,10 +1117,10 @@ export const startupUGMEmailHandler = Telegraf.on(["photo", "text", "contact", "
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmailEntity({email: ctx.message.text})
+      const rs = await verifyEmailEntity({ email: ctx.message.text })
       if (rs.data.entities.length) {
-          ctx.reply("Sorry email is already taken !")
-          return;
+        ctx.reply("Sorry email is already taken !")
+        return;
       }
       ctx.scene.state.startupUGMEmail = ctx.message.text;
       console.log(ctx.scene.state.startupUGMEmail);
@@ -1181,7 +1176,7 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
       ctx.session.startupUGMHeadQuarterLocation = hqId;
       ctx.scene.state.startupUGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -1219,9 +1214,9 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     other_link_one: globalState.startupUGMFacebookLink,
     other_link_two: globalState.startupUGMFacebookLink,
     other_link_three: globalState.startupUGMFacebookLink,
-    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    trade_license_photo: fs.createReadStream(path.join(`files / tradeLPhoto / ${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files / GMIdphoto / ${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files / letterPhoto / ${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1261,9 +1256,9 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     other_link_one: globalState.startupUGMFacebookLink,
     other_link_two: globalState.startupUGMFacebookLink,
     other_link_three: globalState.startupUGMFacebookLink,
-    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    trade_license_photo: fs.createReadStream(path.join(`files / tradeLPhoto / ${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files / GMIdphoto / ${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files / letterPhoto / ${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1402,37 +1397,37 @@ export const startupRegisteringEditUGMValueHandler = Telegraf.on(["photo", "text
       case "name":
         globalState.startupUGMName = response
         ctx.reply("Name Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "founderN1":
         globalState.startupUGMFounder1 = response
         ctx.replyWithHTML("Founder one Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "founderN2":
         globalState.startupUGMFounder2 = response
         ctx.replyWithHTML("Founder two Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "founderN3":
         globalState.startupUGMFounder3 = response
         ctx.replyWithHTML("Founder three Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "founderN4":
         globalState.startupUGMFounder4 = response
         ctx.replyWithHTML("Founder four Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "founderN5":
         globalState.startupUGMFounder5 = response
         ctx.replyWithHTML("Founder five Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "employee":
         globalState.startupUGMEmployeeSize = response
         ctx.replyWithHTML("Employee Size updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         return
       case "sector":
         globalState.startupUGMSectorName = response
@@ -1454,68 +1449,68 @@ export const startupRegisteringEditUGMValueHandler = Telegraf.on(["photo", "text
           ctx.session.startupUGMSectorID = sectorId;
           ctx.scene.state.startupUGMSectorID = sectorId;
           ctx.reply("Sector Updated")
-          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
           break;
         }
       case "facebook":
         globalState.startupUGMFacebookLink = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "telegram":
         globalState.startupUGMTelegramLink = response
         ctx.replyWithHTML("telegram link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "youtube":
         globalState.startupUGMYouTubeLink = response
         ctx.replyWithHTML("youtube link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "twitter":
         globalState.startupUGMTwitterLink = response
         ctx.replyWithHTML("twitter link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "tiktok":
         globalState.startupUGMTikTokLink = response
         ctx.replyWithHTML("tiktok link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "linkedin":
         globalState.startupUGMLinkedInLink = response
         ctx.replyWithHTML("linkedin link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "other1":
         globalState.startupUGMOther1Link = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "other2":
         globalState.startupUGMOtherLink2 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "other3":
         globalState.startupUGMOtherLink3 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "phone":
         globalState.startupUGMPhoneNumber = response
         ctx.reply("Phone Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "website":
         globalState.startupUGMWebsite = response
         ctx.reply("Website Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "email":
         globalState.startupUGMEmail = response
         ctx.reply("updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
       case "sector":
         globalState.startupUGMHeadQuarterLocation = response
@@ -1539,7 +1534,7 @@ export const startupRegisteringEditUGMValueHandler = Telegraf.on(["photo", "text
           globalState = ctx.scene.state;
         }
         ctx.reply("Updated HeadQuarters")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName}\nFounder1: ${globalState.startupUGMFounder1}\nFounder2: ${globalState.startupUGMFounder2}\nFounder3: ${globalState.startupUGMFounder3}\nFounder4: ${globalState.startupUGMFounder4}\nFounder5: ${globalState.startupUGMFounder5}\nPhone: ${globalState.startupUGMPhoneNumber}\nSector: ${globalState.startupUGMSectorName}\nEmployee Size: ${globalState.startupUGMEmployeeSize}\nnWebsite: ${globalState.startupUGMWebsite}\nEmail: ${globalState.startupUGMEmail}\nFacebook link: ${globalState.startupUGMFacebookLink}\nTelegram link: ${globalState.startupUGMTelegramLink}\nYouTube link: ${globalState.startupUGMYouTubeLink}\nTikTok link: ${globalState.startupUGMTikTokLink}\nTwitter link: ${globalState.startupUGMTwitterLink}\nOther link1: ${globalState.startupUGMOther1Link}\nOther link2: ${globalState.startupUGMOther2Link}\nOther link3: ${globalState.startupUGMOther3Link}`, registerStartupConfirmUGMKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName} \nEmployee Size: ${globalState.startupUGMEmployeeSize} \nnWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
         break;
     }
   }
@@ -1557,7 +1552,7 @@ export const startupLRNameHandler = Telegraf.on(["photo", "text", "contact", "do
     ctx.replyWithHTML(`please enter startup founders name`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
-    ctx.replyWithHTML(`Please enter a valid startup G/M name!`, cancelKeyboard);
+    ctx.replyWithHTML(`Please enter a valid startup G / M name!`, cancelKeyboard);
     return;
   }
 })
@@ -1572,8 +1567,8 @@ export const startupLRFoundersHandler = Telegraf.on(["photo", "text", "contact",
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupLRFounder${totalAddedFounders}`] = ctx.message.text;
-      console.log(ctx.scene.state[`startupLRFounder${totalAddedFounders}`]);
+      ctx.scene.state[`startupLRFounder${totalAddedFounders} `] = ctx.message.text;
+      console.log(ctx.scene.state[`startupLRFounder${totalAddedFounders} `]);
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
         return ctx.wizard.next();
@@ -1595,12 +1590,12 @@ export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+    download(downloadURL, `files / tradeLPhoto / ${fname} `,).then(async () => {
+      ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
     })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
-    ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+    ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
     return ctx.wizard.next();
   } else {
     ctx.replyWithHTML(` please enter valid trade licence photo!`, startupRegisterOptionalKeyboard);
@@ -1613,12 +1608,12 @@ export const startupLRIdPhotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files / GMIdPhoto / ${fname} `,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
   } else {
-    ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
+    ctx.replyWithHTML(`Please enter avalid G / M id photo!`, cancelKeyboard);
     return;
   }
 })
@@ -1628,7 +1623,7 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files / letterPhoto / ${fname} `,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -1895,10 +1890,10 @@ export const startupLREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmailEntity({email: ctx.message.text})
+      const rs = await verifyEmailEntity({ email: ctx.message.text })
       if (rs.data.entities.length) {
-          ctx.reply("Sorry email is already taken !")
-          return;
+        ctx.reply("Sorry email is already taken !")
+        return;
       }
       ctx.scene.state.startupLREmail = ctx.message.text;
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
@@ -1958,7 +1953,7 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       console.log("****************************************************")
       console.log(globalState)
       console.log("****************************************************")
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterL}\nOther link: ${globalState.startupLROther1Link}`, registerStartupConfirmLRKeyboard)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterL} \nOther link: ${globalState.startupLROther1Link} `, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
       ctx.scene.leave()
@@ -1998,9 +1993,9 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     'other_link_one': globalState.startupLRFacebookLink,
     'other_link_two': globalState.startupLRFacebookLink,
     'other_link_three': globalState.startupLRFacebookLink,
-    'trade_license_photo': fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    'trade_license_photo': fs.createReadStream(path.join(`files / tradeLPhoto / ${ctx.from.id}.jpg`)),
+    'rep_id_photo': fs.createReadStream(path.join(`files / GMIdphoto / ${ctx.from.id}.jpg`)),
+    'rep_letter_photo': fs.createReadStream(path.join(`files / letterPhoto / ${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -2138,37 +2133,37 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
       case "name":
         globalState.startupLRName = response
         ctx.reply("Name Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "founderN1":
         globalState.startupLRFounder1 = response
         ctx.replyWithHTML("Founder one Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "founderN2":
         globalState.startupLRFounder2 = response
         ctx.replyWithHTML("Founder two Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "founderN3":
         globalState.startupLRFounder3 = response
         ctx.replyWithHTML("Founder three Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "founderN4":
         globalState.startupLRFounder4 = response
         ctx.replyWithHTML("Founder four Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "founderN5":
         globalState.startupLRFounder5 = response
         ctx.replyWithHTML("Founder five Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "employee":
         globalState.startupLREmployeeSize = response
         ctx.replyWithHTML("Employee Size updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         return
       case "sector":
         globalState.startupLRSectorName = response
@@ -2190,68 +2185,68 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
           ctx.session.startupLRSectorID = sectorId;
           ctx.scene.state.startupLRSectorID = sectorId;
           ctx.reply("Sector Updated")
-          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
           break;
         }
       case "facebook":
         globalState.startupLRFacebookLink = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "telegram":
         globalState.startupLRTelegramLink = response
         ctx.replyWithHTML("telegram link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "youtube":
         globalState.startupLRYouTubeLink = response
         ctx.replyWithHTML("youtube link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "twitter":
         globalState.startupLRTwitterLink = response
         ctx.replyWithHTML("twitter link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "tiktok":
         globalState.startupLRTikTokLink = response
         ctx.replyWithHTML("tiktok link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "linkedin":
         globalState.startupLRLinkedInLink = response
         ctx.replyWithHTML("linkedin link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "other1":
         globalState.startupLROther1Link = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "other2":
         globalState.startupLROtherLink2 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "other3":
         globalState.startupLROtherLink3 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "phone":
         globalState.startupLRPhoneNumber = response
         ctx.reply("Phone Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "website":
         globalState.startupLRWebsite = response
         ctx.reply("Website Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "email":
         globalState.startupLREmail = response
         ctx.reply("updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
       case "sector":
         globalState.startupLRHeadQuarterLocation = response
@@ -2275,7 +2270,7 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
           globalState = ctx.scene.state;
         }
         ctx.reply("Updated HeadQuarters")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName}\nFounder1: ${globalState.startupLRFounder1}\nFounder2: ${globalState.startupLRFounder2}\nFounder3: ${globalState.startupLRFounder3}\nFounder4: ${globalState.startupLRFounder4}\nFounder5: ${globalState.startupLRFounder5}\nPhone: ${globalState.startupLRPhoneNumber}\nSector: ${globalState.startupLRSectorName}\nEmployee Size: ${globalState.startupLREmployeeSize}\nnWebsite: ${globalState.startupLRWebsite}\nEmail: ${globalState.startupLREmail}\nFacebook link: ${globalState.startupLRFacebookLink}\nTelegram link: ${globalState.startupLRTelegramLink}\nYouTube link: ${globalState.startupLRYouTubeLink}\nTikTok link: ${globalState.startupLRTikTokLink}\nTwitter link: ${globalState.startupLRTwitterLink}\nOther link1: ${globalState.startupLROther1Link}\nOther link2: ${globalState.startupLROther2Link}\nOther link3: ${globalState.startupLROther3Link}`, registerStartupConfirmLRKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
         break;
     }
   }
@@ -2309,7 +2304,7 @@ export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "conta
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupURFounder${totalAddedFounders}`] = ctx.message.text;
+      ctx.scene.state[`startupURFounder${totalAddedFounders} `] = ctx.message.text;
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML("please enter startup trade license photo", startupRegisterOptionalKeyboard);
         return ctx.wizard.next();
@@ -2337,8 +2332,8 @@ export const startupURTradeLicensePhoto = Telegraf.on(["photo", "text", "contact
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-      ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
+    download(downloadURL, `files / tradeLPhoto / ${fname} `,).then(async () => {
+      ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
     })
   } else if (ctx.message.text && ctx.message.text == "Skip") {
@@ -2358,12 +2353,12 @@ export const startupUPIdphotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files / GMIdPhoto / ${fname} `,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
   } else {
-    ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
+    ctx.replyWithHTML(`Please enter avalid G / M id photo!`, cancelKeyboard);
     return;
   }
 })
@@ -2376,7 +2371,7 @@ export const startupURStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files / letterPhoto / ${fname} `,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -2637,10 +2632,10 @@ export const startupUREmailHandler = Telegraf.on(["photo", "text", "contact", "d
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
       return ctx.wizard.next();
     } else if (ve(ctx.message.text)) {
-      const rs = await verifyEmailEntity({email: ctx.message.text})
+      const rs = await verifyEmailEntity({ email: ctx.message.text })
       if (rs.data.entities.length) {
-          ctx.reply("Sorry email is already taken !")
-          return;
+        ctx.reply("Sorry email is already taken !")
+        return;
       }
       ctx.scene.state.startupUREmail = ctx.message.text;
       ctx.replyWithHTML(`please enter your startup official phone number.`, cancelKeyboard);
@@ -2698,7 +2693,7 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       ctx.session.startupURHeadQuarterLocation = hqId;
       ctx.scene.state.startupURHeadQuarterLocation = hqId;
       globalState = ctx.scene.state
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link: ${globalState.startupUROther1Link}`, registerStartupConfirmURKeyboard)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link: ${globalState.startupUROther1Link} `, registerStartupConfirmURKeyboard)
       ctx.reply("Finished here is your info please approve")
       ctx.scene.leave()
     }
@@ -2737,9 +2732,9 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     'other_link_one': globalState.startupURFacebookLink,
     'other_link_two': globalState.startupURFacebookLink,
     'other_link_three': globalState.startupURFacebookLink,
-    'trade_license_photo': fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    'trade_license_photo': fs.createReadStream(path.join(`files / tradeLPhoto / ${ctx.from.id}.jpg`)),
+    'rep_id_photo': fs.createReadStream(path.join(`files / GMIdphoto / ${ctx.from.id}.jpg`)),
+    'rep_letter_photo': fs.createReadStream(path.join(`files / letterPhoto / ${ctx.from.id}.jpg`)),
     'folder': 'entity',
     'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -2885,37 +2880,37 @@ export const startupRegisteringEditURValueHandler = Telegraf.on(["photo", "text"
       case "name":
         globalState.startupURName = response
         ctx.reply("Name Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "founderN1":
         globalState.startupURFounder1 = response
         ctx.replyWithHTML("Founder one Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "founderN2":
         globalState.startupURFounder2 = response
         ctx.replyWithHTML("Founder two Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "founderN3":
         globalState.startupURFounder3 = response
         ctx.replyWithHTML("Founder three Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "founderN4":
         globalState.startupURFounder4 = response
         ctx.replyWithHTML("Founder four Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "founderN5":
         globalState.startupURFounder5 = response
         ctx.replyWithHTML("Founder five Name Updated");
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "employee":
         globalState.startupUREmployeeSize = response
         ctx.replyWithHTML("Employee Size updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         return
       case "sector":
         globalState.startupURSectorName = response
@@ -2937,68 +2932,68 @@ export const startupRegisteringEditURValueHandler = Telegraf.on(["photo", "text"
           ctx.session.startupURSectorID = sectorId;
           ctx.scene.state.startupURSectorID = sectorId;
           ctx.reply("Sector Updated")
-          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+          ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
           break;
         }
       case "facebook":
         globalState.startupURFacebookLink = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "telegram":
         globalState.startupURTelegramLink = response
         ctx.replyWithHTML("telegram link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "youtube":
         globalState.startupURYouTubeLink = response
         ctx.replyWithHTML("youtube link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "twitter":
         globalState.startupURTwitterLink = response
         ctx.replyWithHTML("twitter link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "tiktok":
         globalState.startupURTikTokLink = response
         ctx.replyWithHTML("tiktok link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "linkedin":
         globalState.startupURLinkedInLink = response
         ctx.replyWithHTML("linkedin link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "other1":
         globalState.startupUROther1Link = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "other2":
         globalState.startupUROtherLink2 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "other3":
         globalState.startupUROtherLink3 = response
         ctx.replyWithHTML("facebook link updatee")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "phone":
         globalState.startupURPhoneNumber = response
         ctx.reply("Phone Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "website":
         globalState.startupURWebsite = response
         ctx.reply("Website Updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "email":
         globalState.startupUREmail = response
         ctx.reply("updated")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
       case "sector":
         globalState.startupURHeadQuarterLocation = response
@@ -3022,7 +3017,7 @@ export const startupRegisteringEditURValueHandler = Telegraf.on(["photo", "text"
           globalState = ctx.scene.state;
         }
         ctx.reply("Updated HeadQuarters")
-        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName}\nFounder1: ${globalState.startupURFounder1}\nFounder2: ${globalState.startupURFounder2}\nFounder3: ${globalState.startupURFounder3}\nFounder4: ${globalState.startupURFounder4}\nFounder5: ${globalState.startupURFounder5}\nPhone: ${globalState.startupURPhoneNumber}\nSector: ${globalState.startupURSectorName}\nEmployee Size: ${globalState.startupUREmployeeSize}\nnWebsite: ${globalState.startupURWebsite}\nEmail: ${globalState.startupUREmail}\nFacebook link: ${globalState.startupURFacebookLink}\nTelegram link: ${globalState.startupURTelegramLink}\nYouTube link: ${globalState.startupURYouTubeLink}\nTikTok link: ${globalState.startupURTikTokLink}\nTwitter link: ${globalState.startupURTwitterLink}\nOther link1: ${globalState.startupUROther1Link}\nOther link2: ${globalState.startupUROther2Link}\nOther link3: ${globalState.startupUROther3Link}`, registerStartupConfirmURKeyboard)
+        ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
         break;
     }
   }
@@ -3100,7 +3095,7 @@ export const startupSelectionActionHandler = async (ctx: any) => {
       console.log(ctx.session.selectedStartupName);
       console.log(ctx.session.selectedStartupId);
       startupNameBold = ctx.session.selectedStartupName.bold();
-      await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditHandOverKeyboard)
+      await ctx.replyWithHTML(`${startupNameBold} \n ******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditHandOverKeyboard)
       await ctx.replyWithHTML("*************************************", {
         reply_markup: {
           keyboard: [[{ text: "Main Menu" }],], resize_keyboard: true, one_time_keyboard: true
@@ -3113,7 +3108,7 @@ export const startupSelectionActionHandler = async (ctx: any) => {
 
 export const startupEditHandler = async (ctx: any) => {
   ctx.deleteMessage();
-  await ctx.replyWithHTML(`${startupNameBold}\n******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditKeyboard);
+  await ctx.replyWithHTML(`${startupNameBold} \n ******************\n\nYou have hired 0 candidates\nposted total of 0 jobs\nbadge(emogis)`, startupEditKeyboard);
 }
 
 export const startupEditFieldHandler = async (ctx: any) => {
@@ -3121,9 +3116,9 @@ export const startupEditFieldHandler = async (ctx: any) => {
   console.log(ctx.session.tobeEditedStartupField);
   const { data, error } = await fetchCities()
   if (data) {
-      const { cities } = data;
-      let cnames = cities.map((nm: any) => nm.name);
-      ctx.session.cityNames = cnames;
+    const { cities } = data;
+    let cnames = cities.map((nm: any) => nm.name);
+    ctx.session.cityNames = cnames;
   }
   ctx.scene.enter("startupEditSpecificFieldScene")
 }
@@ -3142,11 +3137,11 @@ export const startupEditSpecificFieldInitHandler = async (ctx: any) => {
   } else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
     ctx.replyWithHTML("please enter the new location of your company", {
       reply_markup: JSON.stringify({
-          keyboard: ctx.session.cityNames.map((x: string, _: string) => ([{
-              text: x,
-          }])), resize_keyboard: true, one_time_keyboard: true,
+        keyboard: ctx.session.cityNames.map((x: string, _: string) => ([{
+          text: x,
+        }])), resize_keyboard: true, one_time_keyboard: true,
       }),
-  });
+    });
   } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
     ctx.replyWithHTML("please enter the new website of your startup", cancelKeyboard);
   }
@@ -3157,32 +3152,32 @@ export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
       ctx.scene.state.toBeEditedStartupNameField = ctx.message.text;
       console.log(ctx.session.selectedStartupId)
       const { data, errors } = await companyEdit({
-          "id": ctx.session.selectedStartupId,
-          "set": {
-              "name": ctx.scene.state.toBeEditedStartupNameField
-          }
+        "id": ctx.session.selectedStartupId,
+        "set": {
+          "name": ctx.scene.state.toBeEditedStartupNameField
+        }
 
       })
       if (errors) {
-          console.log(errors);
+        console.log(errors);
       } else {
-          console.log(data);
-          ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+        console.log(data);
+        ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
       }
     } else if (ctx.session.tobeEditedStartupField == "edit_employee_of_startup") {
       ctx.scene.state.tobeEditedStartupEmployeeSizeField = ctx.message.text;
       const { data, errors } = await companyEdit({
-          "id": ctx.session.selectedStartupId,
-          "set": {
-              "employee_size": ctx.scene.state.tobeEditedStartupEmployeeSizeField
-          }
+        "id": ctx.session.selectedStartupId,
+        "set": {
+          "employee_size": ctx.scene.state.tobeEditedStartupEmployeeSizeField
+        }
 
       })
       if (errors) {
-          console.log(errors);
+        console.log(errors);
       } else {
-          console.log(data);
-          ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+        console.log(data);
+        ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
       }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_email_of_startup") {
@@ -3190,32 +3185,32 @@ export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
       const { data, errors } = await companyEdit({
         "id": ctx.session.selectedStartupId,
         "set": {
-            "email": ctx.scene.state.tobeEditedStartupEmailField
+          "email": ctx.scene.state.tobeEditedStartupEmailField
         }
 
-    })
-    if (errors) {
+      })
+      if (errors) {
         console.log(errors);
-    } else {
+      } else {
         console.log(data);
         ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
-    }
+      }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_phone_of_startup") {
       ctx.scene.state.tobeEditedStartupPhoneField = ctx.message.text;
       const { data, errors } = await companyEdit({
         "id": ctx.session.selectedStartupId,
         "set": {
-            "phone": ctx.scene.state.tobeEditedStartupPhoneField
+          "phone": ctx.scene.state.tobeEditedStartupPhoneField
         }
 
-    })
-    if (errors) {
+      })
+      if (errors) {
         console.log(errors);
-    } else {
+      } else {
         console.log(data);
         ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
-    }
+      }
     }
     else if (ctx.session.tobeEditedStartupField == "edit_location_of_startup") {
       ctx.scene.state.tobeEditedStartupLocationField = ctx.message.text;
@@ -3223,47 +3218,47 @@ export const startupEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
       const { cities } = data
       console.log(cities.length, "bpt 1")
       if (!cities.length) {
-          ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
-              reply_markup: JSON.stringify({
-                  keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
-                      text: x,
-                  }])), resize_keyboard: true, one_time_keyboard: true,
-              }),
-          })
-          return;
+        ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
+          reply_markup: JSON.stringify({
+            keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
+              text: x,
+            }])), resize_keyboard: true, one_time_keyboard: true,
+          }),
+        })
+        return;
       } else {
-          let hqId = cities[0].id;
-          ctx.session.startupHeadQuarterLocationId = hqId;
-          ctx.scene.state.startupHeadQuarterLocationId = hqId;
-          const { data, errors } = await companyEdit({
-              "id": ctx.session.selectedStartupId,
-              "set": {
-                  "head_quarter": ctx.scene.state.startupHeadQuarterLocationId
-              }
-
-          })
-          if (errors) {
-              console.log(errors);
-          } else {
-              console.log(data);
-              ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+        let hqId = cities[0].id;
+        ctx.session.startupHeadQuarterLocationId = hqId;
+        ctx.scene.state.startupHeadQuarterLocationId = hqId;
+        const { data, errors } = await companyEdit({
+          "id": ctx.session.selectedStartupId,
+          "set": {
+            "head_quarter": ctx.scene.state.startupHeadQuarterLocationId
           }
+
+        })
+        if (errors) {
+          console.log(errors);
+        } else {
+          console.log(data);
+          ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+        }
       }
     } else if (ctx.session.tobeEditedStartupField == "edit_websit_of_startup") {
       ctx.scene.state.tobeEditedStartupWebsiteField == ctx.message.text;
       const { data, errors } = await companyEdit({
         "id": ctx.session.selectedStartupId,
         "set": {
-            "website": ctx.scene.state.tobeEditedStartupWebsiteField
+          "website": ctx.scene.state.tobeEditedStartupWebsiteField
         }
 
-    })
-    if (errors) {
+      })
+      if (errors) {
         console.log(errors);
-    } else {
+      } else {
         console.log(data);
         ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
-    }
+      }
     }
   }
 })
@@ -3290,24 +3285,24 @@ export const handOverStartupPhoneHandler = Telegraf.on(["photo", "text", "contac
     console.log(ctx.scene.state.representativePhone);
     ctx.scene.state.representativeCompanyPhone = ctx.message.text;
     const { data: { users } } = await getUserByPhone({
-        phone: ctx.scene.state.representativeCompanyPhone
+      phone: ctx.scene.state.representativeCompanyPhone
     })
     if (!users.length) {
-        ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
-        return;
-    }else{
-      let destId =users[0].id;
+      ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
+      return;
+    } else {
+      let destId = users[0].id;
       ctx.session.destinationStartupId = destId;
       let BoldRepNo = ctx.message.text.bold();
-      ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo}\n\nNote: They will have access to companies once its given`, {
-          reply_markup: {
-              keyboard: [
-                  [{ text: "Yes" }, { text: "No" }],
-              ], resize_keyboard: true, one_time_keyboard: true
-          }
+      ctx.replyWithHTML(`please confirm representative phone \n\n${BoldRepNo} \n\nNote: They will have access to companies once its given`, {
+        reply_markup: {
+          keyboard: [
+            [{ text: "Yes" }, { text: "No" }],
+          ], resize_keyboard: true, one_time_keyboard: true
+        }
       })
       return ctx.wizard.next();
-      }   
+    }
   } else {
     ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
   }
@@ -3319,27 +3314,27 @@ export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contac
       console.log(ctx.session.sourceStartupUserId)
       console.log(ctx.session.destinationStartupId);
       if (ctx.message.text == "Yes") {
-          const { data, errors } = await companyHandOver({
-                  "object": {
-                      "entity_id": `${ctx.session.selectedStartupId}`, 
-                      "from_user_id": `${ctx.session.sourceStartupUserId}`, 
-                      "to_user_id": `${ctx.session.destinationStartupId}`,
-                      "created_by": `${ctx.session.sourceStartupUserId}`
-                  }
-              
-          })
-          if(errors){
-              console.log(errors);
-              ctx.replyWithHTML(`Error cease you from handing over your Startup`, cancelKeyboard);
-          }else{
-            console.log(data)
-              ctx.replyWithHTML("You have successfully handed over your Startup", cancelKeyboard);
+        const { data, errors } = await companyHandOver({
+          "object": {
+            "entity_id": `${ctx.session.selectedStartupId} `,
+            "from_user_id": `${ctx.session.sourceStartupUserId} `,
+            "to_user_id": `${ctx.session.destinationStartupId} `,
+            "created_by": `${ctx.session.sourceStartupUserId} `
           }
-          // ctx.scene.leave();
-    } else if (ctx.message.text == "No") { 
-      ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
+
+        })
+        if (errors) {
+          console.log(errors);
+          ctx.replyWithHTML(`Error cease you from handing over your Startup`, cancelKeyboard);
+        } else {
+          console.log(data)
+          ctx.replyWithHTML("You have successfully handed over your Startup", cancelKeyboard);
+        }
+        // ctx.scene.leave();
+      } else if (ctx.message.text == "No") {
+        ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
+      }
+      // ctx.scene.leave()
     }
-    // ctx.scene.leave()
   }
-}
 })
