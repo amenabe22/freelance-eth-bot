@@ -128,7 +128,7 @@ export const startupRegistrationLRscene = new CoreScene(
       hdlr.startupLRFacebookLinkHandler,
       hdlr.startupLRTelegramLinkHandler,
       hdlr.startupLRYouTubeLinkHandler,
-      hdlr.startupLRTikTokLinkHandler,
+      hdlr.startupLRTikTokLinkHandler, 
       hdlr.startupLRTwitterLinkHandler,
       hdlr.startupLROtherLink1Handler,
       hdlr.startupLROtherLink2Handler,
