@@ -678,16 +678,6 @@ export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
         download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
-            ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
-
-            // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyIdPhoto}`);
-            // console.log(res);
-            // const res2 = await res.json();
-            // const filePath = res2.result.file_path;
-            // const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-            // console.log(downloadURL);
-            // download(downloadURL, path.join(('companyRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
-            // console.log('Done!')            )
             const { data, error } = await fetchSectors()
             if (data) {
                 const { sectors } = data;
