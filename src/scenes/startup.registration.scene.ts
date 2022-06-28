@@ -90,7 +90,6 @@ export const startupRegistrationUGMscene = new CoreScene(
     handlers: [
       hdlr.startupUGMNameHandler,
       hdlr.startupUGMFoundersHandler,
-      hdlr.startupUGMTradeLicensePhotoHandler,
       hdlr.startupUGMIdPhotoHandler,
       hdlr.startupUGMIndustrySectorHandler,
       hdlr.startupUGMEmployeeSizeHandler,
@@ -149,7 +148,6 @@ export const startupRegistrationURscene = new CoreScene(
     handlers: [
       hdlr.startupURNameHandler,
       hdlr.startupURFoundersNameHandler,
-      hdlr.startupURTradeLicensePhoto,
       hdlr.startupUPIdphotoHandler,
       hdlr.startupURStampedLetterHandler,      
       hdlr.startupUREmployeeSizeHandler,
