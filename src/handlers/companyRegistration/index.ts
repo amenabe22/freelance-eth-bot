@@ -652,16 +652,12 @@ export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "c
     if (ctx.update.message.photo) {
         console.log(ctx.update.message.photo[0])
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-        // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyTradeLicensePhoto}`);
-        //    console.log(res);
-        //    const res2 = await res.json();
-        //    const filePath = res2.result.file_path;
-        //    const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        //    console.log(downloadURL);
-        //    download(downloadURL, path.join(('companyTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
-        //    console.log('Done!')
-        //    )
-        ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
+        download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
+            // return ctx.wizard.next();
+        })
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
@@ -671,31 +667,37 @@ export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "c
 export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
-        // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyIdPhoto}`);
-        // console.log(res);
-        // const res2 = await res.json();
-        // const filePath = res2.result.file_path;
-        // const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        // console.log(downloadURL);
-        // download(downloadURL, path.join(('companyRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
-        // console.log('Done!')            )
-        const { data, error } = await fetchSectors()
-        if (data) {
-            const { sectors } = data;
-            let snames = sectors.map((nm: any) => nm.name);
-            ctx.session.sectorNames = snames
-            let secs = snames.map((x: string, _: string) => ([{
-                text: x,
-            }]))
-            secs.push([{ text: "Back" }])
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
+        download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
 
-            ctx.replyWithHTML("please enter industry sector.", {
-                reply_markup: JSON.stringify({
-                    keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
-                }),
-            })
-        }
-        return ctx.wizard.next();
+            // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyIdPhoto}`);
+            // console.log(res);
+            // const res2 = await res.json();
+            // const filePath = res2.result.file_path;
+            // const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
+            // console.log(downloadURL);
+            // download(downloadURL, path.join(('companyRepOrGMidPhotos'), `${ctx.from.id}.jpg`), () =>
+            // console.log('Done!')            )
+            const { data, error } = await fetchSectors()
+            if (data) {
+                const { sectors } = data;
+                let snames = sectors.map((nm: any) => nm.name);
+                ctx.session.sectorNames = snames
+                let secs = snames.map((x: string, _: string) => ([{
+                    text: x,
+                }]))
+                secs.push([{ text: "Back" }])
+
+                ctx.replyWithHTML("please enter industry sector.", {
+                    reply_markup: JSON.stringify({
+                        keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+            }
+            return ctx.wizard.next();
+        })
     } else {
         ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard);
         return;
