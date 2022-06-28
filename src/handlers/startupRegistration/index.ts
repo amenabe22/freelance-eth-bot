@@ -474,7 +474,6 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     other_link_three: globalState.startupLGMOther3Link,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1956,7 +1955,7 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       console.log("****************************************************")
       console.log(globalState)
       console.log("****************************************************")
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterL} \nOther link: ${globalState.startupLROther1Link} `, registerStartupConfirmLRKeyboard)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
       ctx.scene.leave()
@@ -1981,10 +1980,10 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
   const formData = new FormData()
   const payload: any = {
     name: globalState.startupLRName,
-    founder: globalState.startupLRFounderName,
+    founder: globalState.startupLRFounder1,
     phone: globalState.startupLRPhoneNumber,
     sector: globalState.startupLRSectorID,
-    is_user_gm: false,
+    is_user_gm: 'false',
     user_first_name: first_name,
     user_last_name: last_name,
     employee_size: globalState.startupLREmployeeSize,
@@ -2032,7 +2031,7 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
-    ctx.reply("failed to register company", cancelKeyboard)
+    ctx.replyWithHTML("failed to register company", cancelKeyboard)
   })
 }
 //licensed startup registration with representative ends here...
