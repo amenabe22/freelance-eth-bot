@@ -8,3 +8,11 @@ export const registerJobSeekerPersonalizedJob = async (variables: any) => {
     })
     return res
 }
+
+export const getJobSeekerId = async (variables: any) => {
+    const res = await client.query({
+      query: qry.JOB_SEEKER ,
+      variables
+    })
+    return res
+}

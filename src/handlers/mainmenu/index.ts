@@ -20,28 +20,6 @@ export const jobSeekerInitHandler = async (ctx: any) => {
 }
 
 // availability handler
-export const availablityHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
-    if (ctx.message.text) {
-        ctx.scene.state.currentAvailablity = ctx.message.text;
-        const { data, errors } = await fetchEducationLevels()
-        if (!errors) {
-            const { education_levels } = data;
-            const educationLevelNames = education_levels.map((lvl: any) => [{ text: lvl.name }])
-            ctx.replyWithHTML("please choose your educational level.", {
-                reply_markup: JSON.stringify({
-                    keyboard: educationLevelNames
-                    , resize_keyboard: true, one_time_keyboard: true,
-                }),
-            });
-        }
-
-        return ctx.wizard.next();
-    } else {
-        ctx.replyWithHTML(ctx.chat.id, "Please enter a valid availablity status!", cancelKeyboard);
-        return;
-    }
-})
-
 export const educationalLevelHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.currentEducationLevel = ctx.message.text;
