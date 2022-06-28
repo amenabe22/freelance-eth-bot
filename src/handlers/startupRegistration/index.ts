@@ -464,14 +464,14 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     type: 'STARTUP',
     head_quarter: globalState.startupLGMHeadQuarterLocation,
     facebook_link: globalState.startupLGMFacebookLink,
-    telegram_link: globalState.startupLGMFacebookLink,
-    youtube_link: globalState.startupLGMFacebookLink,
-    tiktok_link: globalState.startupLGMFacebookLink,
-    twitter_link: globalState.startupLGMFacebookLink,
-    linkedin_link: globalState.startupLGMFacebookLink,
-    other_link_one: globalState.startupLGMFacebookLink,
-    other_link_two: globalState.startupLGMFacebookLink,
-    other_link_three: globalState.startupLGMFacebookLink,
+    telegram_link: globalState.startupLGMTelegramLink,
+    youtube_link: globalState.startupLGMYouTubeLink,
+    tiktok_link: globalState.startupLGMTikTokLink,
+    twitter_link: globalState.startupLGMTwitterLink,
+    linkedin_link: globalState.startupLGMLinkedInLink,
+    other_link_one: globalState.startupLGMOther1Link,
+    other_link_two: globalState.startupLGMOther2Link,
+    other_link_three: globalState.startupLGMOther3Link,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
@@ -803,7 +803,7 @@ export const startupUGMFoundersHandler = Telegraf.on(["photo", "text", "contact"
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupUGMFounder${totalAddedFounders} `] = ctx.message.text;
+      ctx.scene.state[`startupUGMFounder${totalAddedFounders}`] = ctx.message.text;
       console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders} `])
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the G / M id photo. `, cancelKeyboard);
@@ -825,7 +825,7 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -1167,6 +1167,11 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
 })
 
 export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
+  const { data: { users } } = await getUserByTelegramId({
+    telegram_id: JSON.stringify(ctx.from.id)
+  })
+  const [{ phone, first_name, last_name }] = users
+  console.log(phone, first_name, last_name)
   const formData = new FormData();
   const payload: any = {
     name: globalState.startupUGMName,
@@ -1174,24 +1179,24 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     phone: globalState.startupUGMPhoneNumber,
     sector: globalState.startupUGMSectorID,
     is_user_gm: true,
-    user_first_name: globalState.startupUGMUFN,
-    user_last_name: globalState.startupUGMULN,
+    user_first_name: first_name,
+    user_last_name: last_name,
     employee_size: globalState.startupUGMEmployeeSize,
     website: globalState.startupUGMWebsite,
     email: globalState.startupUGMEmail,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
-    user_phone: globalState.startupUGMUP,
+    user_phone: phone,
     head_quarter: globalState.startupUGMHeadQuarterLocation,
     facebook_link: globalState.startupUGMFacebookLink,
-    telegram_link: globalState.startupUGMFacebookLink,
-    youtube_link: globalState.startupUGMFacebookLink,
-    tiktok_link: globalState.startupUGMFacebookLink,
-    twitter_link: globalState.startupUGMFacebookLink,
-    linkedin: globalState.startupUGMFacebookLink,
-    other_link_one: globalState.startupUGMFacebookLink,
-    other_link_two: globalState.startupUGMFacebookLink,
-    other_link_three: globalState.startupUGMFacebookLink,
+    telegram_link: globalState.startupUGMTelegramLink,
+    youtube_link: globalState.startupUGMYouTubeLink,
+    tiktok_link: globalState.startupUGMTikTokLink,
+    twitter_link: globalState.startupUGMTwitterLink,
+    linkedin_link: globalState.startupUGMLinkedInLink,
+    other_link_one: globalState.startupUGMOther1Link,
+    other_link_two: globalState.startupUGMOther2Link,
+    other_link_three: globalState.startupUGMOther3Link,
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
@@ -1223,6 +1228,11 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
   })
 }
 export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
+  const { data: { users } } = await getUserByTelegramId({
+    telegram_id: JSON.stringify(ctx.from.id)
+  })
+  const [{ phone, first_name, last_name }] = users
+  console.log(phone, first_name, last_name)
   const formData = new FormData();
   const payload: any = {
     name: globalState.startupUGMName,
@@ -1230,24 +1240,24 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     phone: globalState.startupUGMPhoneNumber,
     sector: globalState.startupUGMSectorID,
     is_user_gm: globalState.statupUGMIsUserGm,
-    user_first_name: globalState.startupUGMUFN,
-    user_last_name: globalState.startupUGMULN,
+    user_first_name: first_name,
+    user_last_name: last_name,
     employee_size: globalState.startupUGMEmployeeSize,
     website: globalState.startupUGMWebsite,
     email: globalState.startupUGMEmail,
-    user_phone: globalState.startupUGMUP,
+    user_phone: phone,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
     head_quarter: globalState.startupUGMHeadQuarterLocation,
     facebook_link: globalState.startupUGMFacebookLink,
-    telegram_link: globalState.startupUGMFacebookLink,
-    youtube_link: globalState.startupUGMFacebookLink,
-    tiktok_link: globalState.startupUGMFacebookLink,
-    twitter_link: globalState.startupUGMFacebookLink,
-    linkedin: globalState.startupUGMFacebookLink,
-    other_link_one: globalState.startupUGMFacebookLink,
-    other_link_two: globalState.startupUGMFacebookLink,
-    other_link_three: globalState.startupUGMFacebookLink,
+    telegram_link: globalState.startupUGMTelegramLink,
+    youtube_link: globalState.startupUGMYouTubeLink,
+    tiktok_link: globalState.startupUGMTikTokLink,
+    twitter_link: globalState.startupUGMTwitterLink,
+    linkedin_link: globalState.startupUGMLinkedInLink,
+    other_link_one: globalState.startupUGMOther1Link,
+    other_link_two: globalState.startupUGMOther2Link,
+    other_link_three: globalState.startupUGMOther3Link,
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
@@ -1558,8 +1568,8 @@ export const startupLRFoundersHandler = Telegraf.on(["photo", "text", "contact",
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupLRFounder${totalAddedFounders} `] = ctx.message.text;
-      console.log(ctx.scene.state[`startupLRFounder${totalAddedFounders} `]);
+      ctx.scene.state[`startupLRFounder${totalAddedFounders}`] = ctx.message.text;
+      console.log(ctx.scene.state[`startupLRFounder${totalAddedFounders}`]);
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML(`please send the photo of startup trade license scanned photo. `, cancelKeyboard);
         return ctx.wizard.next();
@@ -1581,7 +1591,7 @@ export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `files/tradeLPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -1599,7 +1609,7 @@ export const startupLRIdPhotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -1614,7 +1624,7 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/letterPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -1963,31 +1973,36 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
   }
 });
 export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
+  const { data: { users } } = await getUserByTelegramId({
+    telegram_id: JSON.stringify(ctx.from.id)
+  })
+  const [{ phone, first_name, last_name }] = users
+  console.log(phone, first_name, last_name)
   const formData = new FormData()
   const payload: any = {
     name: globalState.startupLRName,
     founder: globalState.startupLRFounderName,
     phone: globalState.startupLRPhoneNumber,
     sector: globalState.startupLRSectorID,
-    is_user_gm: globalState.statupLRIsUserGm,
-    user_first_name: globalState.startupLRUFN,
-    user_last_name: globalState.startupLRULN,
+    is_user_gm: false,
+    user_first_name: first_name,
+    user_last_name: last_name,
     employee_size: globalState.startupLREmployeeSize,
     website: globalState.startupLRWebsite,
     email: globalState.startupLREmail,
-    user_phone: globalState.startupLRUP,
+    user_phone: phone,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
     head_quarter: globalState.startupLRHeadQuarterLocation,
     facebook_link: globalState.startupLRFacebookLink,
-    telegram_link: globalState.startupLRFacebookLink,
-    youtube_link: globalState.startupLRFacebookLink,
-    tiktok_link: globalState.startupLRFacebookLink,
-    twitter_link: globalState.startupLRFacebookLink,
-    linkedin_link: globalState.startupLRFacebookLink,
-    other_link_one: globalState.startupLRFacebookLink,
-    other_link_two: globalState.startupLRFacebookLink,
-    other_link_three: globalState.startupLRFacebookLink,
+    telegram_link: globalState.startupLRTelegramLink,
+    youtube_link: globalState.startupLRYouTubeLink,
+    tiktok_link: globalState.startupLRTikTokLink,
+    twitter_link: globalState.startupLRTwitterLink,
+    linkedin_link: globalState.startupLRLinkedInLinkLink,
+    other_link_one: globalState.startupLROther1Link,
+    other_link_two: globalState.startupLROther2Link,
+    other_link_three: globalState.startupLROther3Link,
     trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
@@ -2316,7 +2331,7 @@ export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "conta
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
       totalAddedFounders++
-      ctx.scene.state[`startupURFounder${totalAddedFounders} `] = ctx.message.text;
+      ctx.scene.state[`startupURFounder${totalAddedFounders}`] = ctx.message.text;
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
          return ctx.wizard.next();
@@ -2344,7 +2359,7 @@ export const startupUPIdphotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/GMIdPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -2362,7 +2377,7 @@ export const startupURStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `files/letterPhoto/${fname} `,).then(async () => {
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -2703,35 +2718,40 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
   }
 });
 export const confirmRegisterStartUpURHandler = async (ctx: any) => {
+  const { data: { users } } = await getUserByTelegramId({
+    telegram_id: JSON.stringify(ctx.from.id)
+  })
+  const [{ phone, first_name, last_name }] = users
+  console.log(phone, first_name, last_name)
   const formData = new FormData()
   const payload: any = {
-    'name': globalState.startupURName,
-    'founder': globalState.startupURFounderName,
-    'phone': globalState.startupURPhoneNumber,
-    'sector': globalState.startupURSectorID,
-    'is_user_gm': globalState.statupURIsUserGm,
-    'user_first_name': globalState.startupURUFN,
-    'user_last_name': globalState.startupURULN,
-    'employee_size': globalState.startupUREmployeeSize,
-    'website': globalState.startupURWebsite,
-    'email': globalState.startupUREmail,
-    'user_phone': globalState.startupURUP,
-    'telegram_id': ctx.from.id,
-    'type': 'STARTUP',
-    'head_quarter': globalState.startupURHeadQuarterLocation,
-    'facebook_link': globalState.startupURFacebookLink,
-    'telegram_link': globalState.startupURFacebookLink,
-    'youtube_link': globalState.startupURFacebookLink,
-    'tiktok_link': globalState.startupURFacebookLink,
-    'twitter_link': globalState.startupURFacebookLink,
-    'linkedin_': globalState.startupURFacebookLink,
-    'other_link_one': globalState.startupURFacebookLink,
-    'other_link_two': globalState.startupURFacebookLink,
-    'other_link_three': globalState.startupURFacebookLink,
-    'rep_id_photo': fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    'rep_letter_photo': fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
-    'folder': 'entity',
-    'origin_platform_id': '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+    name: globalState.startupURName,
+    founder: globalState.startupURFounder1,
+    phone: globalState.startupURPhoneNumber,
+    sector: globalState.startupURSectorID,
+    is_user_gm: false,
+    user_first_name: first_name,
+    user_last_name: last_name,
+    employee_size: globalState.startupUREmployeeSize,
+    website: globalState.startupURWebsite,
+    email: globalState.startupUREmail,
+    user_phone: phone,
+    telegram_id: ctx.from.id,
+    type: 'STARTUP',
+    head_quarter: globalState.startupURHeadQuarterLocation,
+    facebook_link: globalState.startupURFacebookLink,
+    telegram_link: globalState.startupURTelegramLink,
+    youtube_link: globalState.startupURYouTubeLink,
+    tiktok_link: globalState.startupURTikTokLink,
+    twitter_link: globalState.startupURTwitterLink,
+    linkedin_link: globalState.strartupURLinkedInLink,
+    other_link_one: globalState.startupUROther1Link,
+    other_link_two: globalState.startupUROther2Link,
+    other_link_three: globalState.startupUROther3Link,
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
+    folder: 'entity',
+    origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
 
   console.log(".................................................................................")
