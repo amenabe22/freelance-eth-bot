@@ -151,7 +151,10 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
             // return ctx.wizard.next();
+        }).catch((e) => {
+            console.log(JSON.stringify(e))
         })
+        ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
@@ -166,8 +169,12 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
         download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
-            return ctx.wizard.next();
+            // return ctx.wizard.next();
+        }).catch((e) => {
+            console.log(JSON.stringify(e))
         })
+        ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
+
     } else {
         ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard);
         return;
