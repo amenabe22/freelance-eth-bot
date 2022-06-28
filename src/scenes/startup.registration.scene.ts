@@ -1,29 +1,29 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
-import  {companyRegistraionCancel}  from "../handlers/callbacks"
+import { companyRegistraionCancel } from "../handlers/callbacks"
 import { handOverStartupInitHandler, startupEditSpecificFieldInitHandler } from "../handlers"
 
 
 export const startupRegisteringEditLGMScene = new CoreScene(
-             "startupRegisteringEditLGMScene",
-             {
-              enter: hdlr.startupRegisteringEditLGMInitHandler,
-              handlers: [
-                hdlr.startupRegisteringEditLGMValueHandler
-              ]
-            },
-            [
-              companyRegistraionCancel
-            ]
-          )
+  "startupRegisteringEditLGMScene",
+  {
+    enter: hdlr.startupRegisteringEditLGMInitHandler,
+    handlers: [
+      hdlr.startupRegisteringEditLGMValueHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
 
 export const startupRegisteringEditUGMScene = new CoreScene(
   "startupRegisteringEditUGMScene",
   {
-   enter: hdlr.startupRegisteringEditUGMInitHandler,
-   handlers: [
-     hdlr.startupRegisteringEditUGMValueHandler
-   ]
+    enter: hdlr.startupRegisteringEditUGMInitHandler,
+    handlers: [
+      hdlr.startupRegisteringEditUGMValueHandler
+    ]
   },
   [
     companyRegistraionCancel
@@ -32,10 +32,10 @@ export const startupRegisteringEditUGMScene = new CoreScene(
 export const startupRegisteringEditLRScene = new CoreScene(
   "startupRegisteringEditLRScene",
   {
-   enter: hdlr.startupRegisteringEditLRInitHandler,
-   handlers: [
-     hdlr.startupRegisteringEditLRValueHandler
-   ]
+    enter: hdlr.startupRegisteringEditLRInitHandler,
+    handlers: [
+      hdlr.startupRegisteringEditLRValueHandler
+    ]
   },
   [
     companyRegistraionCancel
@@ -44,10 +44,10 @@ export const startupRegisteringEditLRScene = new CoreScene(
 export const startupRegisteringEditURScene = new CoreScene(
   "startupRegisteringEditURScene",
   {
-   enter: hdlr.startupRegisteringEditURInitHandler,
-   handlers: [
-     hdlr.startupRegisteringEditURValueHandler
-   ]
+    enter: hdlr.startupRegisteringEditURInitHandler,
+    handlers: [
+      hdlr.startupRegisteringEditURValueHandler
+    ]
   },
   [
     companyRegistraionCancel
@@ -86,11 +86,10 @@ export const startupRegistrationLGMscene = new CoreScene(
 export const startupRegistrationUGMscene = new CoreScene(
   "startupRegistrationUGMscene",
   {
-  enter: hdlr.startupUGMInitHandler,
+    enter: hdlr.startupUGMInitHandler,
     handlers: [
       hdlr.startupUGMNameHandler,
       hdlr.startupUGMFoundersHandler,
-      hdlr.startupUGMTradeLicensePhotoHandler,
       hdlr.startupUGMIdPhotoHandler,
       hdlr.startupUGMIndustrySectorHandler,
       hdlr.startupUGMEmployeeSizeHandler,
@@ -115,7 +114,7 @@ export const startupRegistrationUGMscene = new CoreScene(
 export const startupRegistrationLRscene = new CoreScene(
   "startupRegistrationLRscene",
   {
-  enter: hdlr.startupLRInitHandler,
+    enter: hdlr.startupLRInitHandler,
     handlers: [
       hdlr.startupLRNameHandler,
       hdlr.startupLRFoundersHandler,
@@ -135,7 +134,7 @@ export const startupRegistrationLRscene = new CoreScene(
       hdlr.startupLROtherLink3Handler,
       hdlr.startupLREmailHandler,
       hdlr.startupLROfficialPhoneNoHandler,
-      hdlr.startupLRHeadQuarterLocationHandler,  
+      hdlr.startupLRHeadQuarterLocationHandler,
     ]
   },
   [
@@ -149,9 +148,8 @@ export const startupRegistrationURscene = new CoreScene(
     handlers: [
       hdlr.startupURNameHandler,
       hdlr.startupURFoundersNameHandler,
-      hdlr.startupURTradeLicensePhoto,
       hdlr.startupUPIdphotoHandler,
-      hdlr.startupURStampedLetterHandler,      
+      hdlr.startupURStampedLetterHandler,
       hdlr.startupUREmployeeSizeHandler,
       hdlr.startupURWebsiteHandler,
       hdlr.startupURFacebookLinkHandler,
@@ -164,7 +162,7 @@ export const startupRegistrationURscene = new CoreScene(
       hdlr.startupUROtherLink3Handler,
       hdlr.startupUREmailHandler,
       hdlr.startupUROfficialPhoneNoHandler,
-      hdlr.startupURHeadQuarterLocationHandler,  
+      hdlr.startupURHeadQuarterLocationHandler,
     ]
   },
   [
@@ -180,8 +178,8 @@ export const startupEditSpecificFieldScene = new CoreScene(
       hdlr.startupEditSpecificFieldSumitHandler
     ]
   }, [
-    companyRegistraionCancel
-  ]
+  companyRegistraionCancel
+]
 )
 
 export const handOverStartupScene = new CoreScene(
