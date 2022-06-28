@@ -500,7 +500,7 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
-    ctx.reply("failed to register company", cancelKeyboard)
+    ctx.reply("failed to register startup", cancelKeyboard)
   })
 }
 
@@ -1165,7 +1165,69 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
   }
 })
 
-export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
+// export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
+//   const { data: { users } } = await getUserByTelegramId({
+//     telegram_id: JSON.stringify(ctx.from.id)
+//   })
+//   const [{ phone, first_name, last_name }] = users
+//   console.log(phone, first_name, last_name)
+//   const formData = new FormData();
+//   const payload: any = {
+//     name: globalState.startupUGMName,
+//     founder: globalState.startupUGMFounder1,
+//     phone: globalState.startupUGMPhoneNumber,
+//     sector_id: globalState.startupUGMSectorID,
+//     is_user_gm: 'true',
+//     user_first_name: first_name,
+//     user_last_name: last_name,
+//     employee_size: globalState.startupUGMEmployeeSize,
+//     website: globalState.startupUGMWebsite,
+//     // email: globalState.startupUGMEmail,
+//     user_phone: phone,
+//     telegram_id: ctx.from.id,
+//     type: 'STARTUP',
+//     head_quarter: globalState.startupUGMHeadQuarterLocation,
+//     facebook_link: globalState.startupUGMFacebookLink,
+//     telegram_link: globalState.startupUGMTelegramLink,
+//     youtube_link: globalState.startupUGMYouTubeLink,
+//     tiktok_link: globalState.startupUGMTikTokLink,
+//     twitter_link: globalState.startupUGMTwitterLink,
+//     linkedin_link: globalState.startupUGMLinkedInLink,
+//     other_link_one: globalState.startupUGMOther1Link,
+//     other_link_two: globalState.startupLGMOther2Link,
+//     other_link_three: globalState.startupUGMOther3Link,
+//     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+//     folder: 'entity',
+//     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
+//   }
+//   console.log(".................................................................................")
+//   console.log(payload)
+//   console.log(".................................................................................")
+//   for (const key of Object.keys(payload)) {
+//     if (payload[key])
+//       formData.append(key, payload[key])
+//   }
+//   console.log("------------------------------------------------------------")
+//   console.log(payload)
+//   console.log("------------------------------------------------------------")
+//   await registerStartup(formData).then(({ data }) => {
+//     if (data) {
+//       ctx.deleteMessage();
+//       console.log(data)
+//       ctx.reply("sucessfully submitted", cancelKeyboard)
+//     } else {
+
+//     }
+//     console.log(globalState, "cr")
+//   }).catch((e) => {
+//     const message = e.response.data
+//     console.error(JSON.stringify(message))
+//     console.log(message.graphQLErrors, "errroooooor")
+//     ctx.reply("failed to register startup", cancelKeyboard)
+//   })
+// }
+
+export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
   const { data: { users } } = await getUserByTelegramId({
     telegram_id: JSON.stringify(ctx.from.id)
   })
@@ -1176,16 +1238,16 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     name: globalState.startupUGMName,
     founder: globalState.startupUGMFounder1,
     phone: globalState.startupUGMPhoneNumber,
-    sector: globalState.startupUGMSectorID,
-    is_user_gm: true,
+    sector_id: globalState.startupUGMSectorID,
+    is_user_gm: 'true',
     user_first_name: first_name,
     user_last_name: last_name,
     employee_size: globalState.startupUGMEmployeeSize,
     website: globalState.startupUGMWebsite,
-    email: globalState.startupUGMEmail,
+    // email: globalState.startupUGMEmail,
+    user_phone: phone,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
-    user_phone: phone,
     head_quarter: globalState.startupUGMHeadQuarterLocation,
     facebook_link: globalState.startupUGMFacebookLink,
     telegram_link: globalState.startupUGMTelegramLink,
@@ -1194,7 +1256,7 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     twitter_link: globalState.startupUGMTwitterLink,
     linkedin_link: globalState.startupUGMLinkedInLink,
     other_link_one: globalState.startupUGMOther1Link,
-    other_link_two: globalState.startupUGMOther2Link,
+    other_link_two: globalState.startupLGMOther2Link,
     other_link_three: globalState.startupUGMOther3Link,
     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
@@ -1223,53 +1285,8 @@ export const confirmRegisteringStartupUGMActionHandler = async (ctx: any) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
-    ctx.reply("failed to register company", cancelKeyboard)
+    ctx.reply("failed to register startup", cancelKeyboard)
   })
-}
-export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
-  const { data: { users } } = await getUserByTelegramId({
-    telegram_id: JSON.stringify(ctx.from.id)
-  })
-  const [{ phone, first_name, last_name }] = users
-  console.log(phone, first_name, last_name)
-  const formData = new FormData();
-  const payload: any = {
-    name: globalState.startupUGMName,
-    founder: globalState.startupUGMFounder1,
-    phone: globalState.startupUGMPhoneNumber,
-    sector: globalState.startupUGMSectorID,
-    is_user_gm: globalState.statupUGMIsUserGm,
-    user_first_name: first_name,
-    user_last_name: last_name,
-    employee_size: globalState.startupUGMEmployeeSize,
-    website: globalState.startupUGMWebsite,
-    email: globalState.startupUGMEmail,
-    user_phone: phone,
-    telegram_id: ctx.from.id,
-    type: 'STARTUP',
-    head_quarter: globalState.startupUGMHeadQuarterLocation,
-    facebook_link: globalState.startupUGMFacebookLink,
-    telegram_link: globalState.startupUGMTelegramLink,
-    youtube_link: globalState.startupUGMYouTubeLink,
-    tiktok_link: globalState.startupUGMTikTokLink,
-    twitter_link: globalState.startupUGMTwitterLink,
-    linkedin_link: globalState.startupUGMLinkedInLink,
-    other_link_one: globalState.startupUGMOther1Link,
-    other_link_two: globalState.startupUGMOther2Link,
-    other_link_three: globalState.startupUGMOther3Link,
-    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-    folder: 'entity',
-    origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-  }
-  for (const key of Object.keys(payload)) {
-    if (payload[key])
-      formData.append(key, payload[key])
-  }
-  const { data } = await registerStartup(formData)
-  if (data) {
-    console.log(data);
-    ctx.reply("You have successfully registered your startup.", cancelKeyboard)
-  }
 }
 
 //Unicensed startup registration with General manager endes here...
@@ -1958,7 +1975,7 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
-      ctx.scene.leave()
+      
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -1977,18 +1994,18 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
   })
   const [{ phone, first_name, last_name }] = users
   console.log(phone, first_name, last_name)
-  const formData = new FormData()
+  const formData = new FormData();
   const payload: any = {
     name: globalState.startupLRName,
     founder: globalState.startupLRFounder1,
     phone: globalState.startupLRPhoneNumber,
-    sector: globalState.startupLRSectorID,
-    is_user_gm: 'false',
+    sector_id: globalState.startupLRSectorID,
+    is_user_gm: 'true',
     user_first_name: first_name,
     user_last_name: last_name,
     employee_size: globalState.startupLREmployeeSize,
     website: globalState.startupLRWebsite,
-    email: globalState.startupLREmail,
+    // email: globalState.startupLREmail,
     user_phone: phone,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
@@ -1998,7 +2015,7 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     youtube_link: globalState.startupLRYouTubeLink,
     tiktok_link: globalState.startupLRTikTokLink,
     twitter_link: globalState.startupLRTwitterLink,
-    linkedin_link: globalState.startupLRLinkedInLinkLink,
+    linkedin_link: globalState.startupLRLinkedInLink,
     other_link_one: globalState.startupLROther1Link,
     other_link_two: globalState.startupLROther2Link,
     other_link_three: globalState.startupLROther3Link,
@@ -2031,7 +2048,7 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
-    ctx.replyWithHTML("failed to register company", cancelKeyboard)
+    ctx.reply("failed to register startup", cancelKeyboard)
   })
 }
 //licensed startup registration with representative ends here...
@@ -2701,9 +2718,9 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       ctx.session.startupURHeadQuarterLocation = hqId;
       ctx.scene.state.startupURHeadQuarterLocation = hqId;
       globalState = ctx.scene.state
-      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link: ${globalState.startupUROther1Link} `, registerStartupConfirmURKeyboard)
+      ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
       ctx.reply("Finished here is your info please approve")
-      ctx.scene.leave()
+      
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -2722,18 +2739,18 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
   })
   const [{ phone, first_name, last_name }] = users
   console.log(phone, first_name, last_name)
-  const formData = new FormData()
+  const formData = new FormData();
   const payload: any = {
     name: globalState.startupURName,
     founder: globalState.startupURFounder1,
     phone: globalState.startupURPhoneNumber,
-    sector: globalState.startupURSectorID,
-    is_user_gm: false,
+    sector_id: globalState.startupURSectorID,
+    is_user_gm: 'true',
     user_first_name: first_name,
     user_last_name: last_name,
     employee_size: globalState.startupUREmployeeSize,
     website: globalState.startupURWebsite,
-    email: globalState.startupUREmail,
+    // email: globalState.startupUREmail,
     user_phone: phone,
     telegram_id: ctx.from.id,
     type: 'STARTUP',
@@ -2743,7 +2760,7 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     youtube_link: globalState.startupURYouTubeLink,
     tiktok_link: globalState.startupURTikTokLink,
     twitter_link: globalState.startupURTwitterLink,
-    linkedin_link: globalState.strartupURLinkedInLink,
+    linkedin_link: globalState.startupURLinkedInLink,
     other_link_one: globalState.startupUROther1Link,
     other_link_two: globalState.startupUROther2Link,
     other_link_three: globalState.startupUROther3Link,
@@ -2776,7 +2793,7 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     const message = e.response.data
     console.error(JSON.stringify(message))
     console.log(message.graphQLErrors, "errroooooor")
-    ctx.reply("failed to register company", cancelKeyboard)
+    ctx.reply("failed to register startup", cancelKeyboard)
   })
 }
 
@@ -3360,11 +3377,11 @@ export const handOverStartupYesNoHandler = Telegraf.on(["photo", "text", "contac
           console.log(data)
           ctx.replyWithHTML("You have successfully handed over your Startup", cancelKeyboard);
         }
-        // ctx.scene.leave();
+        // ;
       } else if (ctx.message.text == "No") {
         ctx.replyWithHTML("You haven't handed over your startup", cancelKeyboard)
       }
-      // ctx.scene.leave()
+      // 
     }
   }
 })
