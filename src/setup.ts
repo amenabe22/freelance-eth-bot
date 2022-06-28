@@ -1,21 +1,5 @@
-<<<<<<< HEAD
-import {
-    AmharicSelectionAction,
-    confirmEditProfileAction,
-    EditMultipleProfileAction,
-    EditProfileAction,
-    EnglishSelectionAction,
-    jobPostCompanyAction,
-    jobPostCompanySelectorAction,
-    RegisterUserHandlerDob,
-    RegisterWithAgeAction,
-    SectorSelectionAction,
-    TermsAndConditionsAction
-} from "./actions";
-=======
 import * as act from "./actions"
 
->>>>>>> bc069cdd911ccacf84e0d9c7c068a7046a2e2c62
 import { CoreBot } from "./bot";
 import { BOT_TOKEN } from "./constants";
 import { coreStage } from "./stages/core.stage";
@@ -30,18 +14,6 @@ export const bot = new CoreBot(
     ],
     // register actions
     [
-<<<<<<< HEAD
-        RegisterWithAgeAction,
-        RegisterUserHandlerDob,
-        AmharicSelectionAction,
-        EnglishSelectionAction,
-        SectorSelectionAction,
-        jobPostCompanyAction,
-        EditProfileAction,
-        jobPostCompanySelectorAction,
-        EditMultipleProfileAction,
-        confirmEditProfileAction
-=======
         act.RegisterCompanyGMAction,
         act.RegisterCompanyRAction,
         act.CompanyHandOverAction,
@@ -87,7 +59,6 @@ export const bot = new CoreBot(
         act.editStartupRegisteringURInitAction,
         act.editCompanyRegistrationRCbAction
         
->>>>>>> bc069cdd911ccacf84e0d9c7c068a7046a2e2c62
     ],
     // register commands
     [ 
@@ -95,21 +66,6 @@ export const bot = new CoreBot(
     ],
     // register core callbacks  
     [
-<<<<<<< HEAD
-        menuJobseekerSelection,
-        personalizedJobSelection,
-        menuMainSelector,
-        menuSettingsSelector,
-        menuLanguageSelector,
-        menuEnglishSelector,
-        menuAmharicSelector,
-        menuAccountSelector,
-        TermsAndConditionsAction,
-        handleCvUploadSelection,
-        employerMenuSelection,
-        postJobMenuSelection
-    ]
-=======
         cb.companyStartup,
         cb.company,
         cb.startup,
@@ -129,6 +85,5 @@ export const bot = new CoreBot(
         cb.employerMenuSelection,
         cb.postJobMenuSelection
     ] 
->>>>>>> bc069cdd911ccacf84e0d9c7c068a7046a2e2c62
 );
 
