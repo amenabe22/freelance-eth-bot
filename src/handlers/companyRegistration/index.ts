@@ -88,9 +88,9 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id),
         head_quarter: companyGHeadQuarterLocationId ?? companyRHeadQuarterLocationId,
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
-        trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
-        rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-        rep_letter_photo: companyGName ? null : fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+        trade_license_photo: fs.createReadStream(path.join(`dist/files/tradeLPhoto/${ctx.from.id}.jpg`)),
+        rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
+        rep_letter_photo: companyGName ? null : fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
         'folder': 'entity',
     }
 
@@ -148,7 +148,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         const fname = `${ctx.from.id}.jpg`
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
-        download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+        download(downloadURL, `dist/files/tradeLPhoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
             // return ctx.wizard.next();
         })
@@ -164,7 +164,7 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
-        download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
+        download(downloadURL, `dist/files/GMIdphoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
             return ctx.wizard.next();
         })
@@ -178,7 +178,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
         const companyStampedLetterPhoto = ctx.update.message.photo[0].file_id;
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyStampedLetterPhoto)
-        download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
+        download(downloadURL, `dist/files/tradeLPhoto/${fname}`,).then(async () => {
             const { data, error } = await fetchSectors()
             if (data) {
                 const { sectors } = data;
