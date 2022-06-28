@@ -651,15 +651,12 @@ export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "c
     if (ctx.update.message.photo) {
         console.log(ctx.update.message.photo[0])
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
-        // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyTradeLicensePhoto}`);
-        //    console.log(res);
-        //    const res2 = await res.json();
-        //    const filePath = res2.result.file_path;
-        //    const downloadURL =  `https://api.telegram.org/file/bot${process.env.TOKEN}/${filePath}`;
-        //    console.log(downloadURL);
-        //    download(downloadURL, path.join(('companyTradeLicencePhotos'), `${ctx.from.id}.jpg`), () =>
-        //    console.log('Done!')
-        //    )
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
+        download(downloadURL, `files/companyTradeLicencePhotos/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+            // return ctx.wizard.next();
+        })
         ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
         return ctx.wizard.next();
     } else {
@@ -670,6 +667,13 @@ export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "c
 export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.update.message.photo) {
         const companyIdPhoto = ctx.update.message.photo[0].file_id;
+        const fname = `${ctx.from.id}.jpg`
+        const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
+        download(downloadURL, `files/companyTradeLicencePhotos/${fname}`,).then(async () => {
+            ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+            // return ctx.wizard.next();
+        })
+
         // const res = await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/getFile?file_id=${companyIdPhoto}`);
         // console.log(res);
         // const res2 = await res.json();
