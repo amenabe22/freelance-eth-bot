@@ -111,9 +111,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         }
         console.log(globalState, "cr")
     }).catch((e) => {
-        const message = e.response.data
-        console.error(JSON.stringify(message))
-        console.log(message.graphQLErrors)
+        console.log(JSON.stringify(e))
     })
 }
 
