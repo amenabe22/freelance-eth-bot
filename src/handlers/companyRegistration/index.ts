@@ -104,7 +104,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
     await registerCompany(formData).then(({ data }) => {
         if (data) {
             ctx.deleteMessage();
-            console.log(data)
+            console.log(data, " >>>> data")
             ctx.reply("sucessfully submitted", cancelKeyboard)
         } else {
             ctx.reply("failed to register company")
