@@ -90,7 +90,7 @@ export const menuAccountSelector = {
     handler: menuAccountSelectorHandler
 }
 
-menuAccountSelectorHandler
+
 export const registerJobSeekerCancel = {
     key: "Back",
     handler: registerJobSeekerCancelHandler
