@@ -77,7 +77,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         name: companyGName ?? companyRName,
         phone: companyGPhoneNumber ?? companyRPhoneNumber,
         sector_id: companyGSectorID ?? companyRSectorID,
-        is_user_gm: 'true',
+        is_user_gm: companyGName ? 'true' : 'false',
         type: 'COMPANY',
         user_first_name: first_name,
         user_last_name: last_name,
@@ -90,7 +90,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
         trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
         rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
-        rep_letter_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+        rep_letter_photo: companyGName ? null : fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
         'folder': 'entity',
     }
 
@@ -111,6 +111,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         }
         console.log(globalState, "cr")
     }).catch((e) => {
+        console.log(JSON.stringify(e))
         const message = e.response.data
         console.error(JSON.stringify(message))
         console.log(message.graphQLErrors)
@@ -687,7 +688,7 @@ export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "
                 text: x,
             }]))
             secs.push([{ text: "Back" }])
-            
+
             ctx.replyWithHTML("please enter industry sector.", {
                 reply_markup: JSON.stringify({
                     keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
