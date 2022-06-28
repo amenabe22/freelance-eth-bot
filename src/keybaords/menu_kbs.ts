@@ -24,8 +24,15 @@ export const onlyMainMenuKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true
     }
 }
-export const cancelKeyboard = {
+export const skipKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{ text: "Back" }], [{ text: "Skip" }]
+        ], resize_keyboard: true, one_time_keyboard: true
+    }
+}
 
+export const cancelKeyboard = {
     reply_markup: {
         keyboard: [
             [{ text: "Back" }]
@@ -56,6 +63,15 @@ export const employerKeyboard = {
         keyboard: [
             [{ text: "Post a Job" }],
             [{ text: "My Job Posts" }, { text: "My Companies / Startup" }],
+            [{ text: "Main Menu" }],
+        ], resize_keyboard: true, one_time_keyboard: true,
+    }
+}
+export const chooseCompanyStartupKeyboard = {
+    parse_mode: "HTML",
+    reply_markup: {
+        keyboard: [
+            [{ text: "Company" }, { text: "Startup" }],
             [{ text: "Main Menu" }],
         ], resize_keyboard: true, one_time_keyboard: true,
     }

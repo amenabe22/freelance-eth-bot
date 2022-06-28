@@ -1,6 +1,19 @@
 import * as hdlr from "../handlers"
 import { CoreScene } from "./scene"
-import { newCustomerRegistrationCancel, registerJobSeekerCancel } from "../handlers/callbacks"
+import { newCustomerRegistrationCancel, newCustomerRegistrationSkip, registerJobSeekerCancel } from "../handlers/callbacks"
+
+export const editProfileRegistrationScene = new CoreScene(
+  "editProfileRegistrationScene",
+  {
+    enter: hdlr.editProfileRegistrationInfoInitHandler,
+    handlers: [
+      hdlr.editProfileRegistrationInfoHandler,
+      hdlr.yearOfBirthRegisterHandler,
+      hdlr.monthOfBirthRegisterHandler,
+      hdlr.dateOfBirthRegisterEditHandler
+    ]
+  }
+)
 
 export const ageInputStyleScene = new CoreScene(
   "ageInputStyleScene",
@@ -23,6 +36,7 @@ export const newCustomerRegistrationScene = new CoreScene(
       hdlr.firstNameRegisterHandler,
       hdlr.lastNameRegisterHandler,
       hdlr.genderRegisterHandler,
+      hdlr.emailRegisterHandler,
       hdlr.residentCityRegisterHandler,
       hdlr.chooseAgeInputStyleHandler,
       hdlr.yearOfBirthRegisterHandler,
@@ -31,7 +45,8 @@ export const newCustomerRegistrationScene = new CoreScene(
     ]
   },
   [
-    newCustomerRegistrationCancel
+    newCustomerRegistrationCancel,
+    newCustomerRegistrationSkip
   ]
 )
 
@@ -43,7 +58,6 @@ export const registerJobSeekerScene = new CoreScene(
     enter: hdlr.jobSeekerInitHandler,
     // steps handler
     handlers: [
-      hdlr.availablityHandler,
       hdlr.educationalLevelHandler,
       hdlr.workStatusHandler
     ]

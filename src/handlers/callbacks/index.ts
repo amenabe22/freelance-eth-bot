@@ -1,11 +1,18 @@
 
 import { jobPostCancelButtonHandler, postJobMenuSelectionHandler } from '../jobpost'
 import { handleCvUploadSelectionHandler } from '../personalization'
+import { editRegistrationInfoCallbackHandler } from '../registration'
 import {
     newCustomerRegistrationCancelHandler,
     registerJobSeekerCancelHandler,
+    companyRegistraionCancelHandler,
+    newCustomerRegistrationSkipHandler
 } from './callbacks'
 import {
+    companyStartupHandler,
+    companyHandler,
+    startupHandler,
+    addMoreCompanyHandler,
     employerMenuSelectionHandler,
     menuAccountSelectorHandler,
     menuAmharicSelectorHandler,
@@ -14,14 +21,41 @@ import {
     menuLanguageSelectorHandler,
     menuMainSelectorHandler,
     menuSettingsSelectorHandler,
-    personalizedJobSelectionHandler
+    personalizedJobSelectionHandler,
+    addMoreStartupHandler
 } from "./core"
-
+export const companyStartup = {
+    key: "My Companies / Startup",
+    handler: companyStartupHandler
+}
+export const company = {
+    key: "Company",
+    handler: companyHandler
+}
+export const startup = {
+    key: "Startup",
+    handler: startupHandler,
+}
+export const adMoreCompany = {
+    key: "Add Company",
+    handler: addMoreCompanyHandler
+}
+export const addMoreStartup = {
+    key: "Add Startup",
+    handler: addMoreStartupHandler,
+}
 export const newCustomerRegistrationCancel = {
     key: "Back",
     handler: newCustomerRegistrationCancelHandler
 }
-
+export const newCustomerRegistrationSkip = { 
+    key: "Skip",
+    handler: newCustomerRegistrationSkipHandler
+}
+export const companyRegistraionCancel = {
+    key: "Back",
+    handler: companyRegistraionCancelHandler
+}
 export const menuJobseekerSelection = {
     key: "Job Seeker",
     handler: menuJobseekerSelectionHandler
@@ -87,3 +121,4 @@ export const jobPostCancelButton = {
     key: "Back",
     handler: jobPostCancelButtonHandler
 }
+
