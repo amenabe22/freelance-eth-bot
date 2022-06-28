@@ -71,7 +71,7 @@ export const registerCompanyConfirmKeyboard = {
 
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Edit", callback_data: "editCompanyRegistring" }, { text: "Confirm", callback_data: "confirmRegisterCompany" }],
+            [{ text: "Edit", callback_data: "editCompanyRegistring" }, { text: "Confirm", callback_data: "confirmRegisterCompanyGM" }],
 
         ]
     }
