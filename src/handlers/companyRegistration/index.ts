@@ -1,7 +1,7 @@
 import fs from "fs"
 import { Telegraf, Context } from "telegraf";
 import FormData from "form-data";
-import { cancelKeyboard } from "../../keybaords/menu_kbs";
+import { cancelKeyboard, employerKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { getUserByTelegramId, getUserByPhone, verifyEmailEntity } from "../../services/registration";
@@ -105,7 +105,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         if (data) {
             ctx.deleteMessage();
             console.log(data, " >>>> data")
-            ctx.reply("sucessfully submitted", cancelKeyboard)
+            ctx.reply("sucessfully submitted", employerKeyboard)
             ctx.scene.leave();
         } else {
             ctx.reply("failed to register company")
