@@ -83,7 +83,7 @@ export const startupLGMTradeLicensePhotoHandler = Telegraf.on(["photo", "text", 
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `dist/files/tradeLPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
       console.log("done")
       ctx.replyWithHTML(`please enter G/M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
@@ -91,7 +91,7 @@ export const startupLGMTradeLicensePhotoHandler = Telegraf.on(["photo", "text", 
   } else {
     ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
     return;
-  } 
+  }
 })
 export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.update.message.photo) {
@@ -99,7 +99,7 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/filesGMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -472,8 +472,8 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
     other_link_one: globalState.startupLGMOther1Link,
     other_link_two: globalState.startupLGMOther2Link,
     other_link_three: globalState.startupLGMOther3Link,
-    trade_license_photo: fs.createReadStream(path.join(`dist/files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
+    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -824,7 +824,7 @@ export const startupUGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -1196,7 +1196,7 @@ export const startupUGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
 //     other_link_one: globalState.startupUGMOther1Link,
 //     other_link_two: globalState.startupLGMOther2Link,
 //     other_link_three: globalState.startupUGMOther3Link,
-//     rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
+//     rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
 //     folder: 'entity',
 //     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
 //   }
@@ -1258,7 +1258,7 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     other_link_one: globalState.startupUGMOther1Link,
     other_link_two: globalState.startupLGMOther2Link,
     other_link_three: globalState.startupUGMOther3Link,
-    rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)), 
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)), 
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1607,7 +1607,7 @@ export const startupLRTradeLicensePhotoHandler = Telegraf.on(["photo", "text", "
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     console.log(downloadURL);
     const fname = `${ctx.from.id}.jpg`
-    download(downloadURL, `dist/files/tradeLPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter G / M id photo.`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -1625,7 +1625,7 @@ export const startupLRIdPhotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -1640,7 +1640,7 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/files/letterPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -2019,9 +2019,9 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
     other_link_one: globalState.startupLROther1Link,
     other_link_two: globalState.startupLROther2Link,
     other_link_three: globalState.startupLROther3Link,
-    trade_license_photo: fs.createReadStream(path.join(`dist/files/tradeLPhoto/${ctx.from.id}.jpg`)),
-    rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`dist/files/letterPhoto/${ctx.from.id}.jpg`)),
+    trade_license_photo: fs.createReadStream(path.join(`files/tradeLPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -2375,7 +2375,7 @@ export const startupUPIdphotoHandler = Telegraf.on(["photo", "text", "contact", 
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/files/GMIdPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
       ctx.replyWithHTML(`please enter Representative stamped letter`, cancelKeyboard);
       return ctx.wizard.next();
     })
@@ -2393,7 +2393,7 @@ export const startupURStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     console.log(ctx.scene.state.startupIdPhoto);
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
-    download(downloadURL, `dist/files/letterPhoto/${fname}`,).then(async () => {
+    download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
       const { data, error } = await fetchSectors()
       if (data) {
         const { sectors } = data;
@@ -2764,8 +2764,8 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
     other_link_one: globalState.startupUROther1Link,
     other_link_two: globalState.startupUROther2Link,
     other_link_three: globalState.startupUROther3Link,
-    rep_id_photo: fs.createReadStream(path.join(`dist/files/GMIdphoto/${ctx.from.id}.jpg`)),
-    rep_letter_photo: fs.createReadStream(path.join(`dist/files/letterPhoto/${ctx.from.id}.jpg`)),
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
+    rep_letter_photo: fs.createReadStream(path.join(`files/letterPhoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
