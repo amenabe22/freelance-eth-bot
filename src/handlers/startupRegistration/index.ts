@@ -4,7 +4,7 @@ import { fetchCities, fetchCity } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
-import { getUserByPhone, getUserByTelegramId, verifyEmailEntity } from "../../services/registration";
+import { getUserByPhone, getUserByTelegramId, getUserByTelegramIdStartup, verifyEmailEntity } from "../../services/registration";
 import {
   registerStartupConfirmLGMKeyboard,
   registerStartupConfirmUGMKeyboard,
@@ -3084,19 +3084,26 @@ export const startupSelectionActionHandler = async (ctx: any) => {
   ctx.deleteMessage()
   const selectedStartup = ctx.match[0];
   console.log(selectedStartup);
-  const { data, error } = await getUserByTelegramId({
+  const { data, error } = await getUserByTelegramIdStartup({
     telegram_id: JSON.stringify(ctx.from.id)
   })
   if (data) {
     let userId = data.users[0].id;
-    console.log(userId);
+    console.log(userId, "user id");
     ctx.session.sourceStartupUserId = userId;
-    console.log(ctx.session.sourceStartpUserId, "hm");
+    console.log(ctx.session.sourceStartupUserId, "hm");
     let checkUserEntity = data.users[0].user_entities;
+    console.log(checkUserEntity);
     if (checkUserEntity) {
-      ctx.session.userSName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
+      let myStartups = checkUserEntity.filter((startup: any)=>{
+        if(startup.entity["verified_at"] != null){
+          return true;
+        }
+      });
+      console.log("my startups list",myStartups)
+      ctx.session.userSName = myStartups.map((nam: any) => (nam.entity["name"]))
       console.log(ctx.session.userSName)
-      ctx.session.userSId = checkUserEntity.map((nam: any) => nam.entity["id"])
+      ctx.session.userSId = myStartups.map((nam: any) => nam.entity["id"])
       console.log(ctx.session.userSId);
       if (selectedStartup == 60) {
         ctx.session.selectedStartupName = ctx.session.userSName[0];

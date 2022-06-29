@@ -861,9 +861,14 @@ export const companySelectionActionHandler = async (ctx: any) => {
         console.log(ctx.session.sourceCompanyUserId, "hm");
         let checkUserEntity = data.users[0].user_entities;
         if (checkUserEntity) {
-            ctx.session.userCName = checkUserEntity.map((nam: any) => (nam.entity["name"]))
+            let myCompanies = checkUserEntity.filter((account: any)=>{
+                if(account.entity["verified_at"] != null){
+                  return true;
+                }
+            });
+            ctx.session.userCName = myCompanies.map((nam: any) => (nam.entity["name"]))
             console.log(ctx.session.userCName)
-            ctx.session.userCId = checkUserEntity.map((nam: any) => nam.entity["id"])
+            ctx.session.userCId = myCompanies.map((nam: any) => nam.entity["id"])
             console.log(ctx.session.userCId);
             if (selectedCompany == 30) {
                 ctx.session.selectedCompanyName = ctx.session.userCName[0];

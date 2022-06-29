@@ -21,12 +21,18 @@ export const companyHandler = async (ctx: any) => {
         console.log(data);
         let checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
+        let myCompanies = checkUserEntity.filter((company: any)=>{
+            if(company.entity["verified_at"] != null){
+              return true;
+            }
+        });
+        console.log("is verified", myCompanies)
         if (checkUserEntity) {
-            ctx.session.userEName = checkUserEntity.map((nam: any) => {
+            ctx.session.userEName = myCompanies.map((nam: any) => {
                 return `${nam.entity["name"]}`
             })
             console.log(ctx.session.userEName)
-            ctx.session.userEId = checkUserEntity.map((nam: any) => {
+            ctx.session.userEId = myCompanies.map((nam: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId);
@@ -61,13 +67,18 @@ export const startupHandler = async (ctx: any) => {
     if (data) {
         console.log(data);
         let checkUserEntity = data.users[0].user_entities;
-        console.log(checkUserEntity)
+        // console.log(checkUserEntity)
         if (checkUserEntity) {
-            ctx.session.userEName = checkUserEntity.map((nam: any) => {
+       let myStartups = checkUserEntity.filter((startup: any)=>{
+         if(startup.entity["verified_at"] != null){
+           return true;
+         }
+       });
+            ctx.session.userEName = myStartups.map((nam: any) => {
                 return `${nam.entity["name"]}`
             })
             console.log(ctx.session.userEName)
-            ctx.session.userEId = checkUserEntity.map((nam: any) => {
+            ctx.session.userEId = myStartups.map((nam: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId);

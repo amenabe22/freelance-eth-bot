@@ -66,6 +66,7 @@ export const USER = gql`
         entity {
           name
           id
+          verified_at
         }
       }
     }
@@ -109,6 +110,7 @@ export const USER_STARTUP = gql`
         entity {
           name
           id
+          verified_at
         }
       }
     }
