@@ -117,7 +117,7 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
       }
       return ctx.wizard.next();
     })
-  } else {
+  } else { 
     ctx.replyWithHTML(`Please enter avalid G/M id photo!`, cancelKeyboard);
     return;
   }
