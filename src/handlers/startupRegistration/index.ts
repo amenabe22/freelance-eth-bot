@@ -492,7 +492,9 @@ export const confirmRegisterStartUpLGMHandler = async (ctx: any) => {
       ctx.deleteMessage();
       console.log(data)
       ctx.reply("sucessfully submitted", cancelKeyboard)
+      ctx.scene.leave();
     } else {
+      ctx.reply("failed creating startup")
 
     }
     console.log(globalState, "cr")
@@ -1258,7 +1260,7 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
     other_link_one: globalState.startupUGMOther1Link,
     other_link_two: globalState.startupLGMOther2Link,
     other_link_three: globalState.startupUGMOther3Link,
-    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)), 
+    rep_id_photo: fs.createReadStream(path.join(`files/GMIdphoto/${ctx.from.id}.jpg`)),
     folder: 'entity',
     origin_platform_id: '941cc536-5cd3-44a1-8fca-5f898f26aba5',
   }
@@ -1277,6 +1279,7 @@ export const confirmRegisterStartUpUGMHandler = async (ctx: any) => {
       ctx.deleteMessage();
       console.log(data)
       ctx.reply("sucessfully submitted", cancelKeyboard)
+      ctx.scene.leave();
     } else {
 
     }
@@ -1975,7 +1978,7 @@ export const startupLRHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nnWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
       // Finish line
       ctx.reply("Finished here is your info please approve")
-      
+
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -2040,6 +2043,7 @@ export const confirmRegisterStartUpLRHandler = async (ctx: any) => {
       ctx.deleteMessage();
       console.log(data)
       ctx.reply("sucessfully submitted", cancelKeyboard)
+      ctx.scene.leave();
     } else {
 
     }
@@ -2350,7 +2354,7 @@ export const startupURFoundersNameHandler = Telegraf.on(["photo", "text", "conta
       ctx.scene.state[`startupURFounder${totalAddedFounders}`] = ctx.message.text;
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
         ctx.replyWithHTML("please enter representative id photo", cancelKeyboard);
-         return ctx.wizard.next();
+        return ctx.wizard.next();
       }
       // increment total founders added
       ctx.replyWithHTML("please enter another founder name", starupFounderKeyboard);
@@ -2720,7 +2724,7 @@ export const startupURHeadQuarterLocationHandler = Telegraf.on(["photo", "text",
       globalState = ctx.scene.state
       ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupURName} \nFounder1: ${globalState.startupURFounder1} \nFounder2: ${globalState.startupURFounder2} \nFounder3: ${globalState.startupURFounder3} \nFounder4: ${globalState.startupURFounder4} \nFounder5: ${globalState.startupURFounder5} \nPhone: ${globalState.startupURPhoneNumber} \nSector: ${globalState.startupURSectorName} \nEmployee Size: ${globalState.startupUREmployeeSize} \nnWebsite: ${globalState.startupURWebsite} \nEmail: ${globalState.startupUREmail} \nFacebook link: ${globalState.startupURFacebookLink} \nTelegram link: ${globalState.startupURTelegramLink} \nYouTube link: ${globalState.startupURYouTubeLink} \nTikTok link: ${globalState.startupURTikTokLink} \nTwitter link: ${globalState.startupURTwitterLink} \nOther link1: ${globalState.startupUROther1Link} \nOther link2: ${globalState.startupUROther2Link} \nOther link3: ${globalState.startupUROther3Link} `, registerStartupConfirmURKeyboard)
       ctx.reply("Finished here is your info please approve")
-      
+
     }
   } else {
     ctx.replyWithHTML("Please enter a valid location of your startup head quarter!", {
@@ -2785,6 +2789,7 @@ export const confirmRegisterStartUpURHandler = async (ctx: any) => {
       ctx.deleteMessage();
       console.log(data)
       ctx.reply("sucessfully submitted", cancelKeyboard)
+      ctx.scene.leave();
     } else {
 
     }
