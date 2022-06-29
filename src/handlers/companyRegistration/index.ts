@@ -113,6 +113,7 @@ export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
         console.log(globalState, "cr")
     }).catch((e) => {
         console.log(JSON.stringify(e))
+        ctx.reply("failed to register company please edit your info")
         const message = e.response.data
         console.error(JSON.stringify(message))
         console.log(message.graphQLErrors)
