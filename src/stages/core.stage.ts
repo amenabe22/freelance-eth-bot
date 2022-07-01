@@ -23,6 +23,14 @@ import {
     startupRegisteringEditLRScene,
     startupRegisteringEditUGMScene,
     startupRegisteringEditURScene,
+    socialMediaLinkLGMScene,
+    socialMediaLinkDoneLGMScene,
+    socialMediaLinkUGMScene,
+    socialMediaLinkDoneUGMScene,
+    socialMediaLinkLRScene,
+    socialMediaLinkDoneLRScene,
+    socialMediaLinkURScene,
+    socialMediaLinkDoneURScene
 } from "../scenes/startup.registration.scene"
 import { Scenes } from "telegraf"
 import { postAJobScene } from "../scenes/jobpost.scene"
@@ -51,7 +59,14 @@ export const coreStage: any = new Scenes.Stage<any>(
         startupRegisteringEditUGMScene,
         startupRegisteringEditLRScene,
         startupRegisteringEditURScene,
-
-        
+        socialMediaLinkLGMScene,
+        socialMediaLinkDoneLGMScene,
+        socialMediaLinkUGMScene,
+        socialMediaLinkDoneUGMScene,
+        socialMediaLinkLRScene,
+        socialMediaLinkDoneLRScene,
+        socialMediaLinkURScene,
+        socialMediaLinkDoneURScene,        
     ]
 )
+  

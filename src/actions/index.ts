@@ -91,10 +91,10 @@ export const confirmRegisteringStartupURAction = {
     key: "confirmRegisteringStartupUR",
     handler: hdlr.confirmRegisterStartUpURHandler
 }
-export const editRegisteringStartupURAction = {
-    key: "editStartupRegistringUR",
-    handler: hdlr.editRegisterStartUpURHandler
-}
+// export const editRegisteringStartupURAction = {
+//     key: "editStartupRegistringUR",
+//     handler: hdlr.editRegisterStartUpURHandler
+// }
 
 export const RegisterUserHandlerDob = {
     key: "RegisterUser",
@@ -210,4 +210,20 @@ export const editStartupRegisteringLRInitAction = {
 export const editStartupRegisteringURInitAction = {
     key: ["name.UR", "founderN1.UR", "founderN2.UR", "founderN3.UR", "founderN5.UR", "employee.UR", "sector.UR", "facebook.UR", "telegram.UR", "youtube.UR", "tiktok.startupUR", "twitter.UR", "linkedin.UR", "other1.UR ", "other2.UR", "other3.UR", "email.UR", "phone.UR", "website.UR", "location.UR"],
     handler: hdlr.editRegisterStartupURCbActionHandler
+}
+export const socialMediaAddingLGMInitAction = {
+    key: ["facebook-linkLGM", "telegram-linkLGM", "youtube-linkLGM", "tiktok-linkLGM", "twitter-linkLGM", "linkedin-linkLGM", "otherlink1-linkLGM", "otherlink2-linkLGM", "otherlink3-linkLGM", "done-linkLGM"],
+    handler: hdlr.socialMediaAddingActionLGMHandler
+}
+export const socialMediaAddingUGMInitAction = {
+    key: ["facebook-linkUGM", "telegram-linkUGM", "youtube-linkUGM", "tiktok-linkUGM", "twitter-linkUGM", "linkedin-linkUGM", "otherlink1-linkUGM", "otherlink2-linkUGM", "otherlink3-linkUGM", "done-linkUGM"],
+    handler: hdlr.socialMediaAddingActionUGMHandler
+}
+export const socialMediaAddingLRInitAction = {
+    key: ["facebook-linkLR", "telegram-linkLR", "youtube-linkLR", "tiktok-linkLR", "twitter-linkLR", "linkedin-linkLR", "otherlink1-linkLR", "otherlink2-linkLR", "otherlink3-linkLR", "done-linkLR"],
+    handler: hdlr.socialMediaAddingActionLRHandler
+}
+export const socialMediaAddingURInitAction = {
+    key: ["facebook-linkUR", "telegram-linkUR", "youtube-linkUR", "tiktok-linkUR", "twitter-linkUR", "linkedin-linkUR", "otherlink1-linkUR", "otherlink2-linkUR", "otherlink3-linkUR", "done-linkUR"],
+    handler: hdlr.socialMediaAddingActionURHandler
 }

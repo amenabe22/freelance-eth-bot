@@ -3,6 +3,119 @@ import { CoreScene } from "./scene"
 import { companyRegistraionCancel } from "../handlers/callbacks"
 import { handOverStartupInitHandler, startupEditSpecificFieldInitHandler } from "../handlers"
 
+export const socialMediaLinkLGMScene = new CoreScene(
+  "socialMediaLinkLGMScene",
+  {
+    enter: hdlr.startupSocialMediaLinkLGMInitHandler,
+    handlers: [
+      hdlr.startupSocialMediaLinkLGMValueHandler,
+      hdlr.startupLGMEmailHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+export const socialMediaLinkDoneLGMScene = new CoreScene(
+"socialMediaLinkDoneLGMScene",
+{
+enter: hdlr.startupSocialMediaLinkDoneLGMInitHandler,
+handlers: [
+  hdlr.startupLGMEmailHandler,
+  hdlr.startupLGMOfficialPhoneNoHandler,
+  hdlr.startupLGMHeadQuarterLocationHandler
+]
+},
+[
+companyRegistraionCancel
+]
+)
+
+export const socialMediaLinkUGMScene = new CoreScene(
+  "socialMediaLinkUGMScene",
+  {
+    enter: hdlr.startupSocialMediaLinkUGMInitHandler,
+    handlers: [
+      hdlr.startupSocialMediaLinkUGMValueHandler,
+      hdlr.startupUGMEmailHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+export const socialMediaLinkDoneUGMScene = new CoreScene(
+"socialMediaLinkDoneUGMScene",
+{
+enter: hdlr.startupSocialMediaLinkDoneUGMInitHandler,
+handlers: [
+  hdlr.startupUGMEmailHandler,
+  hdlr.startupUGMOfficialPhoneNoHandler,
+  hdlr.startupUGMHeadQuarterLocationHandler
+]
+},
+[
+companyRegistraionCancel
+]
+)
+
+export const socialMediaLinkLRScene = new CoreScene(
+  "socialMediaLinkLRScene",
+  {
+    enter: hdlr.startupSocialMediaLinkLRInitHandler,
+    handlers: [
+      hdlr.startupSocialMediaLinkLRValueHandler,
+      hdlr.startupLREmailHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+
+export const socialMediaLinkDoneLRScene = new CoreScene(
+"socialMediaLinkDoneLRScene",
+{
+enter: hdlr.startupSocialMediaLinkDoneLRInitHandler,
+handlers: [
+  hdlr.startupLREmailHandler,
+  hdlr.startupLROfficialPhoneNoHandler,
+  hdlr.startupLRHeadQuarterLocationHandler
+]
+},
+[
+companyRegistraionCancel
+]
+)
+
+export const socialMediaLinkURScene = new CoreScene(
+  "socialMediaLinkURScene",
+  {
+    enter: hdlr.startupSocialMediaLinkURInitHandler,
+    handlers: [
+      hdlr.startupSocialMediaLinkURValueHandler,
+      hdlr.startupUREmailHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+
+export const socialMediaLinkDoneURScene = new CoreScene(
+"socialMediaLinkDoneURScene",
+{
+enter: hdlr.startupSocialMediaLinkDoneURInitHandler,
+handlers: [
+  hdlr.startupUREmailHandler,
+  hdlr.startupUROfficialPhoneNoHandler,
+  hdlr.startupURHeadQuarterLocationHandler
+]
+},
+[
+companyRegistraionCancel
+]
+)
 
 export const startupRegisteringEditLGMScene = new CoreScene(
   "startupRegisteringEditLGMScene",
@@ -65,14 +178,7 @@ export const startupRegistrationLGMscene = new CoreScene(
       hdlr.startupLGMIndustrySectorHandler,
       hdlr.startupLGMEmployeeSizeHandler,
       hdlr.startupLGMWebsiteHandler,
-      hdlr.startupLGMFacebookLinkHandler,
-      hdlr.startupLGMTelegramLinkHandler,
-      hdlr.startupLGMYouTubeLinkHandler,
-      hdlr.startupLGMTikTokLinkHandler, 
-      hdlr.startupLGMTwitterLinkHandler,
-      hdlr.startupLGMOtherLink1Handler, 
-      hdlr.startupLGMOtherLink2Handler,
-      hdlr.startupLGMOtherLink3Handler,
+      hdlr.startupLGMSocialMediaLinkHandler,    
       hdlr.startupLGMEmailHandler,
       hdlr.startupLGMOfficialPhoneNoHandler,
       hdlr.startupLGMHeadQuarterLocationHandler,
@@ -94,15 +200,8 @@ export const startupRegistrationUGMscene = new CoreScene(
       hdlr.startupUGMIndustrySectorHandler,
       hdlr.startupUGMEmployeeSizeHandler,
       hdlr.startupUGMWebsiteHandler,
-      hdlr.startupUGMFacebookLinkHandler,
-      hdlr.startupUGMTelegramLinkHandler,
-      hdlr.startupUGMYouTubeLinkHandler,
-      hdlr.startupUGMTikTokLinkHandler,
-      hdlr.startupUGMTwitterLinkHandler,
-      hdlr.startupUGMOtherLink1Handler,
-      hdlr.startupUGMOtherLink2Handler,
-      hdlr.startupUGMOtherLink3Handler,
-      hdlr.startupUGMEmailHandler,
+      hdlr.startupUGMSocialMediaLinkHandler,
+       hdlr.startupUGMEmailHandler,
       hdlr.startupUGMOfficialPhoneNoHandler,
       hdlr.startupUGMHeadQuarterLocationHandler,
     ]
@@ -124,14 +223,7 @@ export const startupRegistrationLRscene = new CoreScene(
       hdlr.startupLRIndustrySectorHandler,
       hdlr.startupLREmployeeSizeHandler,
       hdlr.startupLRWebsiteHandler,
-      hdlr.startupLRFacebookLinkHandler,
-      hdlr.startupLRTelegramLinkHandler,
-      hdlr.startupLRYouTubeLinkHandler,
-      hdlr.startupLRTikTokLinkHandler,
-      hdlr.startupLRTwitterLinkHandler,
-      hdlr.startupLROtherLink1Handler,
-      hdlr.startupLROtherLink2Handler,
-      hdlr.startupLROtherLink3Handler,
+      hdlr.startupLRSocialMediaLinkHandler,
       hdlr.startupLREmailHandler,
       hdlr.startupLROfficialPhoneNoHandler,
       hdlr.startupLRHeadQuarterLocationHandler,
@@ -153,14 +245,7 @@ export const startupRegistrationURscene = new CoreScene(
       hdlr.startupURIndustrySectorHandler, 
       hdlr.startupUREmployeeSizeHandler,
       hdlr.startupURWebsiteHandler,
-      hdlr.startupURFacebookLinkHandler,
-      hdlr.startupURTelegramLinkHandler,
-      hdlr.startupURYouTubeLinkHandler,
-      hdlr.startupURTikTokLinkHandler,
-      hdlr.startupURTwitterLinkHandler,
-      hdlr.startupUROtherLink1Handler,
-      hdlr.startupUROtherLink2Handler,
-      hdlr.startupUROtherLink3Handler,
+      hdlr.startupURSocialMediaLinkHandler,
       hdlr.startupUREmailHandler,
       hdlr.startupUROfficialPhoneNoHandler,
       hdlr.startupURHeadQuarterLocationHandler,

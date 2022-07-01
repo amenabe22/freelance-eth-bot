@@ -256,8 +256,60 @@ export const startupEditKeyboard = {
         inline_keyboard: [
             [{ text: "Name", callback_data: "edit_name_of_startup" }, { text: "Employee Size", callback_data: "edit_employee_of_startup" }],
             [{ text: "Email", callback_data: "edit_email_of_startup" }, { text: "Phone No", callback_data: "edit_phone_of_startup" }],
-            [{ text: "Location", callback_data: "edit_location_of_startup" }, { text: "Website", callback_data: "edit_websit_of_startup" }],
+            [{ text: "Location", callback_data: "edit_location_of_startup" }, { text: "Website", callback_data: "edit_websit_of_startup"}],
             [{ text: "Add License", callback_data: "add_license_startup"}]
         ]
     } 
+}
+export const socialMediaListLGMKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkLGM" }, { text: "Telegram link", callback_data: "telegram-linkLGM"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkLGM" }, { text: "TikTok link", callback_data: "tiktok-linkLGM" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkLGM" }, { text: "LinkedIn link", callback_data: "linkedin-linkLGM" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkLGM" }, { text: "Other link 2", callback_data: "otherlink2-linkLGM" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkLGM"}, { text: "Done", callback_data: "done-linkLGM"}],
+        ]
+    }
+}
+export const socialMediaListUGMKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkUGM" }, { text: "Telegram link", callback_data: "telegram-linkUGM"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkUGM" }, { text: "TikTok link", callback_data: "tiktok-linkUGM" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkUGM" }, { text: "LinkedIn link", callback_data: "linkedin-linkUGM" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkUGM" }, { text: "Other link 2", callback_data: "otherlink2-linkUGM" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkUGM"}, { text: "Done", callback_data: "done-linkUGM"}],
+        ]
+    }
+}
+export const socialMediaListLRKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkLR" }, { text: "Telegram link", callback_data: "telegram-linkLR"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkLR" }, { text: "TikTok link", callback_data: "tiktok-linkLR" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkLR" }, { text: "LinkedIn link", callback_data: "linkedin-linkLR" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkLR" }, { text: "Other link 2", callback_data: "otherlink2-linkLR" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkLR"}, { text: "Done", callback_data: "done-linkLR"}],
+        ]
+    }
+}
+export const socialMediaListURKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkUR" }, { text: "Telegram link", callback_data: "telegram-linkUR"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkUR" }, { text: "TikTok link", callback_data: "tiktok-linkUR" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkUR" }, { text: "LinkedIn link", callback_data: "linkedin-linkUR" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkUR" }, { text: "Other link 2", callback_data: "otherlink2-linkUR" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkUR"}, { text: "Done", callback_data: "done-linkUR"}],
+        ]
+    }
+}
+export const socialMediaYesNoKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{ text: "Yes" }, { text: "No" }],
+            [{ text: "Back" }],
+        ], resize_keyboard: true, one_time_keyboard: true,
+    }
 }
