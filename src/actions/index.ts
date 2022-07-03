@@ -121,6 +121,11 @@ export const CompanySelectionAction = {
     key: /\b(3?[0-9]|4[0-9]|5[0-0])\b/g,
     handler: hdlr.companySelectionActionHandler
 }
+
+export const PersonalizationSelector = {
+    key: /^per_sect_*.*$/,
+    handler: hdlr.personalizedSectorActionHandler
+}
 export const StartupSelectionAction = {
     key: /\b(6?[0-9]|7[0-9]|8[0-0])\b/g,
     handler: hdlr.startupSelectionActionHandler

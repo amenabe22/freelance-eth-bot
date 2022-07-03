@@ -86,6 +86,7 @@ export const sectorSelectionActionHandler = async (ctx: any) => {
             ctx.session.selectedSectorId = ctx.session.sectorIds[x];
         }
     }
+    console.log("asdfadf")
     const { data } = await registerJobSeekerPersonalizedJob({
         objs: [{
             job_seeker_id: ctx.session.personalizedJobSeekerId,

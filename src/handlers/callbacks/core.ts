@@ -7,7 +7,7 @@ import {
     editProfileKeybaord, settingKeyboard
 } from "../../keybaords/settings";
 import { companyKeyboard, starupStatusKeyboard, LicensedStartupKeyboard } from "../../keybaords/company.registration_kbs";
-import { Context } from "telegraf";
+import { getJobSeekerSectors } from "../../services/personalization";
 var boldCompany = "Company".bold();
 var boldStartup = "Startup".bold();
 export const companyStartupHandler = async (ctx: any) => {
@@ -177,23 +177,41 @@ export const termsAndConditionsHandler = async (ctx: any) => {
 }
 
 
+const labelDuplicateSectors = (jsectors: any, sector: any) => {
+    const qry = jsectors.find((e: any) => e.sector.id === sector.id)
+    const label = qry ? `✅ ${sector.name}` : sector.name
+    return label
+}
 
+const labelDuplicateSectorCb = (jsectors: any, sector: any) => {
+    const qry = jsectors.find((e: any) => e.sector.id === sector.id)
+    const label = qry ? `per_sect_200_${sector.id}_1` : `per_sect_200_${sector.id}_0`
+    return label
+}
 
 export const personalizedJobSelectionHandler = async (ctx: any) => {
-    const { data, error } = await getUserByTelegramId({ telegram_id: JSON.stringify(ctx.from.id) })
+    const telegram_id = JSON.stringify(ctx.from.id)
+    const { data, error } = await getUserByTelegramId({ telegram_id })
 
-    const sctrs = await fetchSectors()
+
     if (!error) {
         const [{ job_seeker: { id } }] = data.users
+        const jsectors = await getJobSeekerSectors({ job_seeker_id: id })
+        const { job_seeker_sectors } = jsectors.data
+        
+        const sctrs = await fetchSectors()
         ctx.session.personalizedJobSeekerId = id;
-
         const { sectors } = sctrs.data;
+
         const boldSectors = "Sectors".bold();
+
+        const jobseekersBoard = sectors.map((x: any, xi: any) => ([{
+            text: labelDuplicateSectors(job_seeker_sectors, x),
+            callback_data: labelDuplicateSectorCb(job_seeker_sectors, x)
+        }]))
         ctx.replyWithHTML(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
             reply_markup: JSON.stringify({
-                inline_keyboard: sectors.map((x: any, xi: any) => ([{
-                    text: x.name, callback_data: JSON.stringify(xi + 0)
-                }])), resize_keyboard: true, one_time_keyboard: true,
+                inline_keyboard: jobseekersBoard, resize_keyboard: true, one_time_keyboard: true,
             }),
         });
         ctx.replyWithHTML("*****************************", onlyMainMenuKeyboard)
