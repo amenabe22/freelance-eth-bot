@@ -7,17 +7,53 @@ import {
     registerUserKeyboard,
     registerUserWithAgeKeyboard, shareContactKeyboard
 } from "../../keybaords/registration_kbs";
-import { registerNewBotUser, verifyEmail } from "../../services/registration";
+import { getUserByTelegramId, registerNewBotUser, verifyEmail } from "../../services/registration";
 import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
 import { ve, vn } from "../../utils.py/validation";
-import { getJobSeekerId, insertJobSeekerSector } from "../../services/personalization";
+import { getJobSeekerId, getJobSeekerSectors, insertJobSeekerJobType, insertJobSeekerSector } from "../../services/personalization";
 
 let globalState: any;
-
-export const personalizedSectorActionHandler = async (ctx: any) => {
+export const PersonalizationJtSelectorActionHandler = async (ctx: any) => {
     const selectedSector = ctx.match[0];
     const match = selectedSector.split("_").splice(-2)[0]
     const already_selected = selectedSector.split("_").splice(-1)[0]
+    if (parseInt(already_selected)) {
+        ctx.reply("you have already selected this job type please pick another one !!!")
+        return
+    }
+    const res = await getJobSeekerId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const [{ job_seeker: { id } }] = res.data.users
+    const { data } = await insertJobSeekerJobType({
+        "objs": {
+            "job_seeker_id": id,
+            "job_type_id": match
+        }
+    })
+    if (data) {
+        console.log(data)
+        ctx.reply("updated")
+    } else {
+        ctx.reply("Error updating personalized sector")
+    }
+}
+export const personalizedSectSectorActionHandler = async (ctx: any) => {
+    const maxSectorsLen = 3;
+    const selectedSector = ctx.match[0];
+    const match = selectedSector.split("_").splice(-2)[0]
+    const already_selected = selectedSector.split("_").splice(-1)[0]
+
+    const telegram_id = JSON.stringify(ctx.from.id)
+    const usr = await getUserByTelegramId({ telegram_id })
+    const [{ job_seeker }] = usr.data.users
+    const jsectors = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
+    const { job_seeker_sectors } = jsectors.data
+    
+    if (job_seeker_sectors.length >= 3) {
+        ctx.reply("you can't add more than 3 job sectors")
+        return
+    }
 
     if (parseInt(already_selected)) {
         ctx.reply("you have already selected this sector please pick another one !!!")

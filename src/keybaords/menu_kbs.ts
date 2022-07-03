@@ -76,3 +76,14 @@ export const chooseCompanyStartupKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+
+export const choosePersonalizationOptionsupKeyboard = {
+
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Edit Sectors", callback_data: "editPersonalizationSectors" },
+            { text: "Edit Job Type", callback_data: "editPersonalizationJobType" }],
+
+        ]
+    }
+}

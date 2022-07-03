@@ -1,4 +1,4 @@
-import { REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_EMAIL_ENTITY, USER_STARTUP } from "../apollo/queries"
+import { JOB_TYPES, REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_EMAIL_ENTITY, USER_STARTUP } from "../apollo/queries"
 import { client } from "../apollo"
 
 export const registerNewBotUser = async (variables: any) => {
@@ -52,4 +52,11 @@ export const verifyEmailEntity = async (variables: any) => {
         variables
     })
     return res
+}
+export const fetchJobTypes = async () => {
+    const res = await client.query({
+        query: JOB_TYPES,
+    })
+    return res
+
 }

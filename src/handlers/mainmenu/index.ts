@@ -26,6 +26,7 @@ export const educationalLevelHandler = Telegraf.on(["text", "contact", "document
         const { data, errors } = await fetchEducationLevel({ name: ctx.scene.state.currentEducationLevel })
         const workStatuses = await fetchWorkStatuses()
         if (!errors) {
+            console.log(data,"whoa")
             const { education_levels } = data
             const [{ id }] = education_levels
             ctx.session.currentEducationLevel = id;

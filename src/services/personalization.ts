@@ -9,6 +9,14 @@ export const registerJobSeekerPersonalizedJob = async (variables: any) => {
     return res
 }
 
+export const insertJobSeekerJobType = async (variables: any) => {
+    const res = await client.mutate({
+        mutation: qry.INSERT_JOB_SEEKER_TYPE,
+        variables
+    })
+    return res
+}
+
 export const insertJobSeekerSector = async (variables: any) => {
     const res = await client.mutate({
         mutation: qry.INSERT_JOB_SEEKER_SECTORS,

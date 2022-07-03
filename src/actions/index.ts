@@ -1,5 +1,7 @@
 import {
     editMultipleProfileHandler,
+    editPersonalizationJobTypeActionHandler,
+    editPersonalizationSectorsActionHandler,
     editProfileHandler,
     termsAndConditionsHandler
 } from "../handlers/callbacks/core";
@@ -122,9 +124,14 @@ export const CompanySelectionAction = {
     handler: hdlr.companySelectionActionHandler
 }
 
-export const PersonalizationSelector = {
+export const PersonalizationJtSelectorAction = {
+    key: /^per_jt_*.*$/,
+    handler: hdlr.PersonalizationJtSelectorActionHandler
+}
+
+export const PersonalizationSectSelectorAction = {
     key: /^per_sect_*.*$/,
-    handler: hdlr.personalizedSectorActionHandler
+    handler: hdlr.personalizedSectSectorActionHandler
 }
 export const StartupSelectionAction = {
     key: /\b(6?[0-9]|7[0-9]|8[0-0])\b/g,
@@ -175,9 +182,20 @@ export const editCompanyRegistrationRCbAction = {
     key: ["edr.name", "edr.sector", "edr.phone", "edr.website", "edr.email", "edr.hqs"],
     handler: hdlr.editCompanyRegistrationRCbActionHandler
 }
+
+export const editPersonalizationSectorsAction = {
+    key: "editPersonalizationSectors",
+    handler: editPersonalizationSectorsActionHandler
+}
+
+export const editPersonalizationJobTypeAction = {
+    key: "editPersonalizationJobType",
+    handler: editPersonalizationJobTypeActionHandler
+}
+
 export const editCompanyRegistringAction = {
     key: "editCompanyRegistring",
-    handler: hdlr.editCompanyRegistringHandler 
+    handler: hdlr.editCompanyRegistringHandler
 }
 export const editCompanyRegistringGMAction = {
     key: "editCompanyRegistringGM",
@@ -210,7 +228,7 @@ export const editStartupRegisteringUGMInitAction = {
 }
 export const editStartupRegisteringLRInitAction = {
     key: ["name.LR", "founderN1.LR", "founderN2.LR", "founderN3.LR", "founderN5.LR", "employee.LR", "sector.LR", "facebook.LR", "telegram.LR", "youtube.LR", "tiktok.startupLR", "twitter.LR", "linkedin.LR", "other1.LR ", "other2.LR", "other3.LR", "email.LR", "phone.LR", "website.LR", "location.LR"],
-    handler: hdlr.editRegisterStartupLRCbActionHandler 
+    handler: hdlr.editRegisterStartupLRCbActionHandler
 }
 export const editStartupRegisteringURInitAction = {
     key: ["name.UR", "founderN1.UR", "founderN2.UR", "founderN3.UR", "founderN5.UR", "employee.UR", "sector.UR", "facebook.UR", "telegram.UR", "youtube.UR", "tiktok.startupUR", "twitter.UR", "linkedin.UR", "other1.UR ", "other2.UR", "other3.UR", "email.UR", "phone.UR", "website.UR", "location.UR"],

@@ -27,7 +27,7 @@ export const bot = new CoreBot(
         act.CompanySelectionAction,
         act.UnlicensedStartupAction,
         act.RegisterStartupLGMAction,
-        act.RegisterStartupUGMAction, 
+        act.RegisterStartupUGMAction,
         act.RegisterStartupLRAction,
         act.RegisterStartupURAction,
         act.confirmRegisteringStartupLGMAction,
@@ -62,10 +62,15 @@ export const bot = new CoreBot(
         act.socialMediaAddingUGMInitAction,
         act.socialMediaAddingLRInitAction,
         act.socialMediaAddingURInitAction,
-        
+        act.editPersonalizationSectorsAction,
+        act.editPersonalizationJobTypeAction,
+        act.PersonalizationSectSelectorAction,
+        act.PersonalizationJtSelectorAction,
+
+
     ],
     // register commands
-    [ 
+    [
         StartCommand
     ],
     // register core callbacks  
@@ -88,6 +93,6 @@ export const bot = new CoreBot(
         cb.handleCvUploadSelection,
         cb.employerMenuSelection,
         cb.postJobMenuSelection
-    ] 
+    ]
 );
 
