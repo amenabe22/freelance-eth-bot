@@ -260,7 +260,7 @@ export const startupLGMOfficialPhoneNoHandler = Telegraf.on(["photo", "text", "c
   }
 })
 export const startupLGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) {
+  if (ctx.message.text) { 
     ctx.scene.state.startupLGMHeadQuarterLocation = ctx.message.text;
     const { data, error } = await fetchCity({ name: ctx.scene.state.startupLGMHeadQuarterLocation })
     const { cities } = data

@@ -16,7 +16,7 @@ import { Telegraf } from "telegraf"
 // export const jobSeekerInitHandler = Telegraf.on(["text", "contact", "document", "photo"], 
 export const jobSeekerInitHandler = async (ctx: any) => {
     ctx.scene.state.userId = ctx.session.userId;
-    ctx.replyWithHTML("Please eneter your Availability", cancelKeyboard)
+    ctx.replyWithHTML("Please eneter your educational level.", cancelKeyboard)
 }
 
 // availability handler

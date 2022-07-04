@@ -177,7 +177,7 @@ export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors
   insert_job_seeker_sectors(objects: $objs) {
     affected_rows
   }
-}`
+}` 
 
 export const JOB_SEEKER = gql`
   query getUser($telegram_id: String!) {
