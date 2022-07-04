@@ -172,12 +172,56 @@ export const SECTOR = gql`query getSector($name: citext!) {
   }
 }
 `
+export const SECTOR_BY_ID = gql`query getSector($id: uuid!) {
+  sectors(where: { id: { _eq: $id } }) {
+    id
+    name
+  }
+}
+`
+export const INSERT_JOB_SEEKER_TYPE = gql`mutation($objs: [job_seeker_job_types_insert_input!]!) {
+  insert_job_seeker_job_types(objects: $objs) {
+    affected_rows
+  }
+}`
 
 export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors_insert_input!]!) {
   insert_job_seeker_sectors(objects: $objs) {
     affected_rows
   }
 }` 
+
+export const JOB_SEEKER_SECTORS = gql`query($job_seeker_id: uuid!) {
+  job_seeker_sectors(where: {
+    job_seeker_id: {
+      _eq: $job_seeker_id
+    }
+  }) {
+    id
+    sector {
+      id
+      name
+    }
+  }
+}`
+
+export const JOB_TYPES = gql`query{
+  job_types{
+    created_at
+    id
+    name
+  }
+}
+`
+export const JOB_SEEKER_TYPES = gql`query ($job_seeker_id: uuid!) {
+  job_seeker_job_types(where: {job_seeker_id: {_eq: $job_seeker_id}}) {
+    id
+    job_type {
+      id
+      name
+    }
+  }
+}`
 
 export const JOB_SEEKER = gql`
   query getUser($telegram_id: String!) {
@@ -196,7 +240,7 @@ export const USER_EM = gql`query getUser($email: citext!) {
     }
   }`
 
-  export const USER_EMAIL_ENTITY = gql`query getUser($email: citext!) {
+export const USER_EMAIL_ENTITY = gql`query getUser($email: citext!) {
     entities(where: { email: { _eq: $email } }) {
     email    
     }

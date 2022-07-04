@@ -9,10 +9,42 @@ export const registerJobSeekerPersonalizedJob = async (variables: any) => {
     return res
 }
 
+export const insertJobSeekerJobType = async (variables: any) => {
+    const res = await client.mutate({
+        mutation: qry.INSERT_JOB_SEEKER_TYPE,
+        variables
+    })
+    return res
+}
+
+export const insertJobSeekerSector = async (variables: any) => {
+    const res = await client.mutate({
+        mutation: qry.INSERT_JOB_SEEKER_SECTORS,
+        variables
+    })
+    return res
+}
+
 export const getJobSeekerId = async (variables: any) => {
     const res = await client.query({
-      query: qry.JOB_SEEKER ,
-      variables
+        query: qry.JOB_SEEKER,
+        variables
+    })
+    return res
+}
+
+export const getJobSeekerSectors = async (variables: any) => {
+    const res = await client.query({
+        query: qry.JOB_SEEKER_SECTORS,
+        variables
+    })
+    return res
+}
+
+export const getJobSeekerTypes = async (variables: any) => {
+    const res = await client.query({
+        query: qry.JOB_SEEKER_TYPES,
+        variables
     })
     return res
 }

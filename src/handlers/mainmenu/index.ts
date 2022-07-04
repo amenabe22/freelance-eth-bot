@@ -26,6 +26,7 @@ export const educationalLevelHandler = Telegraf.on(["text", "contact", "document
         const { data, errors } = await fetchEducationLevel({ name: ctx.scene.state.currentEducationLevel })
         const workStatuses = await fetchWorkStatuses()
         if (!errors) {
+            console.log(data,"whoa")
             const { education_levels } = data
             const [{ id }] = education_levels
             ctx.session.currentEducationLevel = id;
@@ -86,6 +87,7 @@ export const sectorSelectionActionHandler = async (ctx: any) => {
             ctx.session.selectedSectorId = ctx.session.sectorIds[x];
         }
     }
+    console.log("asdfadf")
     const { data } = await registerJobSeekerPersonalizedJob({
         objs: [{
             job_seeker_id: ctx.session.personalizedJobSeekerId,

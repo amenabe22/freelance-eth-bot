@@ -1,17 +1,80 @@
 import { bot } from "../../setup";
 import { Telegraf, Context } from "telegraf"
 import { cancelKeyboard, skipKeyboard } from "../../keybaords/menu_kbs";
-import { fetchCities, fetchCity } from "../../services/basic";
+import { fetchCities, fetchCity, fetchSector, fetchSectorById } from "../../services/basic";
 import {
     ageKeyboard, editRegisterKeyboard, genderKeyboard,
     registerUserKeyboard,
     registerUserWithAgeKeyboard, shareContactKeyboard
 } from "../../keybaords/registration_kbs";
-import { registerNewBotUser, verifyEmail } from "../../services/registration";
+import { getUserByTelegramId, registerNewBotUser, verifyEmail } from "../../services/registration";
 import { chooseLanguageKeyboard } from "../../keybaords/language_kbs";
 import { ve, vn } from "../../utils.py/validation";
+import { getJobSeekerId, getJobSeekerSectors, insertJobSeekerJobType, insertJobSeekerSector } from "../../services/personalization";
 
 let globalState: any;
+export const PersonalizationJtSelectorActionHandler = async (ctx: any) => {
+    const selectedSector = ctx.match[0];
+    const match = selectedSector.split("_").splice(-2)[0]
+    const already_selected = selectedSector.split("_").splice(-1)[0]
+    if (parseInt(already_selected)) {
+        ctx.reply("you have already selected this job type please pick another one !!!")
+        return
+    }
+    const res = await getJobSeekerId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const [{ job_seeker: { id } }] = res.data.users
+    const { data } = await insertJobSeekerJobType({
+        "objs": {
+            "job_seeker_id": id,
+            "job_type_id": match
+        }
+    })
+    if (data) {
+        console.log(data)
+        ctx.reply("updated")
+    } else {
+        ctx.reply("Error updating personalized sector")
+    }
+}
+export const personalizedSectSectorActionHandler = async (ctx: any) => {
+    const maxSectorsLen = 3;
+    const selectedSector = ctx.match[0];
+    const match = selectedSector.split("_").splice(-2)[0]
+    const already_selected = selectedSector.split("_").splice(-1)[0]
+
+    const telegram_id = JSON.stringify(ctx.from.id)
+    const usr = await getUserByTelegramId({ telegram_id })
+    const [{ job_seeker }] = usr.data.users
+    const jsectors = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
+    const { job_seeker_sectors } = jsectors.data
+    
+    if (job_seeker_sectors.length >= 3) {
+        ctx.reply("you can't add more than 3 job sectors")
+        return
+    }
+
+    if (parseInt(already_selected)) {
+        ctx.reply("you have already selected this sector please pick another one !!!")
+        return
+    }
+    const res = await getJobSeekerId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const [{ job_seeker: { id } }] = res.data.users
+    const { data } = await insertJobSeekerSector({
+        "objs": {
+            "job_seeker_id": id,
+            "sector_id": match
+        }
+    })
+    if (data) {
+        ctx.reply("updated")
+    } else {
+        ctx.reply("Error updating personalized sector")
+    }
+}
 
 export const editProfileRegistrationInfoInitHandler = async (ctx: any) => {
     const target = ctx.session.editTarget.split("_")
@@ -204,7 +267,7 @@ export const ageRegistrationHandlder = async (ctx: any) => {
         console.log(data, "data is")
         console.log(data.data.errors[0].message, "hmm")
         console.log(errors[0])
-        console.log(errors[0].message, "error is") 
+        console.log(errors[0].message, "error is")
 
         const [{ message }] = errors
         ctx.replyWithHTML(`you haven't registered because of ${message}. please start the bot again using /start command`);
@@ -281,54 +344,54 @@ export const genderRegisterHandler = Telegraf.on(["text", "contact", "document",
 // user email registration handler
 export const emailRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
-        if(ctx.message.text == "Skip"){
-         ctx.scene.state.emailRegister = " ";
-         const { data } = await fetchCities()
-         if (data) {
-             const { cities } = data;
-             let cnames = cities.map((nm: any) => nm.name);
-             ctx.session.cityNames = cnames
-         ctx.replyWithHTML("please enter your residence city.", {
-            reply_markup: JSON.stringify({
-                keyboard: cnames.map((x: string, _: string) => ([{
-                    text: x,
-                }])), resize_keyboard: true, one_time_keyboard: true,
-            }),
-        })
-        return ctx.wizard.next();
-    }
-    }else{
-        ctx.scene.state.emailRegister = ctx.message.text;
-        if (!ve(ctx.message.text)) {
-            ctx.reply("Please enter a valid email!")
-            return;
-        } else {
-            const rs = await verifyEmail({email: ctx.scene.state.emailRegister})
-            console.log(rs)
-            if (rs.data.users.length) {
-                ctx.reply("Sorry email is already taken !")
-                return;
-            }else{
-                const { data } = await fetchCities()
-                if (data) {
-                    const { cities } = data;
-                    let cnames = cities.map((nm: any) => nm.name);
-                    ctx.session.cityNames = cnames
-                    ctx.replyWithHTML("please enter your residence city.", {
-                        reply_markup: JSON.stringify({
-                            keyboard: cnames.map((x: string, _: string) => ([{
-                                text: x,
-                            }])), resize_keyboard: true, one_time_keyboard: true,
-                        }),
-                    })
-                    return ctx.wizard.next();
-                }
+        if (ctx.message.text == "Skip") {
+            ctx.scene.state.emailRegister = " ";
+            const { data } = await fetchCities()
+            if (data) {
+                const { cities } = data;
+                let cnames = cities.map((nm: any) => nm.name);
+                ctx.session.cityNames = cnames
+                ctx.replyWithHTML("please enter your residence city.", {
+                    reply_markup: JSON.stringify({
+                        keyboard: cnames.map((x: string, _: string) => ([{
+                            text: x,
+                        }])), resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+                return ctx.wizard.next();
             }
-            // check email first            
+        } else {
+            ctx.scene.state.emailRegister = ctx.message.text;
+            if (!ve(ctx.message.text)) {
+                ctx.reply("Please enter a valid email!")
+                return;
+            } else {
+                const rs = await verifyEmail({ email: ctx.scene.state.emailRegister })
+                console.log(rs)
+                if (rs.data.users.length) {
+                    ctx.reply("Sorry email is already taken !")
+                    return;
+                } else {
+                    const { data } = await fetchCities()
+                    if (data) {
+                        const { cities } = data;
+                        let cnames = cities.map((nm: any) => nm.name);
+                        ctx.session.cityNames = cnames
+                        ctx.replyWithHTML("please enter your residence city.", {
+                            reply_markup: JSON.stringify({
+                                keyboard: cnames.map((x: string, _: string) => ([{
+                                    text: x,
+                                }])), resize_keyboard: true, one_time_keyboard: true,
+                            }),
+                        })
+                        return ctx.wizard.next();
+                    }
+                }
+                // check email first            
+            }
         }
-    }      
     }
-    })
+})
 
 export const residentCityRegisterHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {

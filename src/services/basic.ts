@@ -60,6 +60,14 @@ export const fetchSectors = async () => {
     })
     return res
 }
+export const fetchSectorById = async (vars: any) => {
+    const res = await client.query({
+        query: qry.SECTOR_BY_ID,
+        variables: vars
+    })
+    return res
+}
+
 
 export const fetchSector = async (vars: any) => {
     const res = await client.query({
