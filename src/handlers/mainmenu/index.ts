@@ -16,17 +16,35 @@ import { Telegraf } from "telegraf"
 // export const jobSeekerInitHandler = Telegraf.on(["text", "contact", "document", "photo"], 
 export const jobSeekerInitHandler = async (ctx: any) => {
     ctx.scene.state.userId = ctx.session.userId;
-    ctx.replyWithHTML("Please eneter your educational level.", cancelKeyboard)
+    const { data, errors } = await fetchEducationLevels()
+
+    if (!errors) {
+        let educationLevel = data.education_levels;
+        const educationLevelName = educationLevel.map((names: any) => {
+            return `${names.name}`
+        })
+        ctx.reply("please choose your educational level.", {
+            reply_markup: JSON.stringify({
+                keyboard: educationLevelName.map((x: any, xi: any) => ([{
+                    text: x,
+                }])), resize_keyboard: true, one_time_keyboard: true,
+            }),
+        });
+    } else {
+        ctx.reply("Error fetching education levels")
+        return
+    }
 }
 
 // availability handler
 export const educationalLevelHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.currentEducationLevel = ctx.message.text;
+        console.log(">>>>>>>>>>>>>>", ctx.scene.state.currentEducationLevel, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         const { data, errors } = await fetchEducationLevel({ name: ctx.scene.state.currentEducationLevel })
         const workStatuses = await fetchWorkStatuses()
         if (!errors) {
-            console.log(data,"whoa")
+            console.log(data, "whoa")
             const { education_levels } = data
             const [{ id }] = education_levels
             ctx.session.currentEducationLevel = id;

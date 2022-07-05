@@ -181,7 +181,7 @@ export const termsAndConditionsHandler = async (ctx: any) => {
 }
 
 const labelDuplicateJTypes = (jtypes: any, jtype: any) => {
-    console.log(jtypes,"Dawg")
+    console.log(jtypes, "Dawg")
     const qry = jtypes.find((e: any) => e.job_type.id === jtype.id)
     const label = qry ? `✅ ${jtype.name}` : jtype.name
     return label
@@ -209,54 +209,70 @@ export const personalizedJobSelectionHandler = async (ctx: any) => {
     const telegram_id = JSON.stringify(ctx.from.id)
     const { data, error } = await getUserByTelegramId({ telegram_id })
     if (!error) {
-        const [{ job_seeker: { id } }] = data.users
-        const { data: { job_seeker_job_types } } = await getJobSeekerTypes({ job_seeker_id: id })
+        const [{ job_seeker }] = data.users
+        if (!job_seeker) {
+            const empty = `*Sectors*\n\n\n*Job Types*\n\n`
+            ctx.replyWithMarkdownV2(empty, choosePersonalizationOptionsupKeyboard)
+        } else {
 
-        const { data: { job_seeker_sectors } } = await getJobSeekerSectors({ job_seeker_id: id })
-        let str = ""
-        let selectedTypes = ""
-        if (job_seeker_sectors.length)
-            for (let x = 0; x < job_seeker_sectors.length; x++) {
-                const sec = job_seeker_sectors[x];
-                const name = sec.sector.name
-                str += `\\- ${name}\n`
-            }
-        if (job_seeker_job_types.length)
-            for (let x = 0; x < job_seeker_job_types.length; x++) {
-                const jt = job_seeker_job_types[x];
-                const name = jt.job_type.name
-                selectedTypes += `\\- ${name}\n`
-            }
+            const { data: { job_seeker_job_types } } = await getJobSeekerTypes({ job_seeker_id: job_seeker.id })
 
-        const final = `*Sectors*\n\n${str}\n\n*Job Types*\n\n${selectedTypes}`
-        ctx.replyWithMarkdownV2(final, choosePersonalizationOptionsupKeyboard)
+            const { data: { job_seeker_sectors } } = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
+            let str = ""
+            let selectedTypes = ""
+            if (job_seeker_sectors.length)
+                for (let x = 0; x < job_seeker_sectors.length; x++) {
+                    const sec = job_seeker_sectors[x];
+                    const name = sec.sector.name
+                    str += `\\- ${name}\n`
+                }
+            if (job_seeker_job_types.length)
+                for (let x = 0; x < job_seeker_job_types.length; x++) {
+                    const jt = job_seeker_job_types[x];
+                    const name = jt.job_type.name
+                    selectedTypes += `\\- ${name}\n`
+                }
+
+            const final = `*Sectors*\n\n${str}\n\n*Job Types*\n\n${selectedTypes}`
+            ctx.replyWithMarkdownV2(final, choosePersonalizationOptionsupKeyboard)
+        }
     }
 }
 
 export const editPersonalizationJobTypeActionHandler = async (ctx: any) => {
     const telegram_id = JSON.stringify(ctx.from.id)
     const { data, errors } = await getUserByTelegramId({ telegram_id })
-
-
     const { data: { job_types } } = await fetchJobTypes()
 
     if (!errors) {
-        const [{ job_seeker: { id } }] = data.users
-
-        const jtypes = await getJobSeekerTypes({ job_seeker_id: id })
-        const { job_seeker_job_types } = jtypes.data
         const boldTitle = "*Job Types*"
-        const jobTypesBoard = job_types.map((x: any, xi: any) => ([{
-            text: labelDuplicateJTypes(job_seeker_job_types, x),
-            callback_data: labelDuplicateJtypesCb(job_seeker_job_types, x)
-        }]))
-        ctx.replyWithMarkdownV2(`${boldTitle}\n\nPick any job types you want to get notifications and personalized job posts\n\n`, {
-            reply_markup: JSON.stringify({
-                inline_keyboard: jobTypesBoard, resize_keyboard: true, one_time_keyboard: true,
-            }),
-        });
+        const [{ job_seeker }] = data.users
+
+        if (!job_seeker) {
+            ctx.replyWithMarkdownV2(`${boldTitle}\n\nPick any job types you want to get notifications and personalized job posts\n\n`, {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: job_types.map((x: any, xi: any) => ([{
+                        text: x.name,
+                        callback_data: `per_jt_200_${x.id}_0`
+                    }])), resize_keyboard: true, one_time_keyboard: true,
+                }),
+            });
+        } else {
+            const jtypes = await getJobSeekerTypes({ job_seeker_id: job_seeker.id })
+            const { job_seeker_job_types } = jtypes.data
+            const jobTypesBoard = job_types.map((x: any, xi: any) => ([{
+                text: labelDuplicateJTypes(job_seeker_job_types, x),
+                callback_data: labelDuplicateJtypesCb(job_seeker_job_types, x)
+            }]))
+
+            ctx.replyWithMarkdownV2(`${boldTitle}\n\nPick any job types you want to get notifications and personalized job posts\n\n`, {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: jobTypesBoard, resize_keyboard: true, one_time_keyboard: true,
+                }),
+            });
+        }
         ctx.replyWithHTML("*****************************", onlyMainMenuKeyboard)
-    }   
+    }
 }
 
 export const editPersonalizationSectorsActionHandler = async (ctx: any) => {
@@ -265,27 +281,39 @@ export const editPersonalizationSectorsActionHandler = async (ctx: any) => {
 
 
     if (!errors) {
-        const [{ job_seeker: { id } }] = data.users
-        const jsectors = await getJobSeekerSectors({ job_seeker_id: id })
-        const { job_seeker_sectors } = jsectors.data
-
+        const [{ job_seeker }] = data.users
+        const boldSectors = "Sectors".bold();
         const sctrs = await fetchSectors()
-        ctx.session.personalizedJobSeekerId = id;
         const { sectors } = sctrs.data;
 
-        const boldSectors = "Sectors".bold();
+        if (!job_seeker) {
+            ctx.replyWithHTML(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: sectors.map((x: any, xi: any) => ([{
+                        text: x.text,
+                        callback_data: `per_sect_200_${x.id}_0`
+                    }])), resize_keyboard: true, one_time_keyboard: true,
+                }),
+            });
 
-        const jobseekersBoard = sectors.map((x: any, xi: any) => ([{
-            text: labelDuplicateSectors(job_seeker_sectors, x),
-            callback_data: labelDuplicateSectorCb(job_seeker_sectors, x)
-        }]))
+        } else {
+            const jsectors = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
+            const { job_seeker_sectors } = jsectors.data
+            ctx.session.personalizedJobSeekerId = job_seeker.id;
 
-        ctx.replyWithHTML(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
-            reply_markup: JSON.stringify({
-                inline_keyboard: jobseekersBoard, resize_keyboard: true, one_time_keyboard: true,
-            }),
-        });
+
+            const jobseekersBoard = sectors.map((x: any, xi: any) => ([{
+                text: labelDuplicateSectors(job_seeker_sectors, x),
+                callback_data: labelDuplicateSectorCb(job_seeker_sectors, x)
+            }]))
+            ctx.replyWithHTML(`${boldSectors}\nPick three sectors you want to get notifications and personalized job posts\n\nNote: You can only select 3 Categories`, {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: jobseekersBoard, resize_keyboard: true, one_time_keyboard: true,
+                }),
+            });
+        }
         ctx.replyWithHTML("*****************************", onlyMainMenuKeyboard)
+
     }
 }
 
