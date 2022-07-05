@@ -4,6 +4,7 @@ import { client } from "../apollo"
 export const registerNewBotUser = async (variables: any) => {
     const res = await client.mutate({
         mutation: REGISTER_USER,
+        fetchPolicy: "network-only",
         variables
     })
     return res
@@ -56,6 +57,7 @@ export const verifyEmailEntity = async (variables: any) => {
 export const fetchJobTypes = async () => {
     const res = await client.query({
         query: JOB_TYPES,
+        fetchPolicy: "network-only",
     })
     return res
 

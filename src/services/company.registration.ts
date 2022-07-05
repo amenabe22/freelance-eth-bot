@@ -7,6 +7,7 @@ import FormData from "form-data";
 export const registerNewBotUser = async (variables: any) => {
     const res = await client.mutate({
         mutation: REGISTER_USER,
+        fetchPolicy: "network-only",
         variables
     })
     return res
@@ -23,6 +24,7 @@ export const registerCompany = async (formDataObj: FormData) => {
 export const companyHandOver = async (variables: any) => {
     const res = await client.mutate({
         mutation: COMPANY_HANDOVER,
+        fetchPolicy: "network-only",
         variables
     })
     return res
@@ -30,6 +32,7 @@ export const companyHandOver = async (variables: any) => {
 export const companyEdit = async (variables: any) => {
     const res = await client.mutate({
         mutation: COMPANY_EDIT,
+        fetchPolicy: "network-only",
         variables
     })
     return res
