@@ -11,9 +11,10 @@ export const jobPostCancelButtonHandler = async (ctx: any) => {
 export const jobPostCompanySelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
-    let companyClicked = ctx.match[0];
-    ctx.session.postAJobCompanyName = companyClicked;
-    ctx.scene.enter("postAJobScene");
+    ctx.replyWithHTML("Please select the startup you want to post with.", kb.myJobPostCompanyKeyboard)
+    // let companyClicked = ctx.match[0];
+    // ctx.session.postAJobCompanyName = companyClicked;
+    // ctx.scene.enter("postAJobScene");
 
 }
 export const jobPostCompanyActionHandler = async (ctx: any) => {
