@@ -66,6 +66,7 @@ export const bot = new CoreBot(
         act.editPersonalizationJobTypeAction,
         act.PersonalizationSectSelectorAction,
         act.PersonalizationJtSelectorAction,
+        act.jobPostStartupSelectorAction
 
 
     ],

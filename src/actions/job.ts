@@ -1,13 +1,18 @@
-import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers"
+import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler, jobPostStartupSelectorActionHandler } from "../handlers"
 
 export const jobPostCompanyAction = {
     key: "jobPostCompany",
     handler: jobPostCompanyActionHandler
 }
 
+export const jobPostStartupSelectorAction = {
+    key: ["jobPostStartup", "jobPostPrivateClient"],
+    handler: jobPostStartupSelectorActionHandler
+}
+
 
 export const jobPostCompanySelectorAction = {
-    key: ["c1", "c2", "c3", "c4", "c5", "c6", "jobPostStartup", "jobPostPrivateClient"],
+    key: /^job_cmp_*.*$/,
     handler: jobPostCompanySelectorActionHandler
 }
 

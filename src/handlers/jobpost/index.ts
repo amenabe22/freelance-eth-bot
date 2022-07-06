@@ -2,26 +2,88 @@ import { cancelKeyboard, employerKeyboard, onlyMainMenuKeyboard } from "../../ke
 
 import { Telegraf } from "telegraf";
 import * as kb from "../../keybaords/jobpost_kbs";
+import { getUserByTelegramId } from "../../services/registration";
 
 export const jobPostCancelButtonHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
     ctx.scene.leave();
 }
 
+export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
+    ctx.answerCbQuery();
+    ctx.deleteMessage();
+    console.log("dawg")
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    if (data) {
+        console.log(data);
+        const checkUserEntity = data.users[0].user_entities;
+        console.log(checkUserEntity)
+        const myCompanies = checkUserEntity
+        console.log(myCompanies, "dawg")
+        // 
+        // apply verified filter once finished implementing logic
+        //
+        // const myCompanies = checkUserEntity.filter((company: any) => {
+        //     if (company.entity["verified_at"] != null) {
+        //         return true;
+        //     }
+        // });
+        if (checkUserEntity) {
+            console.log(myCompanies, "Dawg")
+            // using job_cmp_300 company handler for both use separate if conditions are differnet
+            ctx.replyWithHTML("Please select the company you want to post with.", {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
+                        text: x.entity.name, callback_data: `job_cmp_300${x.id}`
+                    }]))
+                })
+            })
+        }
+    }
+
+}
 export const jobPostCompanySelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
-    ctx.replyWithHTML("Please select the startup you want to post with.", kb.myJobPostCompanyKeyboard)
-    // let companyClicked = ctx.match[0];
-    // ctx.session.postAJobCompanyName = companyClicked;
-    // ctx.scene.enter("postAJobScene");
+    let companyClicked = ctx.match[0];
+    ctx.session.postAJobCompanyName = companyClicked;
+    ctx.scene.enter("postAJobScene");
 
 }
 export const jobPostCompanyActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
-    ctx.replyWithHTML("Please select the company you want to post with.", kb.myJobPostCompanyKeyboard)
-    ctx.replyWithHTML("back to main menu.", onlyMainMenuKeyboard);
+    const { data, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    if (data) {
+        console.log(data);
+        const checkUserEntity = data.users[0].user_entities;
+        console.log(checkUserEntity)
+        const myCompanies = checkUserEntity
+        console.log(myCompanies, "dawg")
+        //
+        // apply verified filter once finished implementing logic
+        //        
+        // const myCompanies = checkUserEntity.filter((company: any) => {
+        //     if (company.entity["verified_at"] != null) {
+        //         return true;
+        //     }
+        // });
+        if (checkUserEntity) {
+            console.log(myCompanies, "Dawg")
+            ctx.replyWithHTML("Please select the company you want to post with.", {
+                reply_markup: JSON.stringify({
+                    inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
+                        text: x.entity.name, callback_data: `job_cmp_300${x.id}`
+                    }]))
+                })
+            })
+            // ctx.replyWithHTML("back to main menu.", onlyMainMenuKeyboard);
+        }
+    }
 }
 export const postAJobInitHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name} lets start you job posting Process\n\nPlease enter your job title.`, cancelKeyboard);
