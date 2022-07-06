@@ -35,6 +35,42 @@ export const COMPANY_EDIT = gql`mutation($id: uuid!, $set: entities_set_input!) 
     id
   }
 }`
+export const USER_ST = gql`
+query getUser($telegram_id: String!) {
+  users(where: { telegram_id: { _eq: $telegram_id } }) {
+    id
+    first_name
+    last_name
+    phone
+    job_seeker{
+      id
+      cv
+      availability_status
+      work_status{
+        id
+        name
+      }
+      education_level{
+        id
+        name
+      }
+    }
+    user_entities(where: {
+      entity: {
+        type: {
+          _eq: "STARTUP"
+        }
+      }
+    }){
+      entity {
+        name
+        id
+        verified_at
+      }
+    }
+  }
+}
+`
 
 export const USER = gql`
   query getUser($telegram_id: String!) {

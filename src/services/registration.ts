@@ -1,9 +1,19 @@
-import { JOB_TYPES, REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_EMAIL_ENTITY, USER_STARTUP } from "../apollo/queries"
+import { JOB_TYPES, REGISTER_USER, USER, USER_BY_PHONE, USER_EM, USER_EMAIL_ENTITY, USER_ST, USER_STARTUP } from "../apollo/queries"
 import { client } from "../apollo"
 
 export const registerNewBotUser = async (variables: any) => {
     const res = await client.mutate({
         mutation: REGISTER_USER,
+        fetchPolicy: "network-only",
+        variables
+    })
+    return res
+}
+
+export const getUserByTelegramStEntId = async (variables: any) => {
+    const res = await client.query({
+        query: USER_ST,
+        // to avoid caching
         fetchPolicy: "network-only",
         variables
     })

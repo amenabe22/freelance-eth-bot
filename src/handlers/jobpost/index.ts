@@ -2,7 +2,7 @@ import { cancelKeyboard, employerKeyboard, onlyMainMenuKeyboard } from "../../ke
 
 import { Telegraf } from "telegraf";
 import * as kb from "../../keybaords/jobpost_kbs";
-import { getUserByTelegramId } from "../../services/registration";
+import { getUserByTelegramId, getUserByTelegramStEntId } from "../../services/registration";
 
 export const jobPostCancelButtonHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
@@ -12,8 +12,7 @@ export const jobPostCancelButtonHandler = async (ctx: any) => {
 export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
-    console.log("dawg")
-    const { data, error } = await getUserByTelegramId({
+    const { data, error } = await getUserByTelegramStEntId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
     if (data) {
@@ -21,7 +20,6 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
         const checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
         const myCompanies = checkUserEntity
-        console.log(myCompanies, "dawg")
         // 
         // apply verified filter once finished implementing logic
         //
@@ -31,7 +29,6 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
         //     }
         // });
         if (checkUserEntity) {
-            console.log(myCompanies, "Dawg")
             // using job_cmp_300 company handler for both use separate if conditions are differnet
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
@@ -63,7 +60,6 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         const checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
         const myCompanies = checkUserEntity
-        console.log(myCompanies, "dawg")
         //
         // apply verified filter once finished implementing logic
         //        
@@ -73,7 +69,6 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         //     }
         // });
         if (checkUserEntity) {
-            console.log(myCompanies, "Dawg")
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
                     inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
