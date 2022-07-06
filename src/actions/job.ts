@@ -1,4 +1,4 @@
-import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "src/handlers"
+import { jobPostCompanyActionHandler, jobPostCompanySelectorActionHandler } from "../handlers"
 
 export const jobPostCompanyAction = {
     key: "jobPostCompany",
