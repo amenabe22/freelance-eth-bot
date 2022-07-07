@@ -25,12 +25,11 @@ export const postAJobTypeKeyboard = {
             [{ text: "Contractual" }, { text: "Remote" }],
             [{ text: "Part time" }, { text: "Freelancer" }],
             [{ text: "Permanent" }],
-            [{ text: "Cancel" }],
+            [{ text: "Back" }],
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
 export const postAJobSectorKeyboard = {
-
     reply_markup: {
         keyboard: [
             [{ text: "Computer Science" }, { text: "Construction" }],
@@ -46,14 +45,25 @@ export const postAJobOptionalKeyboard = {
     reply_markup: {
         keyboard: [
             [{ text: "Skip" }],
-            [{ text: "Cancel" }],
+            [{ text: "Back" }],
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
-module.exports = {
-    choosePostJobKeyboard,
-    myJobPostCompanyKeyboard,
-    postAJobTypeKeyboard,
-    postAJobSectorKeyboard,
-    postAJobOptionalKeyboard
+export const confirmPostJobKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{text: "Confirm", callback_data: "confirmJobPost"}, {text: "Edit", callback_data: "editJobPost"}]
+        ]
+    }
+}
+export const editJobPostKeyboard = {
+  reply_markup: {
+    inline_keyboard: [
+        [{ text: "Title", callback_data: "jp-title"}, {text: "Description", callback_data: "jp-description"}],
+        [{ text: "Job Type", callback_data: "jp-type"}, {text: "Job Sector", callback_data: "jp-sector"}],
+        [{ text: "Salary", callback_data: "jp-salary"}, {text: "Location", callback_data: "jp-location"}],
+        [{ text: "Aplicant Needed", callback_data: "jp-applicant"}, {text: "Vacancy Number", callback_data: "jp-vacancy"}],
+        [{ text: "Done", callback_data: "jp-done"}]
+    ]
+  }
 }

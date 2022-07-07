@@ -372,7 +372,6 @@ export const companyEditInitHandler = async (ctx: any) => {
                     text: x,
                 }]))
                 secs.push([{ text: "Back" }])
-
                 ctx.replyWithHTML("please enter industry sector.", {
                     reply_markup: JSON.stringify({
                         keyboard: secs, resize_keyboard: true, one_time_keyboard: true,

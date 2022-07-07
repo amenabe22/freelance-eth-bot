@@ -206,7 +206,7 @@ const labelDuplicateSectorCb = (jsectors: any, sector: any) => {
     return label
 }
 export const personalizedJobSelectionHandler = async (ctx: any) => {
-    const telegram_id = JSON.stringify(ctx.from.id)
+    const telegram_id = JSON.stringify(ctx.from.id) 
     const { data, error } = await getUserByTelegramId({ telegram_id })
     if (!error) {
         const [{ job_seeker }] = data.users

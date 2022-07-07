@@ -14,11 +14,23 @@ export const postAJobScene = new CoreScene(
             hdlr.postAJobSalaryHandler,
             hdlr.postAJobWorkingLocationHandler,
             hdlr.postAjobApplicantNeededHandler,
-            hdlr.postAJobCloseDateHandler
+            hdlr.postAJobVacancyHandler
         ]
     },
     [
         jobPostCancelButton
     ],
-
 )
+export const editJobPostScene = new CoreScene(
+    "editJobPostScene",
+    {
+        enter: hdlr.editPostAJobInitHandler,
+        handlers: [
+            hdlr.editpostAJobValueHandler,
+         
+        ]
+    },
+    [
+        jobPostCancelButton
+    ],
+    )
