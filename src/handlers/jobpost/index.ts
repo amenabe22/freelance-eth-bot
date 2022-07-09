@@ -2,8 +2,10 @@ import { cancelKeyboard, employerKeyboard, onlyMainMenuKeyboard } from "../../ke
 
 import { Telegraf } from "telegraf";
 import * as kb from "../../keybaords/jobpost_kbs";
-import { getUserByTelegramId, getUserByTelegramStEntId } from "../../services/registration";
+import { fetchJobTypes, getUserByTelegramId, getUserByTelegramStEntId } from "../../services/registration";
 import { fetchCities, fetchCity, fetchSector, fetchSectors } from "../../services/basic";
+import { inserJobPost, jobTypeN } from "../../services/jobpost";
+
 let globalState: any;
 export const jobPostCancelButtonHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
@@ -45,9 +47,9 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
 export const jobPostCompanySelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
-    let companyClicked = ctx.match[0];
+    let companyClicked = ctx.match[0].split("_");
     console.log(companyClicked)
-    ctx.session.postAJobCompanyName = companyClicked;
+    ctx.session.postAJobCompanyName = companyClicked[2];
     ctx.scene.enter("postAJobScene");
 
 }
@@ -71,10 +73,11 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         //     }
         // });
         if (checkUserEntity) {
+            console.log(myCompanies, "<>>><<<<<>><<")
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
                     inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
-                        text: x.entity.name, callback_data: `job_cmp_300${x.id}`
+                        text: x.entity.name, callback_data: `job_cmp_300${x.entity.id}`
                     }]))
                 })
             })
@@ -105,7 +108,18 @@ export const postAJobNameHandler = Telegraf.on(["text", "contact", "document", "
 export const postAJobDescriptionHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.postAJobDescription = ctx.message.text;
-        await ctx.replyWithHTML(`You are doing great ${ctx.from.first_name}, please enter job type.`, kb.postAJobTypeKeyboard);
+        const { data: { job_types } } = await fetchJobTypes()
+        let jts = job_types.map((x: any, xi: any) => ([{
+            text: x.name,
+            callback_data: x.id,
+        }]))
+
+        ctx.replyWithHTML("Please enter job type.", {
+            reply_markup: JSON.stringify({
+                keyboard: jts, resize_keyboard: true, one_time_keyboard: true,
+            }),
+        })
+
         return ctx.wizard.next();
     } else {
         ctx.replyWithHTML(`Please enter a valid job description!`, cancelKeyboard);
@@ -114,7 +128,11 @@ export const postAJobDescriptionHandler = Telegraf.on(["text", "contact", "docum
 })
 export const postAJobTypeHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
-        ctx.scene.state.postAJobType = ctx.message.text;
+        const { data: { job_types } } = await jobTypeN({ name: ctx.message.text })
+        console.log(JSON.stringify(ctx.message), ">>>>>>>>>>")
+        if (job_types.length) {
+            ctx.scene.state.postAJobType = job_types[0].id;
+        }
         const { data, error } = await fetchSectors()
         if (data) {
             const { sectors } = data;
@@ -123,7 +141,7 @@ export const postAJobTypeHandler = Telegraf.on(["text", "contact", "document", "
             let secs = snames.map((x: string, _: string) => ([{
                 text: x,
             }]))
-            secs.push([{text: "Skip"}],[{ text: "Back" }])
+
             ctx.replyWithHTML("please enter sector type for your Job.", {
                 reply_markup: JSON.stringify({
                     keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
@@ -138,11 +156,11 @@ export const postAJobTypeHandler = Telegraf.on(["text", "contact", "document", "
 })
 export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
-        if(ctx.message.text == "Skip"){
+        if (ctx.message.text == "Skip") {
             ctx.scene.state.postAJobSector = " ";
             await ctx.replyWithHTML(`Alright please enter job salary.`, kb.postAJobOptionalKeyboard);
-            return ctx.wizard.next(); 
-        }else{
+            return ctx.wizard.next();
+        } else {
             ctx.scene.state.postAJobSector = ctx.message.text;
             const { data, error } = await fetchSector({ name: ctx.scene.state.postAJobSector })
             if (data) {
@@ -150,7 +168,7 @@ export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document",
                 let secs = ctx.session.sectorNames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                secs.push([{text: "Skip"}],[{ text: "Back" }])
+                secs.push([{ text: "Skip" }], [{ text: "Back" }])
 
                 if (!sectors.length) {
                     ctx.replyWithHTML("please enter valid sector!", {
@@ -169,7 +187,7 @@ export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document",
                 }
             }
         }
-           
+
     } else {
         ctx.replyWithHTML(`Please enter a valid job sector!`, kb.postAJobSectorKeyboard);
         return;
@@ -188,7 +206,7 @@ export const postAJobSalaryHandler = Telegraf.on(["text", "contact", "document",
                 let fkbs = cnames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                fkbs.push([{text: "Skip"}],[{ text: "Back" }])
+                fkbs.push([{ text: "Skip" }], [{ text: "Back" }])
                 ctx.replyWithHTML("Awsome, please enter job working location.", {
                     reply_markup: JSON.stringify({
                         keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
@@ -197,7 +215,7 @@ export const postAJobSalaryHandler = Telegraf.on(["text", "contact", "document",
             }
         } else {
             ctx.scene.state.postAJobSalary = ctx.message.text;
-              const { data, error } = await fetchCities()
+            const { data, error } = await fetchCities()
             if (data) {
                 const { cities } = data;
                 let cnames = cities.map((nm: any) => nm.name);
@@ -205,7 +223,7 @@ export const postAJobSalaryHandler = Telegraf.on(["text", "contact", "document",
                 let fkbs = cnames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                fkbs.push([{text: "Skip"}],[{ text: "Back" }])
+                fkbs.push([{ text: "Skip" }], [{ text: "Back" }])
                 ctx.replyWithHTML("Awsome, please enter job working location.", {
                     reply_markup: JSON.stringify({
                         keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
@@ -233,11 +251,11 @@ export const postAJobWorkingLocationHandler = Telegraf.on(["text", "contact", "d
                 let fkbs = ctx.session.cityNames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                fkbs.push([{text: "Skip"}],[{ text: "Back" }])
+                fkbs.push([{ text: "Skip" }], [{ text: "Back" }])
                 ctx.replyWithHTML("Please enter a valid location of your job!", {
                     reply_markup: JSON.stringify({
                         keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
-                        }),
+                    }),
                 })
                 return;
             } else {
@@ -247,7 +265,7 @@ export const postAJobWorkingLocationHandler = Telegraf.on(["text", "contact", "d
             }
             await ctx.replyWithHTML(`Almost done ${ctx.from.first_name}, please enter job applicant needed.`, kb.postAJobOptionalKeyboard);
             return ctx.wizard.next();
-        }     
+        }
     } else {
         ctx.replyWithHTML(`Please enter a valid working location!`, kb.postAJobOptionalKeyboard);
         return;
@@ -293,8 +311,46 @@ export const postAJobVacancyHandler = Telegraf.on(["text", "contact", "document"
 
 export const jobPostConfirmHandler = async (ctx: any) => {
     ctx.deleteMessage();
+    console.log(globalState)
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const {
+        postAJobWorkingLocationId,
+        postAJobApplicantNeeded,
+        postAJobVancancyNumber,
+        postAJobSalary,
+        postAJobType,
+        postAJobDescription,
+        postAJobName,
+        postAJobSectorId
+    } = globalState
+    console.log(ctx.session.postAJobCompanyName.substring(3), "job company name")
+    const { data } = await inserJobPost({
+        "object": {
+            "city_id": postAJobWorkingLocationId,
+            "close_date": new Date().toISOString(),
+            "created_by": users[0].id,
+            "entity_id": ctx.session.postAJobCompanyName.substring(3),
+            "description": postAJobDescription,
+            "from_platform_id": "941cc536-5cd3-44a1-8fca-5f898f26aba5",
+            "job_type_id": postAJobType,
+            "title": postAJobName,
+            "vacancy_number": postAJobVancancyNumber,
+            "sectors": {
+                "data": {
+                    "sector_id": postAJobSectorId
+                }
+            }
+        }
+    })
+    if (data) {
+        ctx.replyWithHTML(`Congradulations you have post a job to ${ctx.session.postAJobCompanyNameBold} company successfully.`, cancelKeyboard);
+    } else {
+        ctx.reply("Error posting your job")
+    }
     // Do the logic to register job post
-    ctx.replyWithHTML(`Congradulations you have post a job to ${ctx.session.postAJobCompanyNameBold} company successfully.`, cancelKeyboard);
+    // ctx.replyWithHTML(`Congradulations you have post a job to ${ctx.session.postAJobCompanyNameBold} company successfully.`, cancelKeyboard);
 }
 export const jobPostEditInitHandler = async (ctx: any) => {
     ctx.deleteMessage();
@@ -309,7 +365,7 @@ export const jobPostingSelectedFieldEditHandler = async (ctx: any) => {
 }
 
 export const editPostAJobInitHandler = async (ctx: any) => {
-    const target = ctx.session.editTarget 
+    const target = ctx.session.editTarget
     console.log("1", target)
     switch (target) {
         case "title":
@@ -317,7 +373,7 @@ export const editPostAJobInitHandler = async (ctx: any) => {
             return
         case "description":
             ctx.replyWithHTML("Please enter new description for your Job.", cancelKeyboard);
-            return   
+            return
         case "type":
             ctx.replyWithHTML("please enter new job type for your job.", kb.postAJobTypeKeyboard);
             return
@@ -346,7 +402,7 @@ export const editPostAJobInitHandler = async (ctx: any) => {
             return
         case "vacancy":
             ctx.replyWithHTML(`please enter new vancany number of your job.`, cancelKeyboard);
-            return           
+            return
         case "location":
             const res = await fetchCities()
             if (res.data) {
@@ -364,32 +420,32 @@ export const editPostAJobInitHandler = async (ctx: any) => {
             return
         case "done":
             ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.confirmPostJobKeyboard);
-            return     
+            return
         default:
             break;
     }
 }
 
 
-export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {    
+export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     const response = ctx.message.text
     const target = ctx.session.editTarget
     if (response) {
-         switch (target) {
+        switch (target) {
             case "title":
                 globalState.postAJobName = response
-               await ctx.reply("title Updated, you can edit more fileds here")
-               await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
-               break;
+                await ctx.reply("title Updated, you can edit more fileds here")
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
+                break;
             case "description":
                 globalState.postAJobDescription = response
-                await ctx.reply ("Description Updated, you can edit more fileds here");
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.reply("Description Updated, you can edit more fileds here");
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 break;
             case "type":
                 globalState.postAJobType = response
                 await ctx.reply("job type Updated, you can edit more fileds here")
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 break;
             case "sector":
                 globalState.postAJobSector = response
@@ -411,23 +467,23 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
                     ctx.session.postAJobSector = sectorId;
                     ctx.scene.state.postAJobSector = sectorId;
                     ctx.reply("Sector Updated, you can edit more fileds here")
-                    await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                    await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                     break;
                 }
             case "salary":
                 globalState.companyRPhoneNumber = response
                 ctx.reply("salary Updated, you can edit more fileds here")
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 break;
             case "applicant":
                 globalState.companyRWebsite = response
                 ctx.reply("applicant num Updated, you can edit more fileds here")
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 break;
             case "vacancy":
                 globalState.postAJobVancancyNumber = response
                 ctx.reply("vacancy num Updated, you can edit more fileds here")
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 break;
             case "location":
                 globalState.postAJobLocation = response
@@ -450,11 +506,11 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
                     globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters, you can edit more fileds here")
-                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);                
+                await ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.editJobPostKeyboard);
                 return;
             case "done":
                 ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.confirmPostJobKeyboard);
-                break;        
+                break;
         }
     }
 })

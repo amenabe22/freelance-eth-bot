@@ -225,7 +225,7 @@ export const INSERT_JOB_SEEKER_SECTORS = gql`mutation($objs: [job_seeker_sectors
   insert_job_seeker_sectors(objects: $objs) {
     affected_rows
   }
-}` 
+}`
 
 export const JOB_SEEKER_SECTORS = gql`query($job_seeker_id: uuid!) {
   job_seeker_sectors(where: {
@@ -238,6 +238,14 @@ export const JOB_SEEKER_SECTORS = gql`query($job_seeker_id: uuid!) {
       id
       name
     }
+  }
+}`
+
+export const JOB_TYPE_N = gql`query job_types($name: citext!) {
+  job_types(where: { name: { _eq: $name } }) {
+    id
+    name
+    description
   }
 }`
 
@@ -281,3 +289,9 @@ export const USER_EMAIL_ENTITY = gql`query getUser($email: citext!) {
     email    
     }
   }`
+
+export const INSERT_JOB = gql`mutation insert_jobs_one($object: jobs_insert_input!) {
+  insert_jobs_one(object: $object) {
+    id
+  }
+}`
