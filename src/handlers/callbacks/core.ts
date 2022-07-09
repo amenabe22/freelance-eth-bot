@@ -8,7 +8,8 @@ import {
 } from "../../keybaords/settings";
 import { companyKeyboard, starupStatusKeyboard, LicensedStartupKeyboard } from "../../keybaords/company.registration_kbs";
 import { getJobSeekerSectors, getJobSeekerTypes } from "../../services/personalization";
-
+import { myJobsKeboard } from "../../keybaords/myJobs_kbs";
+import { myJobPostsKeyboard } from "../../keybaords/jobpost_kbs"
 
 
 var boldCompany = "Company".bold();
@@ -300,8 +301,6 @@ export const editPersonalizationSectorsActionHandler = async (ctx: any) => {
             const jsectors = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
             const { job_seeker_sectors } = jsectors.data
             ctx.session.personalizedJobSeekerId = job_seeker.id;
-
-
             const jobseekersBoard = sectors.map((x: any, xi: any) => ([{
                 text: labelDuplicateSectors(job_seeker_sectors, x),
                 callback_data: labelDuplicateSectorCb(job_seeker_sectors, x)
@@ -316,9 +315,37 @@ export const editPersonalizationSectorsActionHandler = async (ctx: any) => {
 
     }
 }
-
-
 export const employerMenuSelectionHandler = async (ctx: any) => {
     ctx.replyWithHTML(`${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
 }
 
+export const myJobPostsOpenedJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Opened jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsClosedJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Closed jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsPendingJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Pending jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsDeclinedJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Declined jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsActiveJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Active jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsDoneJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Done jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobPostsHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Choose one to see.', myJobPostsKeyboard);
+}
+export const myJobsHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Choose one to see.', myJobsKeboard);
+}
+export const myJobsDoneJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Done jobs will list here.', onlyMainMenuKeyboard);
+}
+export const myJobsActiveJobHandler = async (ctx: any) => {
+    ctx.replyWithHTML('Active jobs will list here.', onlyMainMenuKeyboard);
+}
