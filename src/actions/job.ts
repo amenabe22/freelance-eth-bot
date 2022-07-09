@@ -16,6 +16,7 @@ export const jobPostCompanySelectorAction = {
     handler: jobPostCompanySelectorActionHandler
 }
 
+
 export const jobPostingConfirmHandler = {
     key: "confirmJobPost",
     handler: jobPostConfirmHandler

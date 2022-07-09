@@ -96,7 +96,17 @@ export const bot = new CoreBot(
         act.TermsAndConditionsAction,
         cb.handleCvUploadSelection,
         cb.employerMenuSelection,
-        cb.postJobMenuSelection
+        cb.postJobMenuSelection,
+        cb.myJobPostsSelection,
+        cb.myJobPostsOpendJobSelection,
+        cb.myJobPostsClosedJobsSelection,
+        cb.myJobPostsPendigJobsSelection,
+        cb.myJobPostsDeclinedJobsSelection,
+        cb.myJobPostsActiveJobsSelection,
+        cb.myJobPostsDoneJobsSelection,
+        cb.myJobsSelection,
+        cb.myJobsActiveJobsSelection,
+        cb.myJobsDoneJobsSelection
     ]
 );
 

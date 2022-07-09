@@ -15,6 +15,8 @@ export const jobPostCancelButtonHandler = async (ctx: any) => {
 export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
+    let companyClicked = ctx.match[0];
+    console.log(companyClicked,".........")
     const { data, error } = await getUserByTelegramStEntId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
@@ -36,7 +38,7 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
                     inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
-                        text: x.entity.name, callback_data: `job_cmp_300${x.id}`
+                        text: x.entity.name, callback_data: `job_cmp_300${x.entity.id}`
                     }]))
                 })
             })
@@ -48,7 +50,7 @@ export const jobPostCompanySelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
     let companyClicked = ctx.match[0].split("_");
-    console.log(companyClicked)
+    console.log(companyClicked,"dawg")
     ctx.session.postAJobCompanyName = companyClicked[2];
     ctx.scene.enter("postAJobScene");
 
@@ -73,7 +75,6 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         //     }
         // });
         if (checkUserEntity) {
-            console.log(myCompanies, "<>>><<<<<>><<")
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
                     inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
@@ -302,7 +303,7 @@ export const postAJobVacancyHandler = Telegraf.on(["text", "contact", "document"
         console.log(ctx.session.postAJobVancancyNumber);
         ctx.session.postAJobCompanyNameBold = ctx.session.postAJobCompanyName.bold();
         globalState = ctx.scene.state;
-        ctx.replyWithHTML(`Here is your data\n Title:${globalState.postAJobName}\n Description:${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.confirmPostJobKeyboard);
+        ctx.replyWithHTML(`Here is your data\n Title: ${globalState.postAJobName}\n Description: ${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.confirmPostJobKeyboard);
     } else {
         ctx.replyWithHTML(`Please enter a valid job close date!`, cancelKeyboard);
         return;

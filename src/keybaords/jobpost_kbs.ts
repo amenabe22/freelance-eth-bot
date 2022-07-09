@@ -67,3 +67,13 @@ export const editJobPostKeyboard = {
     ]
   }
 }
+export const myJobPostsKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{text: "Opened"}, {text: "Closed"}],
+            [{text: "Pending"}, {text: "Declined"}],
+            [{text: "Active"}, {text: "Done"}],
+            [{text: "Main Menu"},]
+        ], resize_keyboard: true, one_time_keyboard: true
+    }
+}

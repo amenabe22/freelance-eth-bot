@@ -22,7 +22,17 @@ import {
     menuMainSelectorHandler,
     menuSettingsSelectorHandler,
     personalizedJobSelectionHandler,
-    addMoreStartupHandler
+    addMoreStartupHandler,
+    myJobPostsHandler,
+    myJobsHandler,
+    myJobPostsOpenedJobHandler,
+    myJobPostsClosedJobHandler,
+    myJobPostsPendingJobHandler,
+    myJobPostsDeclinedJobHandler,
+    myJobPostsActiveJobHandler,
+    myJobPostsDoneJobHandler,
+    myJobsActiveJobHandler,
+    myJobsDoneJobHandler
 } from "./core"
 export const companyStartup = {
     key: "My Companies / Startup",
@@ -116,7 +126,47 @@ export const postJobMenuSelection = {
     key: "Post a Job",
     handler: postJobMenuSelectionHandler
 }
+export const myJobPostsSelection = {
+    key: "My Job Posts",
+    handler: myJobPostsHandler
+}
+export const myJobPostsOpendJobSelection = {
+    key: "Opened",
+    handler: myJobPostsOpenedJobHandler
+}
+export const myJobPostsClosedJobsSelection = {
+    key: "Closed",
+    handler: myJobPostsClosedJobHandler
+}
+export const myJobPostsPendigJobsSelection = {
+    key: "Pending",
+    handler: myJobPostsPendingJobHandler
+}
+export const myJobPostsDeclinedJobsSelection = {
+    key: "Declined",
+    handler: myJobPostsDeclinedJobHandler
+}
+export const myJobPostsActiveJobsSelection = {
+    key: "Active",
+    handler: myJobPostsActiveJobHandler
+}
+export const myJobPostsDoneJobsSelection = {
+    key: "Done",
+    handler: myJobPostsDoneJobHandler
+}
 
+export const myJobsSelection = {
+    key: "My Jobs",
+    handler: myJobsHandler
+}
+export const myJobsActiveJobsSelection = {
+    key: "Active Jobs",
+    handler: myJobsActiveJobHandler
+}
+export const myJobsDoneJobsSelection = {
+    key: "Active Jobs",
+    handler: myJobsDoneJobHandler
+}
 export const jobPostCancelButton = {
     key: "Back",
     handler: jobPostCancelButtonHandler
