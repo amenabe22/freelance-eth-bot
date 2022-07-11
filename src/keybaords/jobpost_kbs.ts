@@ -40,6 +40,13 @@ export const postAJobSectorKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+export const applicationStateCancelBtn = {
+    reply_markup: {
+        keyboard: [
+            [{ text: "Cancel" }]
+        ]
+    }
+}
 export const postAJobOptionalKeyboard = {
 
     reply_markup: {
@@ -52,28 +59,28 @@ export const postAJobOptionalKeyboard = {
 export const confirmPostJobKeyboard = {
     reply_markup: {
         inline_keyboard: [
-            [{text: "Confirm", callback_data: "confirmJobPost"}, {text: "Edit", callback_data: "editJobPost"}]
+            [{ text: "Confirm", callback_data: "confirmJobPost" }, { text: "Edit", callback_data: "editJobPost" }]
         ]
     }
 }
 export const editJobPostKeyboard = {
-  reply_markup: {
-    inline_keyboard: [
-        [{ text: "Title", callback_data: "jp-title"}, {text: "Description", callback_data: "jp-description"}],
-        [{ text: "Job Type", callback_data: "jp-type"}, {text: "Job Sector", callback_data: "jp-sector"}],
-        [{ text: "Salary", callback_data: "jp-salary"}, {text: "Location", callback_data: "jp-location"}],
-        [{ text: "Aplicant Needed", callback_data: "jp-applicant"}, {text: "Vacancy Number", callback_data: "jp-vacancy"}],
-        [{ text: "Done", callback_data: "jp-done"}]
-    ]
-  }
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Title", callback_data: "jp-title" }, { text: "Description", callback_data: "jp-description" }],
+            [{ text: "Job Type", callback_data: "jp-type" }, { text: "Job Sector", callback_data: "jp-sector" }],
+            [{ text: "Salary", callback_data: "jp-salary" }, { text: "Location", callback_data: "jp-location" }],
+            [{ text: "Aplicant Needed", callback_data: "jp-applicant" }, { text: "Vacancy Number", callback_data: "jp-vacancy" }],
+            [{ text: "Done", callback_data: "jp-done" }]
+        ]
+    }
 }
 export const myJobPostsKeyboard = {
     reply_markup: {
         keyboard: [
-            [{text: "Opened"}, {text: "Closed"}],
-            [{text: "Pending"}, {text: "Declined"}],
-            [{text: "Active"}, {text: "Done"}],
-            [{text: "Main Menu"},]
+            [{ text: "Opened" }, { text: "Closed" }],
+            [{ text: "Pending" }, { text: "Declined" }],
+            [{ text: "Active" }, { text: "Done" }],
+            [{ text: "Main Menu" },]
         ], resize_keyboard: true, one_time_keyboard: true
     }
 }

@@ -35,6 +35,7 @@ import {
 import { Scenes } from "telegraf"
 import { editJobPostScene, postAJobScene } from "../scenes/jobpost.scene"
 import { uploadCvScene } from "../scenes/uploadCv.scene"
+import { jobApplicationScene } from "../scenes/application.scene"
 export const coreStage: any = new Scenes.Stage<any>(
     [
         newCustomerRegistrationScene,
@@ -68,6 +69,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         socialMediaLinkDoneLRScene,
         socialMediaLinkURScene,
         socialMediaLinkDoneURScene,        
+        jobApplicationScene
     ]
 )
   

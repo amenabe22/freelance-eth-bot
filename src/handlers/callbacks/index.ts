@@ -1,5 +1,5 @@
 
-import { jobPostCancelButtonHandler, postJobMenuSelectionHandler } from '../jobpost'
+import { jobAppCancelButtonHandler, jobPostCancelButtonHandler, postJobMenuSelectionHandler } from '../jobpost'
 import { handleCvUploadSelectionHandler } from '../personalization'
 import { editRegistrationInfoCallbackHandler } from '../registration'
 import {
@@ -172,3 +172,9 @@ export const jobPostCancelButton = {
     handler: jobPostCancelButtonHandler
 }
 
+
+
+export const jobAppCancelButton = {
+    key: "Cancel",
+    handler: jobAppCancelButtonHandler
+}

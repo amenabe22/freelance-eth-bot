@@ -70,8 +70,6 @@ export const bot = new CoreBot(
         act.PersonalizationSectSelectorAction,
         act.PersonalizationJtSelectorAction,
         act.jobPostStartupSelectorAction
-
-
     ],
     // register commands
     [
