@@ -17,14 +17,18 @@ export const startCommandHand = async (ctx: any) => {
         // have some condition to validate the job post
         let jobpostvalid = null
         if (withmsg) {
-            const { data: { jobs } } = await fetchJob({ id: startcmd[1] })
-            if (jobs.length) {
-                jobpostvalid = jobs[0]
-            }
+            await fetchJob({ id: startcmd[1] }).then(({ data: { jobs } }) => {
+                if (jobs.length) {
+                    jobpostvalid = jobs[0]
+                }
+            }).catch(e => {
+                console.log("error fetching job")
+            })
         }
         console.log("POST: ", jobpostvalid)
         if (jobpostvalid) {
-            ctx.replyWithHTML("You are trying to apply for a job", englishMainMenuKeyboard);
+            ctx.session.postId = startcmd[1]
+            return ctx.scene.enter("jobApplicationScene")
         } else {
             const [usr] = users
             let firstName = usr.first_name;

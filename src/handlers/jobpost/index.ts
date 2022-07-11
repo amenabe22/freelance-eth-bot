@@ -7,6 +7,12 @@ import { fetchCities, fetchCity, fetchSector, fetchSectors } from "../../service
 import { inserJobPost, jobTypeN } from "../../services/jobpost";
 
 let globalState: any;
+
+export const jobAppCancelButtonHandler = async (ctx: any) => {
+    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
+    ctx.scene.leave();
+}
+
 export const jobPostCancelButtonHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
     ctx.scene.leave();
