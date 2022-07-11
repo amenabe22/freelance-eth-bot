@@ -4,7 +4,6 @@ import { Telegraf } from "telegraf";
 let globalState: any = {};
 
 export const jobAppInitHandler = (ctx: any) => {
-    console.log(ctx.session.postId, "sess")
     globalState.postId = ctx.session.postId
     ctx.reply("Write a message for the employer to review  Note: CV will be uploaded automatically", applicationStateCancelBtn)
 }

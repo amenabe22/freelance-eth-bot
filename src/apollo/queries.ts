@@ -302,3 +302,45 @@ export const JOB = gql`query jobs($id: uuid!) {
     title
   }
 }`
+
+export const INSERT_APP = gql`mutation insertapp($object: applications_insert_input!) {
+  insert_applications_one(object: $object) {
+    id
+    from_platform_id
+    job {
+      title
+      description
+      id
+    }
+    created_at
+  }
+}`
+
+export const SEEKER_APPS = gql`query app($seeker: uuid!) {
+  applications(where: { job_seeker_id: { _eq: $seeker } }) {
+    id
+    description
+    job {
+      id
+      title
+    }
+    job_seeker {
+      id
+      user {
+        id
+        first_name
+      }
+    }
+  }
+}
+`
+
+export const ALL_POSTED = gql`query jobs($creator: uuid!, $status: job_status!) {
+  jobs(where: { created_by: { _eq: $creator }, status: { _eq: $status } }) {
+    rejected_by
+    title
+    status
+    created_at
+  }
+}
+`
