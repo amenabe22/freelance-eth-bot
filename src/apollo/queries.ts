@@ -295,3 +295,10 @@ export const INSERT_JOB = gql`mutation insert_jobs_one($object: jobs_insert_inpu
     id
   }
 }`
+
+export const JOB = gql`query jobs($id: uuid!) {
+  jobs(where: { id: { _eq: $id } }) {
+    id
+    title
+  }
+}`
