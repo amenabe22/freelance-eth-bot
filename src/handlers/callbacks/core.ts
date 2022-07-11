@@ -10,6 +10,7 @@ import { companyKeyboard, starupStatusKeyboard, LicensedStartupKeyboard } from "
 import { getJobSeekerSectors, getJobSeekerTypes } from "../../services/personalization";
 import { myJobsKeboard } from "../../keybaords/myJobs_kbs";
 import { myJobPostsKeyboard } from "../../keybaords/jobpost_kbs"
+import { fetchAllPostedJobs } from "../../services/jobpost";
 
 
 var boldCompany = "Company".bold();
@@ -207,7 +208,7 @@ const labelDuplicateSectorCb = (jsectors: any, sector: any) => {
     return label
 }
 export const personalizedJobSelectionHandler = async (ctx: any) => {
-    const telegram_id = JSON.stringify(ctx.from.id) 
+    const telegram_id = JSON.stringify(ctx.from.id)
     const { data, error } = await getUserByTelegramId({ telegram_id })
     if (!error) {
         const [{ job_seeker }] = data.users
@@ -320,23 +321,116 @@ export const employerMenuSelectionHandler = async (ctx: any) => {
 }
 
 export const myJobPostsOpenedJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Opened jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].job_seeker.id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "active"
+    })
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no active jobs', onlyMainMenuKeyboard);
+    }
+    // ctx.replyWithHTML('Opened jobs will list here.', onlyMainMenuKeyboard);
 }
 export const myJobPostsClosedJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Closed jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "closed"
+    })
+
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no closed jobs', onlyMainMenuKeyboard);
+    }
 }
 export const myJobPostsPendingJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Pending jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "pending"
+    })
+
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no pending jobs', onlyMainMenuKeyboard);
+    }
+
 }
 export const myJobPostsDeclinedJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Declined jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "declined"
+    })
+
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no declined jobs', onlyMainMenuKeyboard);
+    }
 }
 export const myJobPostsActiveJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Active jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "active"
+    })
+
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no active jobs', onlyMainMenuKeyboard);
+    }
 }
 export const myJobPostsDoneJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Done jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].id
+    const { data: { jobs } } = await fetchAllPostedJobs({
+        creator: job_seeker,
+        status: "done"
+    })
+
+    for (let i = 0; i < jobs.length; i++) {
+        const job = jobs[i];
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+    }
+    if (!jobs.length) {
+        ctx.replyWithHTML('You have no completed jobs', onlyMainMenuKeyboard);
+    }
 }
+
 export const myJobPostsHandler = async (ctx: any) => {
     ctx.replyWithHTML('Choose one to see.', myJobPostsKeyboard);
 }

@@ -43,6 +43,7 @@ export const seekerApplications = async (variables: any) => {
 export const fetchAllPostedJobs = async (variables: any) => {
     const res = await client.query({
         query: ALL_POSTED,
+        fetchPolicy: "network-only",
         variables
     })
     return res
