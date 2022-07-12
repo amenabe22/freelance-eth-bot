@@ -10,7 +10,7 @@ import { companyKeyboard, starupStatusKeyboard, LicensedStartupKeyboard } from "
 import { getJobSeekerSectors, getJobSeekerTypes } from "../../services/personalization";
 import { myJobsKeboard } from "../../keybaords/myJobs_kbs";
 import { myJobPostsKeyboard } from "../../keybaords/jobpost_kbs"
-import { fetchAllPostedJobs } from "../../services/jobpost";
+import { fetchAllPostedJobs, seekerApplications } from "../../services/jobpost";
 
 
 var boldCompany = "Company".bold();
@@ -438,8 +438,39 @@ export const myJobsHandler = async (ctx: any) => {
     ctx.replyWithHTML('Choose one to see.', myJobsKeboard);
 }
 export const myJobsDoneJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Done jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].job_seeker.id
+    const { data: { applications } } = await seekerApplications({
+        seeker: job_seeker,
+        status: "done"
+    })
+
+    for (let i = 0; i < applications.length; i++) {
+        const app = applications[i]
+        const job = app.job;
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}\n\nNote: ${app.description}`, onlyMainMenuKeyboard);
+    }
+    if (!applications.length) {
+        ctx.replyWithHTML('you have no completed jobs', onlyMainMenuKeyboard);
+    }
 }
 export const myJobsActiveJobHandler = async (ctx: any) => {
-    ctx.replyWithHTML('Active jobs will list here.', onlyMainMenuKeyboard);
+    const { data: { users }, error } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id)
+    })
+    const job_seeker = users[0].job_seeker.id
+    const { data: { applications } } = await seekerApplications({
+        seeker: job_seeker,
+        status: "active"
+    })
+    for (let i = 0; i < applications.length; i++) {
+        const app = applications[i]
+        const job = app.job;
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}\n\nNote: ${app.description}`, onlyMainMenuKeyboard);
+    }
+    if (!applications.length) {
+        ctx.replyWithHTML('you have no active jobs', onlyMainMenuKeyboard);
+    }
 }

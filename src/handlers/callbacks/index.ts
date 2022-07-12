@@ -164,7 +164,7 @@ export const myJobsActiveJobsSelection = {
     handler: myJobsActiveJobHandler
 }
 export const myJobsDoneJobsSelection = {
-    key: "Active Jobs",
+    key: "Done Jobs",
     handler: myJobsDoneJobHandler
 }
 export const jobPostCancelButton = {

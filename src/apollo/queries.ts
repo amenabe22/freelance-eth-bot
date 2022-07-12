@@ -317,13 +317,19 @@ export const INSERT_APP = gql`mutation insertapp($object: applications_insert_in
   }
 }`
 
-export const SEEKER_APPS = gql`query app($seeker: uuid!) {
-  applications(where: { job_seeker_id: { _eq: $seeker } }) {
+export const SEEKER_APPS = gql`query app($seeker: uuid!, $status: job_status!) {
+  applications(
+    where: {
+      job_seeker_id: { _eq: $seeker }
+      job: { status: { _eq: $status } }
+    }
+  ) {
     id
     description
     job {
       id
       title
+      status
     }
     job_seeker {
       id
@@ -334,6 +340,7 @@ export const SEEKER_APPS = gql`query app($seeker: uuid!) {
     }
   }
 }
+
 `
 
 export const ALL_POSTED = gql`query jobs($creator: uuid!, $status: job_status!) {
