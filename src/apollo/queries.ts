@@ -300,6 +300,7 @@ export const JOB = gql`query jobs($id: uuid!) {
   jobs(where: { id: { _eq: $id } }) {
     id
     title
+    description    
   }
 }`
 

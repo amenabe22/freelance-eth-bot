@@ -380,7 +380,6 @@ export const jobPostingSelectedFieldEditHandler = async (ctx: any) => {
     ctx.session.editTarget = editTarget;
     ctx.scene.enter("editJobPostScene", ctx.scene.state);
 
-
 }
 
 export const editPostAJobInitHandler = async (ctx: any) => {

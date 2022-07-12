@@ -70,7 +70,10 @@ export const bot = new CoreBot(
         act.PersonalizationSectSelectorAction,
         act.PersonalizationJtSelectorAction,
         act.jobPostStartupSelectorAction,
-        act.jobPostPrivateClientSelectorAction
+        act.jobPostPrivateClientSelectorAction,
+        act.jobApplyingConfirmHandlerAction,
+        act.jobApplyingEditHandlerAction,
+        act.jobApplingSelectFieldHandlerAction
 
 
     ],
@@ -107,7 +110,7 @@ export const bot = new CoreBot(
         cb.myJobPostsDoneJobsSelection,
         cb.myJobsSelection,
         cb.myJobsActiveJobsSelection,
-        cb.myJobsDoneJobsSelection
+        cb.myJobsDoneJobsSelection 
     ]
 );
 

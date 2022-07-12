@@ -41,10 +41,17 @@ export const postAJobSectorKeyboard = {
     }
 }
 export const applicationStateCancelBtn = {
+
     reply_markup: {
         keyboard: [
-            [{ text: "Cancel" }]
-        ]
+            [{ text: "Back" }]
+        ],resize_keyboard: true, one_time_keyboard: true
+    }
+}
+
+export const portfolioLinksKeyboard = {
+    reply_markup: {
+        keyboard: [[{ text: "Done " }, { text: "Back" }],], resize_keyboard: true, one_time_keyboard: true,
     }
 }
 export const postAJobOptionalKeyboard = {
@@ -56,6 +63,23 @@ export const postAJobOptionalKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+export const confirmApplyJobKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Confirm", callback_data: "confirmJobApply" }, { text: "Edit", callback_data: "editJobApply" }]
+        ]
+    }
+}
+export const editJobApplyKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "Description", callback_data: "ja-description" }, { text: "Portfolio link 1", callback_data: "ja-pf1" }],
+            [{ text: "Portfolio link 2", callback_data: "ja-pf2" }, { text: "Portfolio link 3", callback_data: "ja-pf3" }],
+            [{ text: "Done", callback_data: "ja-done"}]
+        ]
+    }
+}
+
 export const confirmPostJobKeyboard = {
     reply_markup: {
         inline_keyboard: [

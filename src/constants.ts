@@ -6,5 +6,6 @@ export const HASURA_GRAPHQL_ADMIN_SECRET: any = process.env.HASURA_GRAPHQL_ADMIN
 export const UPLOAD_ENDPOINT: any = process.env.UPLOAD_ENDPOINT
 export const ENTITY_ENDPOINT: any = process.env.ENTITY_ENDPOINT
 export const MAX_ST_FOUNDERS_LIMIT: number = 5
+export const MAX_PF_Links_LIMIT: number = 3
 export const ENT_CREATE_ENDPT: any = process.env.ENTITY_ENDPOINT
  

@@ -20,14 +20,19 @@ export const startCommandHand = async (ctx: any) => {
             await fetchJob({ id: startcmd[1] }).then(({ data: { jobs } }) => {
                 if (jobs.length) {
                     jobpostvalid = jobs[0]
+                    ctx.session.jobPostTitle = jobpostvalid.title;
+                    ctx.session.jobPostDescription = jobpostvalid.description;
                 }
             }).catch(e => {
                 console.log("error fetching job")
             })
         }
+     
         console.log("POST: ", jobpostvalid)
         if (jobpostvalid) {
             ctx.session.postId = startcmd[1]
+            console.log("title",ctx.session.jobPostTitle);
+            console.log("des",ctx.session.jobPostDescription);
             return ctx.scene.enter("jobApplicationScene")
         } else {
             const [usr] = users

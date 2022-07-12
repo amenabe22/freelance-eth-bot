@@ -8,6 +8,20 @@ export const jobApplicationScene = new CoreScene(
         enter: hdlr.jobAppInitHandler,
         handlers: [
             hdlr.jobAppNoteHandler,
+            hdlr.jobPortfolioLinksHandler
+        ]
+    },
+    [
+        jobAppCancelButton
+    ],
+)
+
+export const editApplyingScene = new CoreScene(
+    "editApplyingScene",
+    {
+        enter: hdlr.editApplyJobInitHandler,
+        handlers: [
+            hdlr.editApplyJobValueHandler,
         ]
     },
     [

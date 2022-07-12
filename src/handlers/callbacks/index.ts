@@ -172,9 +172,7 @@ export const jobPostCancelButton = {
     handler: jobPostCancelButtonHandler
 }
 
-
-
 export const jobAppCancelButton = {
-    key: "Cancel",
+    key: "Back",
     handler: jobAppCancelButtonHandler
 }
