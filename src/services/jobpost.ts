@@ -1,4 +1,4 @@
-import { ALL_POSTED, INSERT_APP, INSERT_JOB, INSER_SHORTLIST, JOB, JOB_TYPE_N, SEEKER_APPS } from "../apollo/queries"
+import { ALL_POSTED, APPLICATION, INSERT_APP, INSERT_JOB, INSER_SHORTLIST, JOB, JOB_TYPE_N, SEEKER_APPS } from "../apollo/queries"
 import { client } from "../apollo"
 
 export const inserJobPost = async (variables: any) => {
@@ -60,6 +60,14 @@ export const fetchJobById = async (variables: any) => {
 export const inserShortList = async (variables: any) => {
     const res = await client.mutate({
         mutation: INSER_SHORTLIST,
+        variables
+    })
+    return res
+}
+
+export const fetchApplication = async (variables: any) => {
+    const res = await client.query({
+        query: APPLICATION,
         variables
     })
     return res
