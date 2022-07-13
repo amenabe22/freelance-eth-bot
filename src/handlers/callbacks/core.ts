@@ -363,7 +363,7 @@ export const myJobPostsPendingJobHandler = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id)
     })
     const job_seeker = users[0].id
-    const { data: { jobs , id} } = await fetchAllPostedJobs({
+    const { data: { jobs, id } } = await fetchAllPostedJobs({
         creator: job_seeker,
         status: "pending"
     })
@@ -410,9 +410,9 @@ export const myJobPostsActiveJobHandler = async (ctx: any) => {
         ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Job Done', callback_data: "activejobpostdone_"+job.id}, {text: "Profile", callback_data: "activejobpostprofile_"+job.id}]
+                    [{ text: 'Job Done', callback_data: "activejobpostdone_" + job.id }, { text: "Profile", callback_data: "activejobpostprofile_" + job.id }]
                 ]
-             }  
+            }
         });
     }
     if (!jobs.length) {
@@ -437,10 +437,10 @@ export const myJobPostsDoneJobHandler = async (ctx: any) => {
         ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'PAYMENT SUMMERY', callback_data: "donejobpostpaymentsum_"+job.id}],
-                    [{ text: "Profile", callback_data: "donejobpostprofile_"+job.id}, {text: "Review and Rate", callback_data: "donejobpostReviewandrate_"+job.id}]
+                    [{ text: 'PAYMENT SUMMERY', callback_data: "donejobpostpaymentsum_" + job.id }],
+                    [{ text: "Profile", callback_data: "donejobpostprofile_" + job.id }, { text: "Review and Rate", callback_data: "donejobpostReviewandrate_" + job.id }]
                 ]
-             }
+            }
         });
     }
     if (!jobs.length) {
@@ -495,7 +495,8 @@ export const myJobsActiveJobHandler = async (ctx: any) => {
         ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}\n\nDescription: ${app.description}`, {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: "Request Payment", callback_data: "activemyjobsreqpayment_"+job.id}], [{text: "Request Review", callback_data: "acitvemyjobsreqreview_"+job.id}]
+                    // [{ text: "Request Payment", callback_data: "activemyjobsreqpayment_" + job.id }],
+                    [{ text: "Request Review", callback_data: "acitvemyjobsreqreview_" + job.id }]
                 ]
             }
         });

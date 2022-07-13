@@ -355,9 +355,28 @@ export const ALL_POSTED = gql`query jobs($creator: uuid!, $status: job_status!) 
     description
     created_at
     id
+    applications{
+      id
+      job_seeker{
+        user{
+          id
+          telegram_id
+          first_name
+          last_name
+        }
+      }
+    }
     job_type{
       name
     }
   }
 }
 `
+
+export const INSER_SHORTLIST = gql`mutation insert_short_lists_one($object: short_lists_insert_input!) {
+  insert_short_lists_one(object: $object) {
+    application {
+      id
+    }
+  }
+}`
