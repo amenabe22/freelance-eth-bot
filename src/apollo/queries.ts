@@ -300,8 +300,12 @@ export const JOB = gql`query jobs($id: uuid!) {
   jobs(where: { id: { _eq: $id } }) {
     id
     title
-    description    
-  }
+		description
+		job_type{
+			name
+		}
+		 
+  }  
 }`
 
 export const INSERT_APP = gql`mutation insertapp($object: applications_insert_input!) {
@@ -348,7 +352,12 @@ export const ALL_POSTED = gql`query jobs($creator: uuid!, $status: job_status!) 
     rejected_by
     title
     status
+    description
     created_at
+    id
+    job_type{
+      name
+    }
   }
 }
 `

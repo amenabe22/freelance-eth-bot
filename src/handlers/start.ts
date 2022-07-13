@@ -3,6 +3,7 @@ import { englishMainMenuKeyboard } from "../keybaords/menu_kbs"
 import { fetchJob } from "../services/jobpost"
 
 export const startCommandHand = async (ctx: any) => {
+    console.log(ctx.from.id)
     console.log("******\n\n", ctx.message.text, "\n\n******")
     const startcmd = ctx.message.text.split(" ")
     const withmsg = startcmd.length > 1

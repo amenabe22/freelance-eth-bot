@@ -48,3 +48,11 @@ export const fetchAllPostedJobs = async (variables: any) => {
     })
     return res
 }
+
+export const fetchJobById = async (variables: any) => {
+    const res = await client.query({
+        query: JOB,
+        variables
+    })
+    return res
+}

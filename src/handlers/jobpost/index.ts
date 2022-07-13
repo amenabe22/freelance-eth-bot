@@ -4,7 +4,7 @@ import { Telegraf } from "telegraf";
 import * as kb from "../../keybaords/jobpost_kbs";
 import { fetchJobTypes, getUserByTelegramId, getUserByTelegramStEntId } from "../../services/registration";
 import { fetchCities, fetchCity, fetchSector, fetchSectors } from "../../services/basic";
-import { inserJobPost, jobTypeN } from "../../services/jobpost";
+import { fetchJobById, inserJobPost, jobTypeN } from "../../services/jobpost";
 
 let globalState: any;
 
@@ -34,16 +34,16 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
         // 
         // apply verified filter once finished implementing logic
         //
-        // const myCompanies = checkUserEntity.filter((company: any) => {
-        //     if (company.entity["verified_at"] != null) {
-        //         return true;
-        //     }
-        // });
+        const vfCompany = myCompanies.filter((company: any) => {
+            if (company.entity["verified_at"] != null) {
+                return true;
+            }
+        });
         if (checkUserEntity) {
             // using job_cmp_300 company handler for both use separate if conditions are differnet
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
-                    inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
+                    inline_keyboard: vfCompany.map((x: any, xi: string) => ([{
                         text: x.entity.name, callback_data: `job_cmp_300${x.entity.id}`
                     }]))
                 })
@@ -76,18 +76,18 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         const checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
         const myCompanies = checkUserEntity
-        //
+        
         // apply verified filter once finished implementing logic
-        //        
-        // const myCompanies = checkUserEntity.filter((company: any) => {
-        //     if (company.entity["verified_at"] != null) {
-        //         return true;
-        //     }
-        // });
+               
+        const vfCompany = myCompanies.filter((company: any) => {
+            if (company.entity["verified_at"] != null) {
+                return true;
+            }
+        });
         if (checkUserEntity) {
             ctx.replyWithHTML("Please select the company you want to post with.", {
                 reply_markup: JSON.stringify({
-                    inline_keyboard: myCompanies.map((x: any, xi: string) => ([{
+                    inline_keyboard: vfCompany.map((x: any, xi: string) => ([{
                         text: x.entity.name, callback_data: `job_cmp_300${x.entity.id}`
                     }]))
                 })
@@ -506,7 +506,7 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
             case "location":
                 globalState.postAJobLocation = response
                 const res = await fetchCity({ name: globalState.postAJobLocation })
-                const { cities } = res.data
+                const { cities } = res.data 
                 console.log(cities.length, "bpt 1")
                 if (!cities.length) {
                     ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
@@ -532,3 +532,169 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
         }
     }
 })
+
+//under here employer side
+export const doneJobPostPaymentSummeryHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+   console.log(ctx.match)
+   let paymentSummeryJobId = ctx.match[0].split('_')[1];
+   console.log(paymentSummeryJobId);
+   ctx.session.jobId = paymentSummeryJobId;
+   ctx.replyWithHTML("The employer will see all employees payment summery", onlyMainMenuKeyboard)
+}
+export const doneJobPostProfileHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    ctx.replyWithHTML("The employer will see the profile here", onlyMainMenuKeyboard)
+ }
+ export const doneJobPostReviewRateHandler = async (ctx: any) => {
+    console.log(ctx.match)
+    ctx.replyWithHTML("The employer will give the employee based on their performance here\n\n\n\n\n\n\n\n\n..",{
+        reply_markup:{
+            inline_keyboard: [
+                [{text: "1", callback_data:"hmm"}, {text: "2", callback_data: "hmm"},{text: "3", callback_data: "hmm"},{text: "4", callback_data: "hmm"},{text: "5", callback_data: "hmm"},]
+            ]
+        }
+    })
+ }
+
+ export const activeJobPostDoneHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match)
+    let doneJobId = ctx.match[0].split('_')[1];
+    console.log(doneJobId);
+    ctx.session.jobId = doneJobId;
+
+    const { data, error } = await fetchJobById({ id: ctx.session.jobId });
+    console.log(data)
+    ctx.session.jobTypeName = data.jobs[0].job_type.name;
+    ctx.session.jobTitle = data.jobs[0].title;
+    ctx.session.jobDescription = data.jobs[0].description;
+    ctx.replyWithHTML(`<b>Job Title: </b> ${ctx.session.jobTitle}\n\n<b>Job Type: </b>${ctx.session.jobTypeName}\n\n<b>Job Description: </b>${ctx.session.jobDescription}`,{
+        reply_markup: {
+            inline_keyboard: [
+                [{text: "PAY",callback_data: "activejobpostpay_"+data.jobs[0].id}, {text: "Review and Rate", callback_data: "activejobpostreview_"+data.jobs[0].id}]
+            ]
+        }
+    })
+ }
+
+ export const activeJobPostProfileHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match)
+    ctx.replyWithHTML("The employer will see the profile here", onlyMainMenuKeyboard)
+ }
+
+ export const activeJobPostPayHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+     console.log(ctx.match)
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId;
+    ctx.replyWithHTML(`<b>Employee Name</b>\n<b>*****</b>\n\n<b>Amount: </b> Amount In birr\n\n<b>job detail</b>\n\n<b>Job End Date: </b>Date`, {
+        reply_markup: {
+            inline_keyboard: [ 
+                [{text: "PAY", callback_data: "activeJobpayforemployee_"+activeJobId}, {text: "Review and Rate", callback_data: "activejobreviewemployee_"+activeJobId}]
+            ]
+        }
+    })   
+ }
+ export const activeJobPostReviewHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId;
+    ctx.replyWithHTML("The employer will give the employee based on their performance here\n\n\n\n\n\n\n\n\n..",{
+        reply_markup:{
+            inline_keyboard: [
+                [{text: "1", callback_data:"hmm"}, {text: "2", callback_data: "hmm"},{text: "3", callback_data: "hmm"},{text: "4", callback_data: "hmm"},{text: "5", callback_data: "hmm"},]
+            ]
+        }
+    })
+ }
+ export const activeJobPostPayForEmployeeHandler = async (ctx: any) => { 
+ ctx.deleteMessage();
+ console.log(ctx.match);
+ let activeJobId = ctx.match[0].split('_')[1];
+ console.log(activeJobId);
+ ctx.session.activeJobId = activeJobId;
+ ctx.replyWithHTML(`please confirm by clicking yes if u want to pay, if not please click No\n\n<b>Employee name: </b>\n<b>*****</b>\n\n<b>Amount: Amount in birr</b>\n job detail\nproject done on ----- datae`, {
+    reply_markup:{
+        inline_keyboard: [
+            [{text: "Yes", callback_data: "jobpostyespay_"+activeJobId}, {text: "No", callback_data: "jobpostnodontpay_"+activeJobId}]
+        ]
+    }
+ })
+ }
+export const activeJobPostReviewForEmployeeHandler = async (ctx: any) => {
+    console.log(ctx.match);
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId
+    ctx.replyWithHTML("The employer will give the employee based on their performance here\n\n\n\n\n\n\n\n\n..",{
+        reply_markup:{
+            inline_keyboard: [
+                [{text: "1", callback_data:"hmm"}, {text: "2", callback_data: "hmm"},{text: "3", callback_data: "hmm"},{text: "4", callback_data: "hmm"},{text: "5", callback_data: "hmm"},]
+            ]
+        }
+    })
+}
+ export const activeJobPostYesPayForEmployeeHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId;
+    ctx.replyWithHTML("You have successfully payed", onlyMainMenuKeyboard)
+ }
+ export const activeJobPostNoPayForEmployeeHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId;
+    ctx.replyWithHTML("You didn't pay the the employee", onlyMainMenuKeyboard)
+ }
+
+// under this employee side
+ export const activeMyJobsRequestPaymentHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeMyJobId = ctx.match[0].split('_')[1];
+    console.log(activeMyJobId);
+    ctx.session.activeMyJobId = activeMyJobId;
+    ctx.replyWithHTML(`<b>Request Payment\n*********</b>\n\n<b>payment amount</b>\n\nplease confirm by clicking Yes if u want to send the payment request or No if u want to decline.`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{text: "Yes", callback_data: "activemyjobYesendPrequest_"+activeMyJobId}, {text: "No", callback_data: "activemyjobdontsendPrequest_"+activeMyJobId}]
+            ]
+        }
+    })
+ }
+export const activeMyJobYesSendPaymentRequestHandler = async (ctx: any) =>{
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeMyJobId = ctx.match[0].split('_')[1];
+    console.log(activeMyJobId);
+    ctx.session.activeMyJobId = activeMyJobId;
+    ctx.replyWithHTML("you have seuccsfully send your payment request", onlyMainMenuKeyboard)
+}
+
+export const activeMyJobNodontSendPaymentRequestHandler =  async (ctx: any) =>{
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeMyJobId = ctx.match[0].split('_')[1];
+    console.log(activeMyJobId);
+    ctx.session.activeMyJobId = activeMyJobId;
+    ctx.replyWithHTML("u did't send payment request", onlyMainMenuKeyboard)
+}
+
+ export const activeMyJobsRequestReviewHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeMyJobId = ctx.match[0].split('_')[1];
+    console.log(activeMyJobId);
+    ctx.session.activeMyJobId = activeMyJobId;
+    ctx.replyWithHTML("u have sent request review for ur emplyeer", onlyMainMenuKeyboard)
+ }

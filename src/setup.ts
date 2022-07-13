@@ -73,7 +73,22 @@ export const bot = new CoreBot(
         act.jobPostPrivateClientSelectorAction,
         act.jobApplyingConfirmHandlerAction,
         act.jobApplyingEditHandlerAction,
-        act.jobApplingSelectFieldHandlerAction
+        act.jobApplingSelectFieldHandlerAction,
+        act.doneJobPostPaymentSummeryHandlerAction,
+        act.doneJobPostProfileHandlerAction,
+        act.doneJobPostReviewRateHandlerAction,
+        act.activeJobPostDoneHandlerAction,
+        act.activeJobPostProfileHandlerAction,
+        act.activeJobPostPayHandlerAction,
+        act.activeJobPostReviewHandlerAction,
+        act.activeJobPostPayForEmployeeHandlerAction,
+        act.activeJobPostReviewForEmployeeHandlerAction,
+        act.activeJobPostYesPayForEmployeeHandlerAction,
+        act.activeJobPostNoPayForEmployeeHandlerAction,
+        act.activemyjobsReqestPaymentHandlerAction,
+        act.activeMyJobsRequestReviewHandlerAction,
+        act.activeMyJobYesSendPaymentRequestHandlerAction,
+        act.activeMyJobNodontSendPaymentRequestHandlerAction
 
 
     ],

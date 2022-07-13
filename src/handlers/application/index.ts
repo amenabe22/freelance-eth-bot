@@ -12,8 +12,7 @@ export const jobAppInitHandler = async (ctx: any) => {
     ctx.scene.state.postId = ctx.session.postId;
     ctx.scene.state.jobPostTitle = ctx.session.jobPostTitle;
     ctx.scene.state.jobPostDescription = ctx.session.jobPostDescription;
-    // ctx.scene.state.jobPostTitleBold = ctx.scene.state.jobPostTitle.bold();
-    // ctx.scene.state.jobPostDescriptionBold = ctx.session.postDescription.bold();
+
    await ctx.replyWithHTML(`Job Title: ${ctx.scene.state.jobPostTitle}\n\nJob Description: ${ctx.scene.state.jobPostDescription}`)
    await ctx.reply("Write a message for the employer to review and why you are the right person for this job.\n\nNote: CV will be attached automatically", applicationStateCancelBtn);
 }
@@ -30,10 +29,7 @@ export const jobAppNoteHandler = Telegraf.on(["photo", "text", "contact", "docum
 }) 
 export const jobPortfolioLinksHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any)=>{
     if (ctx.message.text) {
-        ctx.scene.state.jobApplyPorfolioLink1 = "";
-        ctx.scene.state.jobApplyPorfolioLink2 = "";
-        ctx.scene.state.jobApplyPorfolioLink3 = " ";
-        if (ctx.message.text === "Skip") {
+         if (ctx.message.text === "Skip") {
             globalState = ctx.scene.state
             // console.log("globalState", globalState);
             ctx.replyWithHTML(`User Profile Load heren\n\nDescription:\n${globalState.jobSeekerNote}\n\nPortfolio link 1: ${globalState.jobApplyPorfolioLink1}\nPortfolio link 2: ${globalState.jobApplyPorfolioLink2}\nPortfolio link 3: ${globalState.jobApplyPorfolioLink3}`, confirmApplyJobKeyboard)
@@ -83,7 +79,20 @@ export const jobApplyConfirmHandler = async (ctx: any) => {
             from_platform_id: "941cc536-5cd3-44a1-8fca-5f898f26aba5",
             job_id: postId,
             job_seeker_id:users[0].job_seeker.id,
-            updated_at: new Date().toISOString(),           
+            updated_at: new Date().toISOString(),   
+            application_links: {
+                data: [
+                  {
+                    link: jobApplyPorfolioLink1
+                  },
+                  {
+                    link: jobApplyPorfolioLink2
+                  },
+                  {
+                    link: jobApplyPorfolioLink3
+                  }
+                ]
+              }        
         }
     })
     
@@ -92,7 +101,7 @@ export const jobApplyConfirmHandler = async (ctx: any) => {
     } else  {
         ctx.reply("Error applying job",applicationStateCancelBtn)
     }
- }
+ } 
 
 export const jobApplyEditInitHandler = async (ctx: any) => {
     ctx.deleteMessage();

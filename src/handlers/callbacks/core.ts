@@ -320,6 +320,8 @@ export const employerMenuSelectionHandler = async (ctx: any) => {
     ctx.replyWithHTML(`${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
 }
 
+
+
 export const myJobPostsOpenedJobHandler = async (ctx: any) => {
     const { data: { users }, error } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
@@ -327,7 +329,7 @@ export const myJobPostsOpenedJobHandler = async (ctx: any) => {
     const job_seeker = users[0].job_seeker.id
     const { data: { jobs } } = await fetchAllPostedJobs({
         creator: job_seeker,
-        status: "active"
+        status: "open"
     })
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
@@ -335,7 +337,7 @@ export const myJobPostsOpenedJobHandler = async (ctx: any) => {
     }
 
     if (!jobs.length) {
-        ctx.replyWithHTML('You have no active jobs', onlyMainMenuKeyboard);
+        ctx.replyWithHTML('You have no opened jobs', onlyMainMenuKeyboard);
     }
     // ctx.replyWithHTML('Opened jobs will list here.', onlyMainMenuKeyboard);
 }
@@ -348,10 +350,9 @@ export const myJobPostsClosedJobHandler = async (ctx: any) => {
         creator: job_seeker,
         status: "closed"
     })
-
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, onlyMainMenuKeyboard);
     }
     if (!jobs.length) {
         ctx.replyWithHTML('You have no closed jobs', onlyMainMenuKeyboard);
@@ -362,14 +363,14 @@ export const myJobPostsPendingJobHandler = async (ctx: any) => {
         telegram_id: JSON.stringify(ctx.from.id)
     })
     const job_seeker = users[0].id
-    const { data: { jobs } } = await fetchAllPostedJobs({
+    const { data: { jobs , id} } = await fetchAllPostedJobs({
         creator: job_seeker,
         status: "pending"
     })
 
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, onlyMainMenuKeyboard);
     }
     if (!jobs.length) {
         ctx.replyWithHTML('You have no pending jobs', onlyMainMenuKeyboard);
@@ -388,7 +389,7 @@ export const myJobPostsDeclinedJobHandler = async (ctx: any) => {
 
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, onlyMainMenuKeyboard);
     }
     if (!jobs.length) {
         ctx.replyWithHTML('You have no declined jobs', onlyMainMenuKeyboard);
@@ -401,12 +402,18 @@ export const myJobPostsActiveJobHandler = async (ctx: any) => {
     const job_seeker = users[0].id
     const { data: { jobs } } = await fetchAllPostedJobs({
         creator: job_seeker,
-        status: "active"
+        status: "pending"
     })
-
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+        console.log(job)
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{text: 'Job Done', callback_data: "activejobpostdone_"+job.id}, {text: "Profile", callback_data: "activejobpostprofile_"+job.id}]
+                ]
+             }  
+        });
     }
     if (!jobs.length) {
         ctx.replyWithHTML('You have no active jobs', onlyMainMenuKeyboard);
@@ -419,17 +426,32 @@ export const myJobPostsDoneJobHandler = async (ctx: any) => {
     const job_seeker = users[0].id
     const { data: { jobs } } = await fetchAllPostedJobs({
         creator: job_seeker,
-        status: "done"
+        status: "pending"
     })
-
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}`, onlyMainMenuKeyboard);
+        ctx.session.activeJobPostTitle = job.title
+        ctx.session.activeJobPostJobType = job.job_type.name
+        ctx.session.activeJobPostJobStatus = job.status
+        ctx.session.activeJobPostJobDescription = job.description
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Job Type: </b>${job.job_type.name}\n\n<b>Status: </b>${job.status}\n\n<b>Description: </b>${job.description}`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{text: 'PAYMENT SUMMERY', callback_data: "donejobpostpaymentsum_"+job.id}],
+                    [{ text: "Profile", callback_data: "donejobpostprofile_"+job.id}, {text: "Review and Rate", callback_data: "donejobpostReviewandrate_"+job.id}]
+                ]
+             }
+        });
     }
     if (!jobs.length) {
         ctx.replyWithHTML('You have no completed jobs', onlyMainMenuKeyboard);
     }
 }
+
+
+
+
+
 
 export const myJobPostsHandler = async (ctx: any) => {
     ctx.replyWithHTML('Choose one to see.', myJobPostsKeyboard);
@@ -437,6 +459,8 @@ export const myJobPostsHandler = async (ctx: any) => {
 export const myJobsHandler = async (ctx: any) => {
     ctx.replyWithHTML('Choose one to see.', myJobsKeboard);
 }
+
+
 export const myJobsDoneJobHandler = async (ctx: any) => {
     const { data: { users }, error } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
@@ -444,7 +468,7 @@ export const myJobsDoneJobHandler = async (ctx: any) => {
     const job_seeker = users[0].job_seeker.id
     const { data: { applications } } = await seekerApplications({
         seeker: job_seeker,
-        status: "done"
+        status: "closed"
     })
 
     for (let i = 0; i < applications.length; i++) {
@@ -468,7 +492,13 @@ export const myJobsActiveJobHandler = async (ctx: any) => {
     for (let i = 0; i < applications.length; i++) {
         const app = applications[i]
         const job = app.job;
-        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}\n\nNote: ${app.description}`, onlyMainMenuKeyboard);
+        ctx.replyWithHTML(`<b>Title: </b>${job.title}\n\n<b>Status: </b>${job.status}\n\nDescription: ${app.description}`, {
+            reply_markup: {
+                inline_keyboard: [
+                    [{text: "Request Payment", callback_data: "activemyjobsreqpayment_"+job.id}], [{text: "Request Review", callback_data: "acitvemyjobsreqreview_"+job.id}]
+                ]
+            }
+        });
     }
     if (!applications.length) {
         ctx.replyWithHTML('you have no active jobs', onlyMainMenuKeyboard);
