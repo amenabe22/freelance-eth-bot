@@ -1,6 +1,10 @@
 import { getUserByTelegramId } from "../../services/registration";
 import { fetchApplication, inserShortList } from "../../services/jobpost";
 
+export const jobApplicationHireActionHandler = async (ctx: any) => {
+    ctx.answerCbQuery();
+    ctx.reply("Applicant has been hired")
+}
 export const jobApplicationShortlistActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
@@ -50,7 +54,7 @@ export const jobApplicationShortlistActionHandler = async (ctx: any) => {
                 inline_keyboard: [
                     [
                         {
-                            text: "Shortlist", callback_data: `app_short_${appId[0]}`
+                            text: "Hire", callback_data: `app_hire_${appId[0]}`
                         }, {
                             text: "Reject", callback_data: `app_reject_${appId[0]}`
                         }
