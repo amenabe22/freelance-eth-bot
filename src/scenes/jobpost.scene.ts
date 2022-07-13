@@ -34,3 +34,22 @@ export const editJobPostScene = new CoreScene(
         jobPostCancelButton
     ],
     )
+    export const reviewEmployeeScene = new CoreScene(
+        "reviewEmployeeScene",
+        {
+            enter: hdlr.reviewEmployeeInitHandler,
+            handlers: [
+                hdlr.reviewEmployeeQ1Handler,
+                hdlr.reviewEmployeeQ2Handler,
+                hdlr.reviewEmployeeQ3Handler,
+                hdlr.reviewEmployeeQ4Handler,
+                hdlr.reviewEmployeeQ5Handler,
+             
+            ]
+        },
+        [
+            jobPostCancelButton
+        ],
+        )
+    
+    

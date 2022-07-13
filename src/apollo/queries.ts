@@ -7,6 +7,12 @@ export const CITIES = gql`query {
   }
 }`
 
+export const RATING_QUESTIONS = gql`query {
+  job_seeker_review_questions{
+    id
+    question
+  }
+}`
 
 export const CITY = gql`query getCity($name: citext!) {
   cities(where: { name: { _eq: $name } }) {
@@ -301,6 +307,17 @@ export const JOB = gql`query jobs($id: uuid!) {
     id
     title
 		description
+    applications{
+      id
+      job_seeker{
+        user{
+          id
+          telegram_id
+          first_name
+          last_name
+        }
+      }
+    }
 		job_type{
 			name
 		}

@@ -33,7 +33,7 @@ import {
     socialMediaLinkDoneURScene
 } from "../scenes/startup.registration.scene"
 import { Scenes } from "telegraf"
-import { editJobPostScene, postAJobScene } from "../scenes/jobpost.scene"
+import { editJobPostScene, postAJobScene, reviewEmployeeScene } from "../scenes/jobpost.scene"
 import { uploadCvScene } from "../scenes/uploadCv.scene"
 import { editApplyingScene, jobApplicationScene } from "../scenes/application.scene"
 export const coreStage: any = new Scenes.Stage<any>(
@@ -70,7 +70,8 @@ export const coreStage: any = new Scenes.Stage<any>(
         socialMediaLinkURScene,
         socialMediaLinkDoneURScene,        
         jobApplicationScene,
-        editApplyingScene
+        editApplyingScene,
+        reviewEmployeeScene
     ]
 )
   

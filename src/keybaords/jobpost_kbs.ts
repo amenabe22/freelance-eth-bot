@@ -108,3 +108,11 @@ export const myJobPostsKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true
     }
 }
+export const ratingKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{text: "1"}, { text: "2"}, { text: "3"}, { text: "4"}, { text: "5"}],
+            [{text: "Back"}]
+        ],resize_keyboard: true, one_time_keyboard: true
+    }
+}
