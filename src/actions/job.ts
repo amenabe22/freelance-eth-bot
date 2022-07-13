@@ -1,4 +1,3 @@
-import e from "express"
 import * as hdler from "../handlers"
 export const jobPostCompanyAction = {
     key: "jobPostCompany",
@@ -19,6 +18,26 @@ export const jobPostCompanySelectorAction = {
     handler: hdler.jobPostCompanySelectorActionHandler
 }
 
+export const jobApplicationShortlistAction = {
+    key: /^app_short_*.*$/,
+    handler: hdler.jobApplicationShortlistActionHandler
+}
+
+export const jobApplicationRejectAction = {
+    key: /^app_reject_*.*$/,
+    handler: hdler.jobApplicationRejectActionHandler
+}
+
+export const jobApplicationPreviewAction = {
+    key: /^app_prv_*.*$/,
+    handler: hdler.jobApplicationPreviewActionHandler
+}
+
+
+export const jobApplicationReviewsAction = {
+    key: /^app_reviews_*.*$/,
+    handler: hdler.jobApplicationReviewsActionHandler
+}
 
 export const jobPostingConfirmHandler = {
     key: "confirmJobPost",
