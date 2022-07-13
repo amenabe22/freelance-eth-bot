@@ -23,6 +23,12 @@ export const jobApplicationShortlistAction = {
     handler: hdler.jobApplicationShortlistActionHandler
 }
 
+export const jobApplicationHireAction = {
+    key: /^app_hire_*.*$/,
+    handler: hdler.jobApplicationHireActionHandler
+}
+
+
 export const jobApplicationRejectAction = {
     key: /^app_reject_*.*$/,
     handler: hdler.jobApplicationRejectActionHandler

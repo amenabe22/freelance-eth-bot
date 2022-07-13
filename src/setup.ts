@@ -92,7 +92,8 @@ export const bot = new CoreBot(
         act.jobApplicationShortlistAction,
         act.jobApplicationRejectAction,
         act.jobApplicationReviewsAction,
-        act.jobApplicationPreviewAction
+        act.jobApplicationPreviewAction,
+        act.jobApplicationHireAction
     ],
     // register commands
     [

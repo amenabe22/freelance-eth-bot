@@ -397,3 +397,30 @@ export const INSER_SHORTLIST = gql`mutation insert_short_lists_one($object: shor
     }
   }
 }`
+
+
+export const APPLICATION = gql`query applications($id:uuid!){
+  applications(where:{
+    id:{
+      _eq: $id
+    }
+  }){
+    id
+    job_seeker{
+      education_level{
+        name
+      }      
+      user{
+        first_name
+        last_name
+      	date_of_birth
+        gender
+        email
+        phone
+        city{
+        	name
+        }
+      }
+    }
+  }
+}`

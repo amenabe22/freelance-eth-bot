@@ -1,4 +1,4 @@
-import { ALL_POSTED, INSERT_APP, INSERT_JOB, INSER_SHORTLIST, JOB, JOB_TYPE_N, RATING_QUESTIONS, SEEKER_APPS } from "../apollo/queries"
+import { ALL_POSTED, APPLICATION, INSERT_APP, INSERT_JOB, INSER_SHORTLIST, JOB, JOB_TYPE_N, RATING_QUESTIONS, SEEKER_APPS } from "../apollo/queries"
 import { client } from "../apollo"
 
 export const inserJobPost = async (variables: any) => {
@@ -68,6 +68,13 @@ export const fetchRatingQuestions = async () => {
     const res = await client.query({
         query: RATING_QUESTIONS,
         fetchPolicy: "network-only",
+    })
+    return res
+}
+export const fetchApplication = async (variables: any) => {
+    const res = await client.query({
+        query: APPLICATION,
+        variables
     })
     return res
 }
