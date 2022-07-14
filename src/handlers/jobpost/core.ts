@@ -347,7 +347,7 @@ export const jobPostConfirmHandler = async (ctx: any) => {
             city_id: postAJobWorkingLocationId,
             close_date: new Date().toISOString(),
             created_by: users[0].id,
-            entity_id: globalState.postAJobCompanyName ? ctx.session.postAJobCompanyName.substring(3) : null,
+            entity_id: ctx.session.postAJobCompanyName.substring(3) ?? globalState.postAJobCompanyName,
             description: postAJobDescription,
             from_platform_id: "941cc536-5cd3-44a1-8fca-5f898f26aba5",
             job_type_id: postAJobType,
