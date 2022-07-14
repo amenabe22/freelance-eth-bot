@@ -49,7 +49,7 @@ export const personalizedSectSectorActionHandler = async (ctx: any) => {
     const [{ job_seeker }] = usr.data.users
     const jsectors = await getJobSeekerSectors({ job_seeker_id: job_seeker.id })
     const { job_seeker_sectors } = jsectors.data
-    
+
     if (job_seeker_sectors.length >= 3) {
         ctx.reply("you can't add more than 3 job sectors")
         return
@@ -214,7 +214,7 @@ export const registerUserHandler = async (ctx: any) => {
     } = globalState;
     ctx.deleteMessage();
     const dob = `${yearOfBirthRegister}-${monthOfBirthRegister}-${dateOfBirthRegister}`
-    const { data, errors } = await registerNewBotUser({
+    await registerNewBotUser({
         obj: {
             first_name: firstNameRegister,
             last_name: lastNameRegister,
@@ -225,14 +225,14 @@ export const registerUserHandler = async (ctx: any) => {
             telegram_id: JSON.stringify(ctx.from.id),
             residence_city_id: residentCityRegister
         }
-    })
-    console.log(data);
-    if (!errors) {
+    }).then(({ data }) => {
         ctx.replyWithHTML("you have successfully registered", chooseLanguageKeyboard)
-    } else {
-        const [{ message }] = errors
-        ctx.replyWithHTML(`you haven't registered because of ${message}. please start the bot again using /start command`);
-    }
+        ctx.scene.leave()
+    }).catch(e => {
+        ctx.replyWithHTML(`you haven't registered because of ${e}. please start the bot again using /start command`);
+        ctx.scene.leave()
+
+    })
 }
 
 // reigstration handler with age
