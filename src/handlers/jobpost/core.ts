@@ -6,7 +6,7 @@ import { fetchJobTypes, getUserByTelegramId, getUserByTelegramStEntId } from "..
 import { fetchCities, fetchCity, fetchSector, fetchSectors } from "../../services/basic";
 import { fetchJobById, fetchRatingQuestions, inserJobPost, jobTypeN } from "../../services/jobpost";
 
-let globalState: any;
+let globalState: any = {};
 
 export const jobAppCancelButtonHandler = async (ctx: any) => {
     ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
@@ -22,7 +22,7 @@ export const jobPostStartupSelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
     let companyClicked = ctx.match[0];
-    console.log(companyClicked,".........")
+    console.log(companyClicked, ".........")
     const { data, error } = await getUserByTelegramStEntId({
         telegram_id: JSON.stringify(ctx.from.id)
     })
@@ -56,7 +56,7 @@ export const jobPostCompanySelectorActionHandler = async (ctx: any) => {
     ctx.answerCbQuery();
     ctx.deleteMessage();
     let companyClicked = ctx.match[0].split("_");
-    console.log(companyClicked,"dawg")
+    console.log(companyClicked, "dawg")
     ctx.session.postAJobCompanyName = companyClicked[2];
     ctx.scene.enter("postAJobScene");
 
@@ -76,9 +76,9 @@ export const jobPostCompanyActionHandler = async (ctx: any) => {
         const checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
         const myCompanies = checkUserEntity
-        
+
         // apply verified filter once finished implementing logic
-               
+
         const vfCompany = myCompanies.filter((company: any) => {
             if (company.entity["verified_at"] != null) {
                 return true;
@@ -283,15 +283,15 @@ export const postAJobWorkingLocationHandler = Telegraf.on(["text", "contact", "d
 })
 export const postAjobApplicantNeededHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
-        if(ctx.message.text == "Skip"){
-         ctx.scene.state.postAJobApplicantNeeded = " ";
-         await ctx.replyWithHTML(`One last thing ${ctx.from.first_name}, please enter Vacancy number.`, cancelKeyboard);
-         return ctx.wizard.next(); 
-        }else{
+        if (ctx.message.text == "Skip") {
+            ctx.scene.state.postAJobApplicantNeeded = " ";
+            await ctx.replyWithHTML(`One last thing ${ctx.from.first_name}, please enter Vacancy number.`, cancelKeyboard);
+            return ctx.wizard.next();
+        } else {
             ctx.scene.state.postAJobApplicantNeeded = ctx.message.text;
             await ctx.replyWithHTML(`One last thing ${ctx.from.first_name}, please enter Vacancy number.`, cancelKeyboard);
-            return ctx.wizard.next(); 
-        }        
+            return ctx.wizard.next();
+        }
     } else {
         ctx.replyWithHTML(`Please enter a valid job applicant needed!`, kb.postAJobOptionalKeyboard);
         return;
@@ -347,7 +347,7 @@ export const jobPostConfirmHandler = async (ctx: any) => {
             city_id: postAJobWorkingLocationId,
             close_date: new Date().toISOString(),
             created_by: users[0].id,
-            entity_id: globalState.postAJobCompanyName? ctx.session.postAJobCompanyName.substring(3): null,
+            entity_id: globalState.postAJobCompanyName ? ctx.session.postAJobCompanyName.substring(3) : null,
             description: postAJobDescription,
             from_platform_id: "941cc536-5cd3-44a1-8fca-5f898f26aba5",
             job_type_id: postAJobType,
@@ -358,7 +358,7 @@ export const jobPostConfirmHandler = async (ctx: any) => {
                     sector_id: postAJobSectorId
                 }
             },
-           
+
         }
     })
     if (data) {
@@ -506,7 +506,7 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
             case "location":
                 globalState.postAJobLocation = response
                 const res = await fetchCity({ name: globalState.postAJobLocation })
-                const { cities } = res.data 
+                const { cities } = res.data
                 console.log(cities.length, "bpt 1")
                 if (!cities.length) {
                     ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
@@ -536,29 +536,29 @@ export const editpostAJobValueHandler = Telegraf.on(["photo", "text", "contact",
 //under here employer side
 export const doneJobPostPaymentSummeryHandler = async (ctx: any) => {
     ctx.deleteMessage();
-   console.log(ctx.match)
-   let paymentSummeryJobId = ctx.match[0].split('_')[1];
-   console.log(paymentSummeryJobId);
-   ctx.session.jobId = paymentSummeryJobId;
-   ctx.replyWithHTML("The employer will see all employees payment summery", onlyMainMenuKeyboard)
+    console.log(ctx.match)
+    let paymentSummeryJobId = ctx.match[0].split('_')[1];
+    console.log(paymentSummeryJobId);
+    ctx.session.jobId = paymentSummeryJobId;
+    ctx.replyWithHTML("The employer will see all employees payment summery", onlyMainMenuKeyboard)
 }
 export const doneJobPostProfileHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     ctx.replyWithHTML("The employer will see the profile here", onlyMainMenuKeyboard)
- }
- export const doneJobPostReviewRateHandler = async (ctx: any) => {
+}
+export const doneJobPostReviewRateHandler = async (ctx: any) => {
     console.log(ctx.match)
-    ctx.replyWithHTML("The employer will give the employee based on their performance here\n\n\n\n\n\n\n\n\n..",{
-        reply_markup:{
+    ctx.replyWithHTML("The employer will give the employee based on their performance here\n\n\n\n\n\n\n\n\n..", {
+        reply_markup: {
             inline_keyboard: [
-                [{text: "1", callback_data:"hmm"}, {text: "2", callback_data: "hmm"},{text: "3", callback_data: "hmm"},{text: "4", callback_data: "hmm"},{text: "5", callback_data: "hmm"},]
+                [{ text: "1", callback_data: "hmm" }, { text: "2", callback_data: "hmm" }, { text: "3", callback_data: "hmm" }, { text: "4", callback_data: "hmm" }, { text: "5", callback_data: "hmm" },]
             ]
         }
     })
- }
+}
 
- export const activeJobPostDoneHandler = async (ctx: any) => {
+export const activeJobPostDoneHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match)
     let doneJobId = ctx.match[0].split('_')[1];
@@ -571,9 +571,9 @@ export const doneJobPostProfileHandler = async (ctx: any) => {
     ctx.session.jobTitle = data.jobs[0].title;
     ctx.session.jobDescription = data.jobs[0].description;
     ctx.session.jobApplicants = data.jobs[0].applications;
- 
-    if(ctx.session.jobApplicants.length){
-        let applicantionId= data.jobs[0].applications[0].id;
+
+    if (ctx.session.jobApplicants.length) {
+        let applicantionId = data.jobs[0].applications[0].id;
         let applicantFirstName = data.jobs[0].applications[0].job_seeker.user.first_name;
         let applicantLastName = data.jobs[0].applications[0].job_seeker.user.last_name;
         let applicantTelegramId = data.jobs[0].applications[0].job_seeker.user.telegram_id;
@@ -581,73 +581,62 @@ export const doneJobPostProfileHandler = async (ctx: any) => {
         ctx.session.applicantFirstName = applicantFirstName;
         ctx.session.applicantLastName = applicantLastName;
         ctx.session.applicantTelegramId = applicantTelegramId
-        ctx.replyWithHTML(`<b>Job Title: </b> ${ctx.session.jobTitle}\n\n<b>Job Type: </b>${ctx.session.jobTypeName}\n\n<b>Job Description: </b>${ctx.session.jobDescription}`,{
+        ctx.replyWithHTML(`<b>Job Title: </b> ${ctx.session.jobTitle}\n\n<b>Job Type: </b>${ctx.session.jobTypeName}\n\n<b>Job Description: </b>${ctx.session.jobDescription}`, {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: "PAY",callback_data: "activejobpostpay_"+data.jobs[0].id}, {text: "Review and Rate", callback_data: "activejobpostreview_"+data.jobs[0].id}]
+                    [{ text: "PAY", callback_data: "activejobpostpay_" + data.jobs[0].id }, { text: "Review and Rate", callback_data: "activejobpostreview_" + data.jobs[0].id }]
                 ]
             }
         })
-    }else{
+    } else {
         ctx.replyWithHTML("You don't have any applicants for this job", onlyMainMenuKeyboard);
-    }  
- }
+    }
+}
 
- export const activeJobPostProfileHandler = async (ctx: any) => {
+export const activeJobPostProfileHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match)
     ctx.replyWithHTML("The employer will see the profile here", onlyMainMenuKeyboard)
- }
+}
 
- export const activeJobPostPayHandler = async (ctx: any) => {
+export const activeJobPostPayHandler = async (ctx: any) => {
     ctx.deleteMessage();
-     console.log(ctx.match)
+    console.log(ctx.match)
     let activeJobId = ctx.match[0].split('_')[1];
     console.log(activeJobId);
     ctx.session.activeJobId = activeJobId;
     ctx.replyWithHTML(`<b>${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}</b>\n<b>*****</b>\n\n<b>Amount: </b> Amount In birr\n\n<b>job detail</b>\n\n<b>Job End Date: </b>Date`, {
         reply_markup: {
-            inline_keyboard: [ 
-                [{text: "PAY", callback_data: "activeJobpayforemployee_"+activeJobId}, {text: "Review and Rate", callback_data: "activejobreviewemployee_"+activeJobId}]
+            inline_keyboard: [
+                [{ text: "PAY", callback_data: "activeJobpayforemployee_" + activeJobId }, { text: "Review and Rate", callback_data: "activejobreviewemployee_" + activeJobId }]
             ]
         }
-    })   
- }
- export const activeJobPostReviewHandler = async (ctx: any) => {
+    })
+}
+export const activeJobPostReviewHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeJobId = ctx.match[0].split('_')[1];
     console.log(activeJobId);
     ctx.session.activeJobId = activeJobId;
     console.log(ctx.session.applicantFirstName);
-    const { data, error } = await fetchRatingQuestions()
-    console.log(data)
-        if (data) {
-            const  questions  = data.job_seeker_review_questions;
-            console.log(questions);
-            const questionName = questions.map((nm: any) => nm.question);
-            const questionId = questions.map((nm: any) => nm.id);
-
-    }
-
     ctx.scene.enter("reviewEmployeeScene");
-  
- 
 }
- export const activeJobPostPayForEmployeeHandler = async (ctx: any) => { 
- ctx.deleteMessage();
- console.log(ctx.match);
- let activeJobId = ctx.match[0].split('_')[1];
- console.log(activeJobId);
- ctx.session.activeJobId = activeJobId;
- ctx.replyWithHTML(`please confirm by clicking yes if u want to pay, if not please click No\n\n<b>${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}</b>\n<b>*****</b>\n\n<b>Amount: Amount in birr</b>\n job detail\nproject done on ----- datae`, {
-    reply_markup:{
-        inline_keyboard: [
-            [{text: "Yes", callback_data: "jobpostyespay_"+activeJobId}, {text: "No", callback_data: "jobpostnodontpay_"+activeJobId}]
-        ]
-    }
- })
- }
+
+export const activeJobPostPayForEmployeeHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    console.log(ctx.match);
+    let activeJobId = ctx.match[0].split('_')[1];
+    console.log(activeJobId);
+    ctx.session.activeJobId = activeJobId;
+    ctx.replyWithHTML(`please confirm by clicking yes if u want to pay, if not please click No\n\n<b>${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}</b>\n<b>*****</b>\n\n<b>Amount: Amount in birr</b>\n job detail\nproject done on ----- datae`, {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: "Yes", callback_data: "jobpostyespay_" + activeJobId }, { text: "No", callback_data: "jobpostnodontpay_" + activeJobId }]
+            ]
+        }
+    })
+}
 export const activeJobPostReviewForEmployeeHandler = async (ctx: any) => {
     console.log(ctx.match);
     let activeJobId = ctx.match[0].split('_')[1];
@@ -662,25 +651,25 @@ export const activeJobPostReviewForEmployeeHandler = async (ctx: any) => {
     //     }
     // })
 }
- export const activeJobPostYesPayForEmployeeHandler = async (ctx: any) => {
+export const activeJobPostYesPayForEmployeeHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeJobId = ctx.match[0].split('_')[1];
     console.log(activeJobId);
     ctx.session.activeJobId = activeJobId;
     ctx.replyWithHTML("You have successfully payed", onlyMainMenuKeyboard)
- }
- export const activeJobPostNoPayForEmployeeHandler = async (ctx: any) => {
+}
+export const activeJobPostNoPayForEmployeeHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeJobId = ctx.match[0].split('_')[1];
     console.log(activeJobId);
     ctx.session.activeJobId = activeJobId;
     ctx.replyWithHTML("You didn't pay the the employee", onlyMainMenuKeyboard)
- }
+}
 
 // under this employee side
- export const activeMyJobsRequestPaymentHandler = async (ctx: any) => {
+export const activeMyJobsRequestPaymentHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeMyJobId = ctx.match[0].split('_')[1];
@@ -689,12 +678,12 @@ export const activeJobPostReviewForEmployeeHandler = async (ctx: any) => {
     ctx.replyWithHTML(`<b>Request Payment\n*********</b>\n\n<b>payment amount</b>\n\nplease confirm by clicking Yes if u want to send the payment request or No if u want to decline.`, {
         reply_markup: {
             inline_keyboard: [
-                [{text: "Yes", callback_data: "activemyjobYesendPrequest_"+activeMyJobId}, {text: "No", callback_data: "activemyjobdontsendPrequest_"+activeMyJobId}]
+                [{ text: "Yes", callback_data: "activemyjobYesendPrequest_" + activeMyJobId }, { text: "No", callback_data: "activemyjobdontsendPrequest_" + activeMyJobId }]
             ]
         }
     })
- }
-export const activeMyJobYesSendPaymentRequestHandler = async (ctx: any) =>{
+}
+export const activeMyJobYesSendPaymentRequestHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeMyJobId = ctx.match[0].split('_')[1];
@@ -703,7 +692,7 @@ export const activeMyJobYesSendPaymentRequestHandler = async (ctx: any) =>{
     ctx.replyWithHTML("you have seuccsfully send your payment request", onlyMainMenuKeyboard)
 }
 
-export const activeMyJobNodontSendPaymentRequestHandler =  async (ctx: any) =>{
+export const activeMyJobNodontSendPaymentRequestHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeMyJobId = ctx.match[0].split('_')[1];
@@ -712,68 +701,96 @@ export const activeMyJobNodontSendPaymentRequestHandler =  async (ctx: any) =>{
     ctx.replyWithHTML("u did't send payment request", onlyMainMenuKeyboard)
 }
 
- export const activeMyJobsRequestReviewHandler = async (ctx: any) => {
+export const activeMyJobsRequestReviewHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.match);
     let activeMyJobId = ctx.match[0].split('_')[1];
     console.log(activeMyJobId);
     ctx.session.activeMyJobId = activeMyJobId;
     ctx.replyWithHTML("u have sent request review for ur emplyeer", onlyMainMenuKeyboard)
- }
+}
 
 
- 
 
 
- export const reviewEmployeeInitHandler = async (ctx: any) => {
-   ctx.replyWithHTML(`How you rate the skill of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
- }
- export const reviewEmployeeQ1Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
- if (ctx.message.text) {
-   ctx.scene.state.ratingSkill = ctx.message.text;
-   ctx.replyWithHTML(`How you rate quality of work of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
-   return ctx.wizard.next();
- }else{
-    ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
-    return
- }
- })
- export const reviewEmployeeQ2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if(ctx.message.text){
+
+export const reviewEmployeeInitHandler = async (ctx: any) => {
+    const { data, error } = await fetchRatingQuestions()
+    globalState.reviewAnswers = []
+    globalState.reviewQuestions = []
+    if (data) {
+        const questions = data.job_seeker_review_questions;
+        console.log("QUESTIONS: ", questions)
+        // ctx.reply("")
+        // set questions if they're not in the state
+        globalState.reviewQuestions = questions
+        // if (!globalState.reviewQuestions) {
+        //     globalState.reviewQuestions = questions
+        // }
+        // ctx.reply(globalState.reviewQuestions[0].question)
+        // ctx.replyWithHTML(`How you rate the skill of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
+        // // slice of first item from questions array
+        // globalState.reviewQuestions = globalState.reviewQuestions.slice(1)
+    }
+
+    ctx.replyWithHTML(`How you rate the skill of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
+}
+export const reviewEmployeeQAnswerHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if (ctx.message.text) {
+        console.log("Ans: ", ctx.message.text)
+        // use a stack approach to remove first item on each iteration
+        if (globalState.reviewQuestions.length) {
+            console.log("Ansx: ", ctx.message.text)
+            ctx.reply(globalState.reviewQuestions[0].question)
+            globalState.reviewAnswers.push({
+                "question": globalState.reviewQuestions[0],
+                "answer": ctx.message.text
+            })
+            globalState.reviewQuestions = globalState.reviewQuestions.slice(1)
+        } else {
+            // means all questions have been answered so send success response
+            ctx.reply("Done")
+            console.log("Answers: ", globalState.reviewAnswers)
+            ctx.scene.leave()
+        }
+    }
+})
+export const reviewEmployeeQ2Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if (ctx.message.text) {
         ctx.scene.state.ratingqualityOfWork = ctx.message.text;
         ctx.replyWithHTML(`How you rate Adherence to Timeline and Schedule of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
         return ctx.wizard.next();
-    }else{
+    } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
     }
 })
 export const reviewEmployeeQ3Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if(ctx.message.text){
+    if (ctx.message.text) {
         ctx.scene.state.ratingAdherence = ctx.message.text;
         ctx.replyWithHTML(`How you rate Communication of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
         return ctx.wizard.next();
-    }else{
+    } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
     }
 })
 export const reviewEmployeeQ4Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if(ctx.message.text){
+    if (ctx.message.text) {
         ctx.scene.state.ratingCommunication = ctx.message.text;
         ctx.replyWithHTML(`How you rate Coopration of your employee [${ctx.session.applicantFirstName} ${ctx.session.applicantLastName}]`, kb.ratingKeyboard);
         return ctx.wizard.next();
-    }else{
+    } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
     }
 })
 export const reviewEmployeeQ5Handler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if(ctx.message.text){ 
+    if (ctx.message.text) {
         ctx.scene.state.ratingCommunication = ctx.message.text;
         globalState = ctx.scene.state;
-        
-    }else{
+
+    } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
     }

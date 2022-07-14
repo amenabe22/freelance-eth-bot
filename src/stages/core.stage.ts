@@ -71,7 +71,7 @@ export const coreStage: any = new Scenes.Stage<any>(
         socialMediaLinkDoneURScene,        
         jobApplicationScene,
         editApplyingScene,
-        reviewEmployeeScene
+        reviewEmployeeScene,
     ]
 )
   

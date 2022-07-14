@@ -39,11 +39,11 @@ export const editJobPostScene = new CoreScene(
         {
             enter: hdlr.reviewEmployeeInitHandler,
             handlers: [
-                hdlr.reviewEmployeeQ1Handler,
-                hdlr.reviewEmployeeQ2Handler,
-                hdlr.reviewEmployeeQ3Handler,
-                hdlr.reviewEmployeeQ4Handler,
-                hdlr.reviewEmployeeQ5Handler,
+                hdlr.reviewEmployeeQAnswerHandler,
+                // hdlr.reviewEmployeeQ2Handler,
+                // hdlr.reviewEmployeeQ3Handler,
+                // hdlr.reviewEmployeeQ4Handler,
+                // hdlr.reviewEmployeeQ5Handler,
              
             ]
         },
