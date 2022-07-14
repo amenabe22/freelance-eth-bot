@@ -25,7 +25,6 @@ export const jobApplicationShortlistActionHandler = async (ctx: any) => {
     }).then(() => {
         const str = `
         <b>${job_seeker.user.first_name} ${job_seeker.user.last_name}</b>  
-    ⭐️⭐️⭐️⭐️ (4/5)
     
     Hired by 6 Employers 
     Completed 8 Jobs total

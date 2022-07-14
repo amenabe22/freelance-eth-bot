@@ -341,7 +341,7 @@ export const jobPostConfirmHandler = async (ctx: any) => {
         postAJobName,
         postAJobSectorId
     } = globalState
-    // console.log(ctx.session.postAJobCompanyName.substring(3), "job company name")
+    console.log(globalState.postAJobCompanyName, ctx.session.postAJobCompanyName, "job company name")
     const { data } = await inserJobPost({
         object: {
             city_id: postAJobWorkingLocationId,
@@ -789,7 +789,7 @@ export const reviewEmployeeQ5Handler = Telegraf.on(["photo", "text", "contact", 
     if (ctx.message.text) {
         ctx.scene.state.ratingCommunication = ctx.message.text;
         globalState = ctx.scene.state;
-      ctx.replyWithHTML("Thanks for rating this employee", onlyMainMenuKeyboard)
+        ctx.replyWithHTML("Thanks for rating this employee", onlyMainMenuKeyboard)
     } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
