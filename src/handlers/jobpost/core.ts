@@ -138,33 +138,53 @@ export const postAJobDescriptionHandler = Telegraf.on(["text", "contact", "docum
     }
 })
 export const postAJobTypeHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
+    const { data } = await fetchJobTypes()
+    let jts = data.job_types.map((x: any, xi: any) => ([{
+        text: x.name,
+        callback_data: x.id,
+    }]))
     if (ctx.message.text) {
+
         const { data: { job_types } } = await jobTypeN({ name: ctx.message.text })
         console.log(JSON.stringify(ctx.message), ">>>>>>>>>>")
-        if (job_types.length) {
-            ctx.scene.state.postAJobType = job_types[0].id;
-        }
-        const { data, error } = await fetchSectors()
-        if (data) {
-            const { sectors } = data;
-            let snames = sectors.map((nm: any) => nm.name);
-            ctx.session.sectorNames = snames;
-            let secs = snames.map((x: string, _: string) => ([{
-                text: x,
-            }]))
-
-            ctx.replyWithHTML("please enter sector type for your Job.", {
+        if (!job_types.length) {
+            ctx.replyWithHTML("Please enter a valid job type.", {
                 reply_markup: JSON.stringify({
-                    keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
+                    keyboard: jts, resize_keyboard: true, one_time_keyboard: true,
                 }),
             })
+            return;
+        } else {
+
+            ctx.scene.state.postAJobType = job_types[0].id;
+            const { data, error } = await fetchSectors()
+            if (data) {
+                const { sectors } = data;
+                let snames = sectors.map((nm: any) => nm.name);
+                ctx.session.sectorNames = snames;
+                let secs = snames.map((x: string, _: string) => ([{
+                    text: x,
+                }]))
+
+                ctx.replyWithHTML("please enter sector type for your Job.", {
+                    reply_markup: JSON.stringify({
+                        keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
+                    }),
+                })
+            }
+            return ctx.wizard.next();
         }
-        return ctx.wizard.next();
-    } else {
-        ctx.replyWithHTML(`Please enter a valid job type!`, kb.postAJobTypeKeyboard);
+    }
+    else {
+        ctx.replyWithHTML("Please enter a valid job type.", {
+            reply_markup: JSON.stringify({
+                keyboard: jts, resize_keyboard: true, one_time_keyboard: true,
+            }),
+        })
         return;
     }
 })
+
 export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
