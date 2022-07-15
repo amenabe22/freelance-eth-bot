@@ -165,7 +165,7 @@ export const postAJobTypeHandler = Telegraf.on(["text", "contact", "document", "
                 let secs = snames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-
+                 secs.push([{ text: "Back"}])
                 ctx.replyWithHTML("please enter sector type for your Job.", {
                     reply_markup: JSON.stringify({
                         keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
@@ -199,8 +199,7 @@ export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document",
                 let secs = ctx.session.sectorNames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                secs.push([{ text: "Skip" }], [{ text: "Back" }])
-
+                secs.push([{ text: "Back" }])               
                 if (!sectors.length) {
                     ctx.replyWithHTML("please enter valid sector!", {
                         reply_markup: JSON.stringify({
@@ -219,8 +218,21 @@ export const postAjobSectorHandler = Telegraf.on(["text", "contact", "document",
             }
         }
     } else {
-        ctx.replyWithHTML(`Please enter a valid job sector!`, kb.postAJobSectorKeyboard);
-        return;
+        const { data, error } = await fetchSectors()
+        if (data) {
+            const { sectors } = data;
+            let snames = sectors.map((nm: any) => nm.name);
+            ctx.session.sectorNames = snames;
+            let secs = snames.map((x: string, _: string) => ([{
+                text: x,
+            }]))
+             secs.push([{ text: "Back"}])
+            ctx.replyWithHTML("please valid sector type for your Job!", {
+                reply_markup: JSON.stringify({
+                    keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
+                }),
+            })
+        }
     }
 })
 
@@ -236,7 +248,7 @@ export const postAJobSalaryHandler = Telegraf.on(["text", "contact", "document",
                 let fkbs = cnames.map((x: string, _: string) => ([{
                     text: x,
                 }]))
-                fkbs.push([{ text: "Skip" }], [{ text: "Back" }])
+                fkbs.push([{ text: "Back" }])
                 ctx.replyWithHTML("Awsome, please enter job working location.", {
                     reply_markup: JSON.stringify({
                         keyboard: fkbs, resize_keyboard: true, one_time_keyboard: true,
@@ -305,46 +317,30 @@ export const postAjobApplicantNeededHandler = Telegraf.on(["text", "contact", "d
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.postAJobApplicantNeeded = " ";
-            await ctx.replyWithHTML(`One last thing ${ctx.from.first_name}, please enter Vacancy number.`, cancelKeyboard);
-            return ctx.wizard.next();
         } else {
             ctx.scene.state.postAJobApplicantNeeded = ctx.message.text;
-            await ctx.replyWithHTML(`One last thing ${ctx.from.first_name}, please enter Vacancy number.`, cancelKeyboard);
-            return ctx.wizard.next();
-        }
+       }
+       ctx.session.postAJobName = ctx.scene.state.postAJobName;
+       console.log(ctx.session.postAJobName);
+       ctx.session.postAJobDescription = ctx.scene.state.postAJobDescription;
+       console.log(ctx.session.postAJobDescription);
+       ctx.session.postAJobType = ctx.scene.state.postAJobType;
+       console.log(ctx.session.postAJobType);
+       ctx.session.postAJobSector = ctx.scene.state.postAJobSector;
+       console.log(ctx.session.postAJobSector);
+       ctx.session.postAJobSalary = ctx.scene.state.postAJobSalary;
+       console.log(ctx.session.postAJobSalary);
+       ctx.session.postAJobWorkingLocation = ctx.scene.state.postAJobWorkingLocation;
+       console.log(ctx.session.postAJobWorkingLocation);
+       ctx.session.postAJobApplicantNeeded = ctx.scene.state.postAJobApplicantNeeded;
+       console.log(ctx.session.postAJobApplicantNeeded);
+       globalState = ctx.scene.state;
+       ctx.replyWithHTML(`Here is your data\n Title: ${globalState.postAJobName}\n Description: ${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}`, kb.confirmPostJobKeyboard);
     } else {
         ctx.replyWithHTML(`Please enter a valid job applicant needed!`, kb.postAJobOptionalKeyboard);
         return;
     }
 })
-export const postAJobVacancyHandler = Telegraf.on(["text", "contact", "document", "photo"], async (ctx: any) => {
-    if (ctx.message.text) {
-        ctx.scene.state.postAJobVancancyNumber = ctx.message.text;
-        ctx.session.postAJobName = ctx.scene.state.postAJobName;
-        console.log(ctx.session.postAJobName);
-        ctx.session.postAJobDescription = ctx.scene.state.postAJobDescription;
-        console.log(ctx.session.postAJobDescription);
-        ctx.session.postAJobType = ctx.scene.state.postAJobType;
-        console.log(ctx.session.postAJobType);
-        ctx.session.postAJobSector = ctx.scene.state.postAJobSector;
-        console.log(ctx.session.postAJobSector);
-        ctx.session.postAJobSalary = ctx.scene.state.postAJobSalary;
-        console.log(ctx.session.postAJobSalary);
-        ctx.session.postAJobWorkingLocation = ctx.scene.state.postAJobWorkingLocation;
-        console.log(ctx.session.postAJobWorkingLocation);
-        ctx.session.postAJobApplicantNeeded = ctx.scene.state.postAJobApplicantNeeded;
-        console.log(ctx.session.postAJobApplicantNeeded);
-        ctx.session.postAJobVancancyNumber = ctx.scene.state.postAJobVancancyNumber;
-        console.log(ctx.session.postAJobVancancyNumber);
-        // ctx.session.postAJobCompanyNameBold = ctx.sessio5n.postAJobCompanyName.bold();
-        globalState = ctx.scene.state;
-        ctx.replyWithHTML(`Here is your data\n Title: ${globalState.postAJobName}\n Description: ${globalState.postAJobDescription}\n Job Type: ${globalState.postAJobType}\n Job Sector: ${globalState.postAJobSector}\n Job Salary: ${globalState.postAJobSalary}\n Working Location: ${globalState.postAJobWorkingLocation}\n Applicant Needed: ${globalState.postAJobApplicantNeeded}\n Vancancy: ${globalState.postAJobVancancyNumber}`, kb.confirmPostJobKeyboard);
-    } else {
-        ctx.replyWithHTML(`Please enter a valid job close date!`, cancelKeyboard);
-        return;
-    }
-})
-
 export const jobPostConfirmHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(globalState)
@@ -354,7 +350,6 @@ export const jobPostConfirmHandler = async (ctx: any) => {
     const {
         postAJobWorkingLocationId,
         postAJobApplicantNeeded,
-        postAJobVancancyNumber,
         postAJobSalary,
         postAJobType,
         postAJobDescription,
@@ -372,7 +367,8 @@ export const jobPostConfirmHandler = async (ctx: any) => {
             from_platform_id: "941cc536-5cd3-44a1-8fca-5f898f26aba5",
             job_type_id: postAJobType,
             title: postAJobName,
-            vacancy_number: postAJobVancancyNumber,
+            // salary: postAJobSalary,
+            vacancy_number: postAJobApplicantNeeded,
             sectors: {
                 data: {
                     sector_id: postAJobSectorId
