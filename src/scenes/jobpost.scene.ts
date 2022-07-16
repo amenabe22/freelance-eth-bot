@@ -14,7 +14,7 @@ export const postAJobScene = new CoreScene(
             hdlr.postAJobSalaryHandler,
             hdlr.postAJobWorkingLocationHandler,
             hdlr.postAjobApplicantNeededHandler,
-            hdlr.postAJobVacancyHandler
+            
         ]
     },
     [
