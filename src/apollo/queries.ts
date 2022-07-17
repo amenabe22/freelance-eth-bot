@@ -85,6 +85,7 @@ export const USER = gql`
       first_name
       last_name
       phone
+      language
       job_seeker{
         id
         cv
@@ -424,3 +425,10 @@ export const APPLICATION = gql`query applications($id:uuid!){
     }
   }
 }`
+
+export const UPDATE_LANGUAGE = gql`mutation update_lang($id: uuid!, $lang: String!) {
+  update_user(pk_columns: { id: $id }, _set: { language: $lang }) {
+    language
+  }
+}
+`

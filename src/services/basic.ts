@@ -86,3 +86,15 @@ export const fetchSector = async (vars: any) => {
     return res
 }
 
+
+export const updateLanguage = async (variables: any) => {
+    const res = await client.mutate({
+        mutation: qry.UPDATE_LANGUAGE,
+        variables
+    })
+    return res
+}
+
+
+
+

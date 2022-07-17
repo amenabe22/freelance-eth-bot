@@ -1,12 +1,14 @@
-export const englishMainMenuKeyboard = {
-
-    reply_markup: {
-        keyboard: [
-            [{ text: "Job Seeker" }, { text: "Employer" }],
-            [{ text: "Settings" }, { text: "Help" }],
-        ], resize_keyboard: true, one_time_keyboard: true,
+export const englishMainMenuKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            keyboard: [
+                [{ text: i18n.t("jobseekerBtnLabel") }, { text: i18n.t("employeerBtnLabel") }],
+                [{ text: i18n.t("settingsBtnLabel") }, { text: i18n.t("helpBtnLabel") }],
+            ], resize_keyboard: true, one_time_keyboard: true,
+        }
     }
 }
+
 export const amharicMainMenuKeyboard = {
 
     reply_markup: {
@@ -57,14 +59,15 @@ export const jobSeekerKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
-export const employerKeyboard = {
-
-    reply_markup: {
-        keyboard: [
-            [{ text: "Post a Job" }],
-            [{ text: "My Job Posts" }, { text: "My Companies / Startup" }],
-            [{ text: "Main Menu" }],
-        ], resize_keyboard: true, one_time_keyboard: true,
+export const employerKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            keyboard: [
+                [{ text: i18n.t("postJobBtnLabel") }],
+                [{ text: i18n.t("myJobPostsBtnLabel") }, { text: i18n.t("myCompaniesAndStartupsBtnLabel") }],
+                [{ text: i18n.t("Main Menu") }],
+            ], resize_keyboard: true, one_time_keyboard: true,
+        }
     }
 }
 export const chooseCompanyStartupKeyboard = {

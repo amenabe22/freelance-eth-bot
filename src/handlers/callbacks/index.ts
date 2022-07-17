@@ -35,7 +35,7 @@ import {
     myJobsDoneJobHandler
 } from "./core"
 export const companyStartup = {
-    key: "My Companies / Startup",
+    key: /^My Companies\/Startups|ድርጅት\/ስታርትአፕ$/,
     handler: companyStartupHandler
 }
 export const company = {
@@ -58,16 +58,16 @@ export const newCustomerRegistrationCancel = {
     key: "Back",
     handler: newCustomerRegistrationCancelHandler
 }
-export const newCustomerRegistrationSkip = { 
+export const newCustomerRegistrationSkip = {
     key: "Skip",
     handler: newCustomerRegistrationSkipHandler
 }
 export const companyRegistraionCancel = {
-    key: "Back",
+    key: /^Back|ተመለስ$/,
     handler: companyRegistraionCancelHandler
 }
 export const menuJobseekerSelection = {
-    key: "Job Seeker",
+    key: /^(Job Seeker|ስራ ፈላጊ)$/,
     handler: menuJobseekerSelectionHandler
 }
 
@@ -77,7 +77,7 @@ export const menuMainSelector = {
 }
 
 export const menuSettingsSelector = {
-    key: "Settings",
+    key: /^(Settings|ሴቲንግ)$/,
     handler: menuSettingsSelectorHandler
 }
 
@@ -118,16 +118,16 @@ export const handleCvUploadSelection = {
 }
 
 export const employerMenuSelection = {
-    key: "Employer",
+    key: /^Employeer|አሰሪ$/,
     handler: employerMenuSelectionHandler
 }
 
 export const postJobMenuSelection = {
-    key: "Post a Job",
+    key: /^Post a Job|ስራ ማስታወቂያ ለማውጣት$/,
     handler: postJobMenuSelectionHandler
 }
 export const myJobPostsSelection = {
-    key: "My Job Posts",
+    key: /^My Job Posts|የእስካሁን ስራዎች$/,
     handler: myJobPostsHandler
 }
 export const myJobPostsOpendJobSelection = {

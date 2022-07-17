@@ -1,5 +1,5 @@
 import path from "path"
-import TelegrafI18n from "telegraf-i18n"
+import I18n from "telegraf-i18n"
 import { Telegraf, session, MiddlewareFn } from "telegraf";
 import { MatchedMiddleware, Triggers } from "telegraf/typings/composer";
 import { Context } from "telegraf/typings/context";
@@ -17,13 +17,19 @@ export class CoreBot {
         this.instance = new Telegraf(token);
         // session should always come before middlewares registration
         this.instance.use(session())
-
-        const i18n = new TelegrafI18n({
+        const i18n = new I18n({
+            directory: path.resolve(__dirname, 'locales'),
+            defaultLanguage: 'en',
+            sessionName: 'session',
             useSession: true,
-            defaultLanguageOnMissing: true, // implies allowMissing = true
-            // directory: path.resolve(__dirname, 'locales')
         })
-        i18n.loadLocale('en', { greeting: 'hi ${firstName}, please select which one of you are ?' })
+        // const i18n = new TelegrafI18n({
+        //     useSession: true,
+        //     defaultLanguageOnMissing: true, // implies allowMissing = true
+        //     // directory: path.resolve(__dirname, 'locales')
+        // })
+        // i18n.loadLocale('en', { greeting: 'hi ${firstName}, please select which one of you are ?' })
+        // i18n.loadLocale('am', { greeting: 'Sup nigga' })
         this.instance.use(i18n.middleware())
 
         // register all other middleware here

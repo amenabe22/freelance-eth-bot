@@ -9,12 +9,12 @@ import { fetchJobById, fetchRatingQuestions, inserJobPost, jobTypeN } from "../.
 let globalState: any = {};
 
 export const jobAppCancelButtonHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
+    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard(ctx));
     ctx.scene.leave();
 }
 
 export const jobPostCancelButtonHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
+    ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, employerKeyboard(ctx));
     ctx.scene.leave();
 }
 
