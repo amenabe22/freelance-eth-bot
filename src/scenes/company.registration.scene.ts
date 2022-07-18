@@ -27,6 +27,7 @@ export const companyRegistrationREditScene = new CoreScene(
     companyRegistraionCancel
   ]
 )
+
 export const companyRegistrationGMScene = new CoreScene(
   "companyRegistrationGMScene",
   {
@@ -38,6 +39,7 @@ export const companyRegistrationGMScene = new CoreScene(
       hdlr.companyIndustrySectorGHandler,
       hdlr.companyEmployeeSizeGHandler,
       hdlr.companyWebsiteGHandler,
+      hdlr.companySocialMediaLinkYesNoGHandler,
       hdlr.companyEmailGHandler,
       hdlr.companyOfficialPhoneNoGHandler,
       hdlr.companyHeadQuarterLocationGHandler,
@@ -60,6 +62,7 @@ export const companyRegistrationRScene = new CoreScene(
       hdlr.companyIndustrySectorRHandler,
       hdlr.companyEmployeeSizeRHandler,
       hdlr.companyWebsiteRHandler,
+      hdlr.companySocialMediaLinkYesNoRHandler,
       hdlr.companyEmailRHandler,
       hdlr.companyOfficialPhoneNoRHandler,
       hdlr.companyHeadQuarterLocationRHandler,
@@ -97,3 +100,62 @@ export const handOverCompanyScene = new CoreScene(
     companyRegistraionCancel
   ]
 )
+export const socialMediaLinkCRScene = new CoreScene(
+  "socialMediaLinkCRScene",
+  {
+    enter: hdlr.companySocialMediaLinkCRInitHandler,
+    handlers: [
+      hdlr.companySocialMediaLinkCRValueHandler,
+      hdlr.companyEmailRHandler
+    ]
+  },
+  [
+    companyRegistraionCancel
+  ]
+)
+
+export const socialMediaLinkDoneCRScene = new CoreScene(
+  "socialMediaLinkDoneCRScene",
+  {
+  enter: hdlr.companySocialMediaLinkDoneCRInitHandler,
+  handlers: [
+    hdlr.companyEmailRHandler,
+    hdlr.companyOfficialPhoneNoRHandler,
+    hdlr.companyHeadQuarterLocationRHandler,
+  ]
+  },
+  [
+  companyRegistraionCancel
+  ]
+  )
+
+  export const socialMediaLinkCGMScene = new CoreScene(
+    "socialMediaLinkCGMScene",
+    {
+      enter: hdlr.companySocialMediaLinkCGMInitHandler,
+      handlers: [
+        hdlr.companySocialMediaLinkCGMValueHandler,
+        hdlr.companyEmailGHandler
+      ]
+    },
+    [
+      companyRegistraionCancel
+    ]
+  )
+  
+  export const socialMediaLinkDoneCGMScene = new CoreScene(
+    "socialMediaLinkDoneCGMScene",
+    {
+    enter: hdlr.companySocialMediaLinkDoneCGMInitHandler,
+    handlers: [
+      hdlr.companyEmailGHandler,
+      hdlr.companyOfficialPhoneNoGHandler,
+      hdlr.companyHeadQuarterLocationGHandler,
+    ]
+    },
+    [
+    companyRegistraionCancel
+    ]
+    )
+    
+  

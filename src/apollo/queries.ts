@@ -215,6 +215,37 @@ export const SECTOR = gql`query getSector($name: citext!) {
   }
 }
 `
+export const COMPANY_SECTORS = gql`query {
+  entity_sectors (where: {type: {_eq: "COMPANY"}}) {
+    id
+    en
+    am
+    type
+  }
+}`
+export const COMPNAY_SECTOR = gql`query getSector($name: citext!) {
+  entity_sectors(where: { name: { _eq: $name } }) {
+    id
+    name
+  }
+}
+`
+export const STARTUP_SECTOR = gql`query getSector($name: citext!) {
+  entity_sectors(where: { name: { _eq: $name } }) {
+    id
+    name
+  }
+}
+`
+export const STARTUP_SECTORS = gql`query {
+  entity_sectors (where: {type: {_eq: "COMPANY"}}) {
+    id
+    en
+    am
+    type
+  }
+}`
+
 export const SECTOR_BY_ID = gql`query getSector($id: uuid!) {
   sectors(where: { id: { _eq: $id } }) {
     id

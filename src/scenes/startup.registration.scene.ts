@@ -31,33 +31,34 @@ companyRegistraionCancel
 ]
 )
 
-export const socialMediaLinkUGMScene = new CoreScene(
-  "socialMediaLinkUGMScene",
+export const socialMediaLinkUScene = new CoreScene(
+  "socialMediaLinkUScene",
   {
-    enter: hdlr.startupSocialMediaLinkUGMInitHandler,
+    enter: hdlr.startupSocialMediaLinkUInitHandler,
     handlers: [
-      hdlr.startupSocialMediaLinkUGMValueHandler,
-      hdlr.startupUGMEmailHandler
+      hdlr.startupSocialMediaLinkUValueHandler,
+      hdlr.startupUEmailHandler
     ]
   },
   [
     companyRegistraionCancel
   ]
 )
-export const socialMediaLinkDoneUGMScene = new CoreScene(
-"socialMediaLinkDoneUGMScene",
+export const socialMediaLinkDoneUScene = new CoreScene(
+"socialMediaLinkDoneUScene",
 {
-enter: hdlr.startupSocialMediaLinkDoneUGMInitHandler,
+enter: hdlr.startupSocialMediaLinkDoneUInitHandler,
 handlers: [
-  hdlr.startupUGMEmailHandler,
-  hdlr.startupUGMOfficialPhoneNoHandler,
-  hdlr.startupUGMHeadQuarterLocationHandler
+  hdlr.startupUEmailHandler,
+  hdlr.startupUOfficialPhoneNoHandler,
+  hdlr.startupUHeadQuarterLocationHandler
 ]
 },
 [
 companyRegistraionCancel
 ]
 )
+
 
 export const socialMediaLinkLRScene = new CoreScene(
   "socialMediaLinkLRScene",
@@ -87,36 +88,6 @@ handlers: [
 companyRegistraionCancel
 ]
 )
-
-export const socialMediaLinkURScene = new CoreScene(
-  "socialMediaLinkURScene",
-  {
-    enter: hdlr.startupSocialMediaLinkURInitHandler,
-    handlers: [
-      hdlr.startupSocialMediaLinkURValueHandler,
-      hdlr.startupUREmailHandler
-    ]
-  },
-  [
-    companyRegistraionCancel
-  ]
-)
-
-export const socialMediaLinkDoneURScene = new CoreScene(
-"socialMediaLinkDoneURScene",
-{
-enter: hdlr.startupSocialMediaLinkDoneURInitHandler,
-handlers: [
-  hdlr.startupUREmailHandler,
-  hdlr.startupUROfficialPhoneNoHandler,
-  hdlr.startupURHeadQuarterLocationHandler
-]
-},
-[
-companyRegistraionCancel
-]
-)
-
 export const startupRegisteringEditLGMScene = new CoreScene(
   "startupRegisteringEditLGMScene",
   {
@@ -130,12 +101,12 @@ export const startupRegisteringEditLGMScene = new CoreScene(
   ]
 )
 
-export const startupRegisteringEditUGMScene = new CoreScene(
-  "startupRegisteringEditUGMScene",
+export const startupRegisteringEditUScene = new CoreScene(
+  "startupRegisteringEditUScene",
   {
-    enter: hdlr.startupRegisteringEditUGMInitHandler,
+    enter: hdlr.startupRegisteringEditUInitHandler,
     handlers: [
-      hdlr.startupRegisteringEditUGMValueHandler
+      hdlr.startupRegisteringEditUValueHandler
     ]
   },
   [
@@ -154,18 +125,7 @@ export const startupRegisteringEditLRScene = new CoreScene(
     companyRegistraionCancel
   ]
 )
-export const startupRegisteringEditURScene = new CoreScene(
-  "startupRegisteringEditURScene",
-  {
-    enter: hdlr.startupRegisteringEditURInitHandler,
-    handlers: [
-      hdlr.startupRegisteringEditURValueHandler
-    ]
-  },
-  [
-    companyRegistraionCancel
-  ]
-)
+
 export const startupRegistrationLGMscene = new CoreScene(
   "startupRegistrationLGMscene",
   {
@@ -189,21 +149,20 @@ export const startupRegistrationLGMscene = new CoreScene(
   ]
 )
 
-export const startupRegistrationUGMscene = new CoreScene(
-  "startupRegistrationUGMscene",
+export const startupRegistrationUscene = new CoreScene(
+  "startupRegistrationUscene",
   {
-    enter: hdlr.startupUGMInitHandler,
+    enter: hdlr.startupUInitHandler,
     handlers: [
-      hdlr.startupUGMNameHandler,
-      hdlr.startupUGMFoundersHandler,
-      hdlr.startupUGMIdPhotoHandler,
-      hdlr.startupUGMIndustrySectorHandler,
-      hdlr.startupUGMEmployeeSizeHandler,
-      hdlr.startupUGMWebsiteHandler,
-      hdlr.startupUGMSocialMediaLinkHandler,
-       hdlr.startupUGMEmailHandler,
-      hdlr.startupUGMOfficialPhoneNoHandler,
-      hdlr.startupUGMHeadQuarterLocationHandler,
+      hdlr.startupUNameHandler,
+      hdlr.startupUFoundersHandler,
+      hdlr.startupUIdPhotoHandler,
+      hdlr.startupUIndustrySectorHandler,
+      hdlr.startupUWebsiteHandler,
+      hdlr.startupUSocialMediaLinkHandler,
+      hdlr.startupUEmailHandler,
+      hdlr.startupUOfficialPhoneNoHandler,
+      hdlr.startupUHeadQuarterLocationHandler,
     ]
   },
   [
@@ -233,28 +192,7 @@ export const startupRegistrationLRscene = new CoreScene(
     companyRegistraionCancel
   ]
 )
-export const startupRegistrationURscene = new CoreScene(
-  "startupRegistrationURscene",
-  {
-    enter: hdlr.startupURInitHandler,
-    handlers: [
-      hdlr.startupURNameHandler,
-      hdlr.startupURFoundersNameHandler,
-      hdlr.startupUPIdphotoHandler,
-      hdlr.startupURStampedLetterHandler,     
-      hdlr.startupURIndustrySectorHandler, 
-      hdlr.startupUREmployeeSizeHandler,
-      hdlr.startupURWebsiteHandler,
-      hdlr.startupURSocialMediaLinkHandler,
-      hdlr.startupUREmailHandler,
-      hdlr.startupUROfficialPhoneNoHandler,
-      hdlr.startupURHeadQuarterLocationHandler,
-    ]
-  },
-  [
-    companyRegistraionCancel
-  ]
-)
+
 export const startupEditSpecificFieldScene = new CoreScene(
   "startupEditSpecificFieldScene",
   {

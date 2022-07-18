@@ -872,7 +872,7 @@ export const reviewEmployeeQ5Handler = Telegraf.on(["photo", "text", "contact", 
     if (ctx.message.text) {
         ctx.scene.state.ratingCommunication = ctx.message.text;
         globalState = ctx.scene.state;
-        ctx.replyWithHTML("Thanks for rating this employee", onlyMainMenuKeyboard)
+        ctx.replyWithHTML("Thanks for rating this employee", onlyMainMenuKeyboard);
     } else {
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return

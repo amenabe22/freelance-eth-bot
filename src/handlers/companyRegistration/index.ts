@@ -2,7 +2,7 @@ import fs from "fs"
 import { Telegraf, Context } from "telegraf";
 import FormData from "form-data";
 import { cancelKeyboard, employerKeyboard } from "../../keybaords/menu_kbs";
-import { fetchCities, fetchCity } from "../../services/basic";
+import { fetchCities, fetchCity, fetchCompanySectors } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { getUserByTelegramId, getUserByPhone, verifyEmailEntity } from "../../services/registration";
 import {
@@ -12,7 +12,10 @@ import {
     registerCompanyEditKeyboard,
     companyEditHandOverKeyboard,
     companyEditKeyboard,
-    registerCompanyREditKeyboard
+    registerCompanyREditKeyboard,
+    socialMediaYesNoKeyboard,
+    socialMediaListCRKeyboard,
+    socialMediaListCGMKeyboard
 } from "../../keybaords/company.registration_kbs";
 import { companyHandOver, registerCompany, companyEdit } from "../../services/company.registration";
 import { formatCompanyRegistrationMsg, formatCompanyRRegistrationMsg } from "../../utils.py/formatMessage";
@@ -130,7 +133,7 @@ export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
 //register company with representative starts here
 export const companyRInitHandler = async (ctx: any) => {
     ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
-}
+} 
 
 export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
@@ -152,7 +155,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
             ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
-            // return ctx.wizard.next();
+            return ctx.wizard.next();
         }).catch((e) => {
             console.log(JSON.stringify(e))
         })
@@ -185,8 +188,9 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyStampedLetterPhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-            const { data, error } = await fetchSectors()
+            const { data, error } = await fetchCompanySectors()
             if (data) {
+                console.log(data)
                 const { sectors } = data;
                 const snames = sectors.map((nm: any) => nm.name);
                 let secs = snames.map((x: string, _: string) => ([{
@@ -197,7 +201,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
                 ctx.replyWithHTML("please enter industry sector.", {
                     reply_markup: JSON.stringify({
                         keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
-                    }),
+                    }), 
                 })
                 return ctx.wizard.next();
             }
@@ -249,11 +253,11 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
-            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            ctx.replyWithHTML("Do you want to add social media links for your company ?",socialMediaYesNoKeyboard )
             return ctx.wizard.next();
         } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyRWebsite = ctx.message.text;
-            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            await ctx.replyWithHTML(`Do you want to add social media links for your company ?`, companyRegisterOptionalKeyboard);
             return ctx.wizard.next();
         } else {
             ctx.replyWithHTML(`please enter a valid company website!`, companyRegisterOptionalKeyboard);
@@ -262,6 +266,22 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
     } else {
         ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
         return;
+    }
+})
+export const companySocialMediaLinkYesNoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if(ctx.message.text){
+     if(ctx.message.text == "No"){
+        await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+        return ctx.wizard.next();
+     }else if(ctx.message.text == "Yes"){
+        ctx.replyWithHTML(`please choose which social media link to enter.`, socialMediaListCRKeyboard);
+     }else {
+        ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+        return;
+      }
+    } else {
+      ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+      return;
     }
 })
 export const companyEmailRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -335,7 +355,7 @@ export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", 
             ctx.session.companyRHeadQuarterLocationId = hqId;
             ctx.scene.state.companyRHeadQuarterLocationId = hqId;
             globalState = ctx.scene.state;
-            await ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sectory: ${globalState.companyRSectorName}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyConfirmKeyboard);
+            await ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sector: ${globalState.companyRSectorName}\n . Facebook Link: ${globalState.companyCRFacebookLink}\n . Telegram Link: ${globalState.companyCRTelegramLink}\n .YouTube Link: ${globalState.companyCRYouTubeLink}\n . TikTok Link: ${globalState.companyCRTikTokLink}\n . Twitter Link: ${globalState.companyCRTwitterLink}\n . LinkedIn Link: ${globalState.companyCRLinkedInLink}\n . Other Link1: ${globalState.companyCROther1Link}\n . Other Link2: ${globalState.companyCROther2Link}\n . Other Link3: ${globalState.companyCROther3Link}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}`, registerCompanyConfirmKeyboard);
         }
     } else {
         ctx.replyWithHTML(`please enter valid location of your company HQ!`, {
@@ -637,6 +657,98 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
     }
 })
 
+export const socialMediaAddingActionCRHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    let clicked = ctx.match[0];
+    ctx.session.targetedText = clicked.split('-')[0];
+    console.log(ctx.session.targetedText);
+    ctx.scene.enter("socialMediaLinkCRScene", ctx.scene.state)
+}
+
+export const companySocialMediaLinkCRInitHandler = async (ctx: any) => {
+    if(ctx.session.targetedText == "facebook"){
+      ctx.replyWithHTML("please enter facebook link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "telegram"){
+      ctx.replyWithHTML("please enter telegram link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "youtube"){
+      ctx.replyWithHTML("please enter youtube link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "tiktok"){
+      ctx.replyWithHTML("please enter tiktok link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "twitter"){
+      ctx.replyWithHTML("please enter twitter link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "linkedin"){
+      ctx.replyWithHTML("please enter linkedin link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink1"){
+      ctx.replyWithHTML("please enter otherlink1 link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink2"){
+      ctx.replyWithHTML("please enter otherlink2 link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink3"){
+      ctx.replyWithHTML("please enter otherlink3 link of your company", cancelKeyboard);
+     }else if(ctx.session.targetedText == "done"){
+      ctx.scene.enter("socialMediaLinkDoneCRScene", ctx.scene.state);
+  }
+  
+  }
+  
+  export const companySocialMediaLinkCRValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) =>{ 
+    if(ctx.session.targetedText == "facebook"){
+      ctx.scene.state.companyCRFacebookLink = ctx.message.text;
+      ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "telegram"){
+      ctx.scene.state.companyCRTelegramLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "youtube"){
+      ctx.scene.state.companyCRYouTubeLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "tiktok"){
+      ctx.scene.state.companyCRTikTokLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "twitter"){
+      ctx.scene.state.companyCRTwitterLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "linkedin"){
+      ctx.scene.state.companyCRLinkedInLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "otherlink1"){
+      ctx.scene.state.companyCROther1Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "otherlink2"){
+      ctx.scene.state.companyCROther2Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "otherlink3"){
+      ctx.scene.state.companyCROther3Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCRKeyboard);
+    }else if(ctx.session.targetedText == "done"){
+      ctx.scene.enter("socialMediaLinkDoneCRScene", ctx.scene.state);
+    }
+  })
+  export const companySocialMediaLinkDoneCRInitHandler = async (ctx: any) => {
+    ctx.replyWithHTML("please enter email of your company.",companyRegisterOptionalKeyboard)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const companyGInitHandler = async (ctx: any) => {
     ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
@@ -740,10 +852,10 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyGWebsite = " ";
-            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            await ctx.replyWithHTML(`Do you want to add social media links for your company ?`, socialMediaYesNoKeyboard);
         } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyGWebsite = ctx.message.text;
-            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            await ctx.replyWithHTML(`Do you want to add social media links for your company ?`, socialMediaYesNoKeyboard);
         } else {
             ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
             return;
@@ -753,6 +865,22 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
     } else {
         ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
         return;
+    }
+})
+export const companySocialMediaLinkYesNoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+    if(ctx.message.text){
+     if(ctx.message.text == "No"){
+        await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+        return ctx.wizard.next();
+     }else if(ctx.message.text == "Yes"){
+        ctx.replyWithHTML(`please choose which social media link to enter.`, socialMediaListCGMKeyboard);
+     }else {
+        ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+        return;
+      }
+    } else {
+      ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+      return;
     }
 })
 export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -841,7 +969,91 @@ export const companyHeadQuarterLocationGHandler = Telegraf.on(["photo", "text", 
     }
 })
 
+
+
+export const socialMediaAddingActionCGMHandler = async (ctx: any) => {
+    ctx.deleteMessage();
+    let clicked = ctx.match[0];
+    ctx.session.targetedText = clicked.split('-')[0];
+    console.log(ctx.session.targetedText);
+    ctx.scene.enter("socialMediaLinkCGMScene", ctx.scene.state)
+}
+
+export const companySocialMediaLinkCGMInitHandler = async (ctx: any) => {
+    if(ctx.session.targetedText == "facebook"){
+      ctx.replyWithHTML("please enter facebook link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "telegram"){
+      ctx.replyWithHTML("please enter telegram link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "youtube"){
+      ctx.replyWithHTML("please enter youtube link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "tiktok"){
+      ctx.replyWithHTML("please enter tiktok link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "twitter"){
+      ctx.replyWithHTML("please enter twitter link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "linkedin"){
+      ctx.replyWithHTML("please enter linkedin link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink1"){
+      ctx.replyWithHTML("please enter otherlink1 link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink2"){
+      ctx.replyWithHTML("please enter otherlink2 link of your company", cancelKeyboard);
+    }else if(ctx.session.targetedText == "otherlink3"){
+      ctx.replyWithHTML("please enter otherlink3 link of your company", cancelKeyboard);
+     }else if(ctx.session.targetedText == "done"){
+      ctx.scene.enter("socialMediaLinkDoneCGMScene", ctx.scene.state);
+  }
+  
+  }
+  
+  export const companySocialMediaLinkCGMValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) =>{ 
+    if(ctx.session.targetedText == "facebook"){
+      ctx.scene.state.companyCGMFacebookLink = ctx.message.text;
+      ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "telegram"){
+      ctx.scene.state.companyCGMTelegramLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "youtube"){
+      ctx.scene.state.companyCGMYouTubeLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "tiktok"){
+      ctx.scene.state.companyCGMTikTokLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "twitter"){
+      ctx.scene.state.companyCGMTwitterLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "linkedin"){
+      ctx.scene.state.companyCGMLinkedInLink = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "otherlink1"){
+      ctx.scene.state.companyCGMOther1Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "otherlink2"){
+      ctx.scene.state.companyCGMOther2Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "otherlink3"){
+      ctx.scene.state.companyCGMOther3Link = ctx.message.text;
+      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListCGMKeyboard);
+    }else if(ctx.session.targetedText == "done"){
+      ctx.scene.enter("socialMediaLinkDoneCGMScene", ctx.scene.state);
+    }
+  })
+  export const companySocialMediaLinkDoneCGMInitHandler = async (ctx: any) => {
+    ctx.replyWithHTML("please enter email of your company.",companyRegisterOptionalKeyboard)
+  }
+
+
+
+
+  
 //register company with General manager ends here.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1055,7 +1267,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 ctx.scene.state.companyGHeadQuarterLocationId = hqId;
                 const { data, errors } = await companyEdit({
                     "id": ctx.session.selectedCompanyId,
-                    "set": {
+                    "set": { 
                         "head_quarter": ctx.scene.state.companyGHeadQuarterLocationId
                     }
 

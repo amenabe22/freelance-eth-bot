@@ -67,6 +67,22 @@ export const fetchSectors = async () => {
     })
     return res
 }
+
+export const fetchCompanySectors = async () => {
+    const res = await client.query({
+        query: qry.COMPANY_SECTORS,
+        fetchPolicy: "network-only",
+    })
+    return res
+}
+export const fetchStartupSectors = async () => {
+    const res = await client.query({
+        query: qry.STARTUP_SECTORS,
+        fetchPolicy: "network-only",
+    })
+    return res
+}
+
 export const fetchSectorById = async (vars: any) => {
     const res = await client.query({
         query: qry.SECTOR_BY_ID,
@@ -76,10 +92,26 @@ export const fetchSectorById = async (vars: any) => {
     return res
 }
 
-
 export const fetchSector = async (vars: any) => {
     const res = await client.query({
         query: qry.SECTOR,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+
+export const fetchCompanySector = async (vars: any) => {
+    const res = await client.query({
+        query: qry.COMPNAY_SECTOR,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+export const fetchStartupSector = async (vars: any) => {
+    const res = await client.query({
+        query: qry.STARTUP_SECTOR,
         fetchPolicy: "network-only",
         variables: vars
     })

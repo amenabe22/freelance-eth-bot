@@ -89,14 +89,6 @@ export const confirmRegisteringStartupLRAction = {
     key: "confirmRegisteringStartupLR",
     handler: hdlr.confirmRegisterStartUpLRHandler
 }
-export const confirmRegisteringStartupURAction = {
-    key: "confirmRegisteringStartupUR",
-    handler: hdlr.confirmRegisterStartUpURHandler
-}
-// export const editRegisteringStartupURAction = {
-//     key: "editStartupRegistringUR",
-//     handler: hdlr.editRegisterStartUpURHandler
-// }
 
 export const RegisterUserHandlerDob = {
     key: "RegisterUser",
@@ -197,15 +189,11 @@ export const editStartupRegisteringLGMAction = {
 }
 export const editStartupRegisteringUGMAction = {
     key: "editStartupRegistringUGM",
-    handler: hdlr.editRegisterStartupUGMHandler
+    handler: hdlr.editRegisterStartupUHandler
 }
 export const editStartupRegisteringLRAction = {
     key: "editStartupRegistringLR",
     handler: hdlr.editRegisterStartupLRHandler
-}
-export const editStartupRegisteringURAction = {
-    key: "editStartupRegistringUR",
-    handler: hdlr.editRegisterStartupURHandler
 }
 export const editStartupRegisteringLGMInitAction = {
     key: ["name.LGM", "founderN1.LGM", "founderN2.LGM", "founderN3.LGM", "founderN5.LGM", "employee.LGM", "sector.LGM", "facebook.LGM", "telegram.LGM", "youtube.LGM", "tiktok.startupLGM", "twitter.LGM", "linkedin.LGM", "other1.LGM ", "other2.LGM", "other3.LGM", "email.LGM", "phone.LGM", "website.LGM", "location.LGM"],
@@ -213,29 +201,32 @@ export const editStartupRegisteringLGMInitAction = {
 }
 export const editStartupRegisteringUGMInitAction = {
     key: ["name.UGM", "founderN1.UGM", "founderN2.UGM", "founderN3.UGM", "founderN5.UGM", "employee.UGM", "sector.UGM", "facebook.UGM", "telegram.UGM", "youtube.UGM", "tiktok.startupUGM", "twitter.UGM", "linkedin.UGM", "other1.UGM ", "other2.UGM", "other3.UGM", "email.UGM", "phone.UGM", "website.UGM", "location.UGM"],
-    handler: hdlr.editRegisterStartupUGMCbActionHandler
+    handler: hdlr.editRegisterStartupUCbActionHandler
 }
 export const editStartupRegisteringLRInitAction = {
     key: ["name.LR", "founderN1.LR", "founderN2.LR", "founderN3.LR", "founderN5.LR", "employee.LR", "sector.LR", "facebook.LR", "telegram.LR", "youtube.LR", "tiktok.startupLR", "twitter.LR", "linkedin.LR", "other1.LR ", "other2.LR", "other3.LR", "email.LR", "phone.LR", "website.LR", "location.LR"],
     handler: hdlr.editRegisterStartupLRCbActionHandler
 }
-export const editStartupRegisteringURInitAction = {
-    key: ["name.UR", "founderN1.UR", "founderN2.UR", "founderN3.UR", "founderN5.UR", "employee.UR", "sector.UR", "facebook.UR", "telegram.UR", "youtube.UR", "tiktok.startupUR", "twitter.UR", "linkedin.UR", "other1.UR ", "other2.UR", "other3.UR", "email.UR", "phone.UR", "website.UR", "location.UR"],
-    handler: hdlr.editRegisterStartupURCbActionHandler
-}
+
 export const socialMediaAddingLGMInitAction = {
     key: ["facebook-linkLGM", "telegram-linkLGM", "youtube-linkLGM", "tiktok-linkLGM", "twitter-linkLGM", "linkedin-linkLGM", "otherlink1-linkLGM", "otherlink2-linkLGM", "otherlink3-linkLGM", "done-linkLGM"],
     handler: hdlr.socialMediaAddingActionLGMHandler
 }
 export const socialMediaAddingUGMInitAction = {
     key: ["facebook-linkUGM", "telegram-linkUGM", "youtube-linkUGM", "tiktok-linkUGM", "twitter-linkUGM", "linkedin-linkUGM", "otherlink1-linkUGM", "otherlink2-linkUGM", "otherlink3-linkUGM", "done-linkUGM"],
-    handler: hdlr.socialMediaAddingActionUGMHandler
+    handler: hdlr.socialMediaAddingActionUHandler
 }
 export const socialMediaAddingLRInitAction = {
     key: ["facebook-linkLR", "telegram-linkLR", "youtube-linkLR", "tiktok-linkLR", "twitter-linkLR", "linkedin-linkLR", "otherlink1-linkLR", "otherlink2-linkLR", "otherlink3-linkLR", "done-linkLR"],
     handler: hdlr.socialMediaAddingActionLRHandler
 }
-export const socialMediaAddingURInitAction = {
-    key: ["facebook-linkUR", "telegram-linkUR", "youtube-linkUR", "tiktok-linkUR", "twitter-linkUR", "linkedin-linkUR", "otherlink1-linkUR", "otherlink2-linkUR", "otherlink3-linkUR", "done-linkUR"],
-    handler: hdlr.socialMediaAddingActionURHandler
+
+export const socialMediaAddingCRInitAction = {
+    key: ["facebook-linkCR", "telegram-linkCR", "youtube-linkCR", "tiktok-linkCR", "twitter-linkCR", "linkedin-linkCR", "otherlink1-linkCR", "otherlink2-linkCR", "otherlink3-linkCR", "done-linkCR"],
+    handler: hdlr.socialMediaAddingActionCRHandler
 }
+export const socialMediaAddingCGMInitAction = {
+    key: ["facebook-linkCGM", "telegram-linkCGM", "youtube-linkCGM", "tiktok-linkCGM", "twitter-linkCGM", "linkedin-linkCGM", "otherlink1-linkCGM", "otherlink2-linkCGM", "otherlink3-linkCGM", "done-linkCGM"],
+    handler: hdlr.socialMediaAddingActionCGMHandler
+}
+

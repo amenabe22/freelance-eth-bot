@@ -58,6 +58,13 @@ export const companyRegisterOptionalKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+export const companyRegisterSocialMediaLinkYesNoKeyboard = {
+    reply_markup: {
+        keyboard: [
+            [{text: "Yes" }, { text: "No"}],
+        ], resize_keyboard: true, one_time_keyboard: true
+    }
+}
 export const startupRegisterOptionalKeyboard = {
 
     reply_markup: {
@@ -111,15 +118,7 @@ export const registerStartupConfirmLRKeyboard = {
         ]
     }
 }
-export const registerStartupConfirmURKeyboard = {
 
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: "Edit", callback_data: "editStartupRegistringUR" }, { text: "Confirm", callback_data: "confirmRegisteringStartupUR" }],
-
-        ]
-    }
-}
 
 export const listOfCompanyRegisterdKeyboard = {
 
@@ -304,6 +303,28 @@ export const socialMediaListURKeyboard = {
             [{ text: "Other Link 3", callback_data: "otherlink3-linkUR"}, { text: "Done", callback_data: "done-linkUR"}],
         ]
     }
+}
+export const socialMediaListCRKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkCR" }, { text: "Telegram link", callback_data: "telegram-linkCR"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkCR" }, { text: "TikTok link", callback_data: "tiktok-linkCR" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkCR" }, { text: "LinkedIn link", callback_data: "linkedin-linkCR" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkCR" }, { text: "Other link 2", callback_data: "otherlink2-linkCR" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkCR"}, { text: "Done", callback_data: "done-linkCR"}],
+        ]
+    } 
+}
+export const socialMediaListCGMKeyboard = {
+    reply_markup: {
+        inline_keyboard: [
+            [{ text: "facebook link", callback_data: "facebook-linkCGM" }, { text: "Telegram link", callback_data: "telegram-linkCGM"}],
+            [{ text: "YouTube link", callback_data: "youtube-linkCGM" }, { text: "TikTok link", callback_data: "tiktok-linkCGM" }],
+            [{ text: "Twitter link", callback_data: "twitter-linkCGM" }, { text: "LinkedIn link", callback_data: "linkedin-linkCGM" }],
+            [{ text: "Other Link 1", callback_data: "otherlink1-linkCGM" }, { text: "Other link 2", callback_data: "otherlink2-linkCGM" }],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkCGM"}, { text: "Done", callback_data: "done-linkCGM"}],
+        ]
+    } 
 }
 export const socialMediaYesNoKeyboard = {
     reply_markup: {
