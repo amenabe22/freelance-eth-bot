@@ -93,7 +93,7 @@ export const editJobPostKeyboard = {
             [{ text: "Title", callback_data: "jp-title" }, { text: "Description", callback_data: "jp-description" }],
             [{ text: "Job Type", callback_data: "jp-type" }, { text: "Job Sector", callback_data: "jp-sector" }],
             [{ text: "Salary", callback_data: "jp-salary" }, { text: "Location", callback_data: "jp-location" }],
-            [{ text: "Aplicant Needed", callback_data: "jp-applicant" }],
+            [{ text: "Aplicant Needed", callback_data: "jp-applicant" }, {text: "Vacancy Number", callback_data: "jp-vacancy"}],
             [{ text: "Done", callback_data: "jp-done" }]
         ]
     }

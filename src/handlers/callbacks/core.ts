@@ -402,7 +402,7 @@ export const myJobPostsActiveJobHandler = async (ctx: any) => {
     const job_seeker = users[0].id
     const { data: { jobs } } = await fetchAllPostedJobs({
         creator: job_seeker,
-        status: "active"
+        status: "pending"
     })
     for (let i = 0; i < jobs.length; i++) {
         const job = jobs[i];

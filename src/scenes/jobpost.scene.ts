@@ -8,12 +8,15 @@ export const postAJobScene = new CoreScene(
         enter: hdlr.postAJobInitHandler,
         handlers: [
             hdlr.postAJobNameHandler,
-            hdlr.postAJobDescriptionHandler,
+            hdlr.postAJobDescriptionHandler, 
             hdlr.postAJobTypeHandler,
             hdlr.postAjobSectorHandler,
             hdlr.postAJobSalaryHandler,
             hdlr.postAJobWorkingLocationHandler,
-            hdlr.postAjobApplicantNeededHandler,
+            hdlr.postAJobVancancyNumberHandler,
+            hdlr.postAJobApplicantGenderHandler,
+            hdlr.postAJobCloseDateHandler,
+            hdlr.postAjobApplicantNeededHandler
             
         ]
     },

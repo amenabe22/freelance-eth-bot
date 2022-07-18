@@ -7,7 +7,7 @@ export const startCommandHand = async (ctx: any) => {
     console.log("******\n\n", ctx.message.text, "\n\n******")
     const startcmd = ctx.message.text.split(" ")
     const withmsg = startcmd.length > 1
-
+    
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id),
     })
