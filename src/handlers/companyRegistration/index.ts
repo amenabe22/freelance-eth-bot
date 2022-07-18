@@ -132,18 +132,18 @@ export const confirmRegisterCompanyActionHandler = async (ctx: any) => {
 }
 //register company with representative starts here
 export const companyRInitHandler = async (ctx: any) => {
-    ctx.replyWithHTML("please enter the name of your company", cancelKeyboard);
+    ctx.replyWithHTML(ctx.i18.t('companyNameMsg'), cancelKeyboard(ctx)); 
 } 
 
 export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyRName = ctx.message.text;
         console.log(ctx.scene.state.companyRName);
-        ctx.scene.state.companyRNameBold = ctx.scene.state.companyRName.bold();
-        ctx.replyWithHTML(`please send the photo of company trade license scanned photo.`, cancelKeyboard);
+        ctx.scene.state.companyRNameBold = ctx.scene.state.companyRName.bold(); 
+        ctx.replyWithHTML(ctx.i18.t('companyTLPhotoMsg'), cancelKeyboard); 
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard);
         return;
     }
 })

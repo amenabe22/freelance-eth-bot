@@ -39,7 +39,7 @@ export const companyStartup = {
     handler: companyStartupHandler
 }
 export const company = {
-    key: "Company",
+    key: /^(Company|ድርጅት)$/,
     handler: companyHandler
 }
 export const startup = {
@@ -47,7 +47,7 @@ export const startup = {
     handler: startupHandler,
 }
 export const adMoreCompany = {
-    key: "Add Company",
+    key: /^Add Company|ድርጅት ያስመዝግቡ$/,
     handler: addMoreCompanyHandler
 }
 export const addMoreStartup = {

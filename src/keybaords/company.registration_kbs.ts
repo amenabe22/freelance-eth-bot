@@ -17,7 +17,6 @@ export const registerCompanyEditKeyboard = {
     }
 }
 export const chooseCompanyStartupKeyboard = {
-
     reply_markup: {
         keyboard: [
             [{ text: "Company" }, { text: "Startup" }],
@@ -25,13 +24,14 @@ export const chooseCompanyStartupKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
-export const companyKeyboard = {
-
+export const companyKeyboard = ({ i18n }: any) =>{
+return{
     reply_markup: {
         inline_keyboard: [
-            [{ text: "G/Manager", callback_data: "Genaral Manager" }, { text: "Representative", callback_data: "Representative" }]
+            [{ text: i18n.t('gmBtnLablel'), callback_data: "Genaral Manager" }, { text: i18n.t('repBtnLabel'), callback_data: "Representative" }]
         ]
     }
+}    
 }
 export const LicensedStartupKeyboard = {
 
@@ -42,7 +42,7 @@ export const LicensedStartupKeyboard = {
     }
 }
 export const UnlicensedStartupKeyboard = {
-
+ 
     reply_markup: {
         inline_keyboard: [
             [{ text: "General Manager", callback_data: "StartupUnlicensedGM" }, { text: "Representative", callback_data: "StartupUnlicensedR" }]

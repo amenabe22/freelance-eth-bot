@@ -25,12 +25,15 @@ export const skipKeyboard = {
     }
 }
 
-export const cancelKeyboard = {
-    reply_markup: {
-        keyboard: [
-            [{ text: "Back" }]
-        ], resize_keyboard: true, one_time_keyboard: true
-    }
+export const cancelKeyboard = ({ i18n }: any) =>{
+    return { 
+        reply_markup: {
+            keyboard: [
+                [{ text: i18n.t("backBtnLabel") }]
+            ], resize_keyboard: true, one_time_keyboard: true
+        }
+     }
+  
 }
 export const onlyMainMenuKeyboardAM = {
 

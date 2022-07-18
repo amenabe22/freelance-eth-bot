@@ -18,14 +18,14 @@ export const companyStartupHandler = async (ctx: any) => {
 export const companyHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
-    }) 
+    })  
     if (data) {
         console.log(data);
         let checkUserEntity = data.users[0].user_entities;
         console.log(checkUserEntity)
         let myCompanies = checkUserEntity.filter((company: any) => {
             if (company.entity["verified_at"] != null) {
-                return true;
+                return true; 
             } 
         });
         console.log("is verified", myCompanies)
@@ -38,7 +38,7 @@ export const companyHandler = async (ctx: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId);
-            await ctx.replyWithHTML(`Companies you have registered\n\nplease select the companies to edit the information or update it.`, {
+            await ctx.replyWithHTML(ctx.i18n.t('companyMsg'), {
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
                         text: x, callback_data: JSON.stringify(xi + 30)
@@ -47,21 +47,17 @@ export const companyHandler = async (ctx: any) => {
             })
             await ctx.replyWithHTML('********************************************', {
                 reply_markup: {
-                    keyboard: [[{ text: "Add Company" }], [{ text: "Main Menu" }]], resize_keyboard: true, one_time_keyboard: true
+                    keyboard: [[{ text: ctx.i18n.t('addcompanyBtnLabel') }], [{ text: ctx.i18n.t('mainMenuBtnLabel')}]], resize_keyboard: true, one_time_keyboard: true
                 }
             })
         } else {
-            var boldGManager = "General Manager".bold();
-            var boldRepresentative = "Representative".bold();
-            ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
+            ctx.replyWithHTML(ctx.i18n.t('addCompanyMsg'), companyKeyboard(ctx))
         }
     }
 }
 export const addMoreCompanyHandler = async (ctx: any) => {
-    var boldGManager = "General Manager".bold();
-    var boldRepresentative = "Representative".bold();
-    ctx.replyWithHTML(`Please select G/Manager or Representative of a company to registor\n\nRequirements-------\n${boldGManager}\n  . G/Manager ID\n  . License Photo\n${boldRepresentative}\n  . Representative ID\n  . Written letter with stamp`, companyKeyboard)
-}
+    ctx.replyWithHTML(ctx.i18n.t('addCompanyMsg'), companyKeyboard(ctx))
+   }
 export const startupHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramIdStartup({
         telegram_id: JSON.stringify(ctx.from.id)
@@ -69,7 +65,6 @@ export const startupHandler = async (ctx: any) => {
     if (data) {
         console.log(data);
         let checkUserEntity = data.users[0].user_entities;
-        // console.log(checkUserEntity)
         if (checkUserEntity) {
             let myStartups = checkUserEntity.filter((startup: any) => {
                 if (startup.entity["verified_at"] != null) {
