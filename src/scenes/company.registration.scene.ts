@@ -41,7 +41,7 @@ export const companyRegistrationGMScene = new CoreScene(
       hdlr.companyWebsiteGHandler,
       hdlr.companySocialMediaLinkYesNoGHandler,
       hdlr.companyEmailGHandler,
-      hdlr.companyOfficialPhoneNoGHandler,
+      hdlr.companyOfficialPhoneNoGHandler, 
       hdlr.companyHeadQuarterLocationGHandler,
     ]
   },

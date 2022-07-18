@@ -28,18 +28,18 @@ export const startCommandHand = async (ctx: any) => {
                 }
             }).catch((e: any) => {
                 console.log("error fetching job")
-            })
+            }) 
         }
 
-        console.log("POST: ", jobpostvalid)
+        console.log("POST: ", jobpostvalid) 
         if (jobpostvalid) {
-            ctx.session.postId = startcmd[1]
+            ctx.session.postId = startcmd[1]  
             console.log("title", ctx.session.jobPostTitle);
-            console.log("des", ctx.session.jobPostDescription);
+            console.log("des", ctx.session.jobPostDescription);  
             return ctx.scene.enter("jobApplicationScene")
         } else {
             const [usr] = users
-            let firstName = usr.first_name;
+            let firstName = usr.first_name; 
             console.log(ctx.i18n.t('jobseekerBtnLabel'))
             const greeting = ctx.i18n.t('greeting', {
                 firstName

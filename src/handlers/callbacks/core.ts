@@ -11,18 +11,14 @@ import { getJobSeekerSectors, getJobSeekerTypes } from "../../services/personali
 import { myJobsKeboard } from "../../keybaords/myJobs_kbs";
 import { myJobPostsKeyboard } from "../../keybaords/jobpost_kbs"
 import { fetchAllPostedJobs, seekerApplications } from "../../services/jobpost";
-
-
-var boldCompany = "Company".bold();
-var boldStartup = "Startup".bold();
-
+ 
 export const companyStartupHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Please Select Company or Startup to register and post jobs.\n\nRequirements---\n${boldCompany}\n   . General manager ID\n   . License Photo\n${boldStartup}\n   . General Manager ID\n   . License Photo`, chooseCompanyStartupKeyboard);
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupMsg'), chooseCompanyStartupKeyboard(ctx));
 }
 export const companyHandler = async (ctx: any) => {
     const { data, error } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id)
-    })
+    }) 
     if (data) {
         console.log(data);
         let checkUserEntity = data.users[0].user_entities;
@@ -30,7 +26,7 @@ export const companyHandler = async (ctx: any) => {
         let myCompanies = checkUserEntity.filter((company: any) => {
             if (company.entity["verified_at"] != null) {
                 return true;
-            }
+            } 
         });
         console.log("is verified", myCompanies)
         if (checkUserEntity) {

@@ -8,23 +8,14 @@ export const englishMainMenuKeyboard = ({ i18n }: any) => {
         }
     }
 }
-
-export const amharicMainMenuKeyboard = {
-
+export const onlyMainMenuKeyboard = ({ i18n }: any) => {
+   return{ 
     reply_markup: {
         keyboard: [
-            [{ text: "Job Seeker" }, { text: "Employer" }],
-            [{ text: "Settings" }, { text: "Help" }],
-        ], resize_keyboard: true, one_time_keyboard: true,
-    }
-}
-export const onlyMainMenuKeyboard = {
-
-    reply_markup: {
-        keyboard: [
-            [{ text: "Main Menu" }]
+            [{ text: i18n.t("mainMenuBtnLabel") }]
         ], resize_keyboard: true, one_time_keyboard: true
     }
+   } 
 }
 export const skipKeyboard = {
     reply_markup: {
@@ -70,14 +61,16 @@ export const employerKeyboard = ({ i18n }: any) => {
         }
     }
 }
-export const chooseCompanyStartupKeyboard = {
+export const chooseCompanyStartupKeyboard = ({ i18n }: any) =>{
+   return { 
     parse_mode: "HTML",
     reply_markup: {
         keyboard: [
-            [{ text: "Company" }, { text: "Startup" }],
-            [{ text: "Main Menu" }],
+            [{ text: i18n.t("companyBtnLabel") }, { text: i18n.t("startupBtnLabel") }],
+            [{ text: i18n.t("mainMenuBtnLabel") }],
         ], resize_keyboard: true, one_time_keyboard: true,
     }
+   } 
 }
 
 export const choosePersonalizationOptionsupKeyboard = {
