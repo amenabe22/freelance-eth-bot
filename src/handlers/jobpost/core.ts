@@ -877,4 +877,4 @@ export const reviewEmployeeQ5Handler = Telegraf.on(["photo", "text", "contact", 
         ctx.replyWithHTML("Please enter a valid input", kb.ratingKeyboard);
         return
     }
-}
+})

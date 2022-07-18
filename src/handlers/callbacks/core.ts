@@ -1,4 +1,4 @@
-import { fetchSectors } from "../../services/basic";
+import { fetchSectors, updateLanguage } from "../../services/basic";
 import { employerKeyboard, englishMainMenuKeyboard, jobSeekerKeyboard, onlyMainMenuKeyboard, chooseCompanyStartupKeyboard, choosePersonalizationOptionsupKeyboard } from "../../keybaords/menu_kbs";
 import { fetchJobTypes, getUserByTelegramId, getUserByTelegramIdStartup } from "../../services/registration";
 import {
@@ -127,7 +127,7 @@ export const menuJobseekerSelectionHandler = async (ctx: any) => {
 }
 
 export const menuMainSelectorHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard);
+    ctx.replyWithHTML(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard(ctx));
 }
 
 // settings handler
@@ -142,12 +142,34 @@ export const menuLanguageSelectorHandler = async (ctx: any) => {
 
 // handler for english selector
 export const menuEnglishSelectorHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Hey ${ctx.from.first_name}, Your language is English.`, settingKeyboard)
+
+    const { data: { users } } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id),
+    })
+    const [{ id }] = users
+    await updateLanguage({ id, lang: "en" }).then(() => {
+        ctx.replyWithHTML(`Hey ${ctx.from.first_name}, Your language is English.`, settingKeyboard)
+        ctx.i18n.locale("en")
+    }).catch(e => {
+        console.log(e)
+        ctx.reply("Error updating language")
+    })
 }
 
 // handler for amharic selector
 export const menuAmharicSelectorHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Sorry ${ctx.from.first_name}, Amharic language is not available right now.`, englishMainMenuKeyboard)
+    // switch user account to amharic on update
+    const { data: { users } } = await getUserByTelegramId({
+        telegram_id: JSON.stringify(ctx.from.id),
+    })
+    const [{ id }] = users
+    await updateLanguage({ id, lang: "am" }).then(() => {
+        ctx.replyWithHTML(`Hey ${ctx.from.first_name} Your language is Amharic now.`, englishMainMenuKeyboard(ctx))
+        ctx.i18n.locale("am")
+    }).catch(e => {
+        console.log(e)
+        ctx.reply("Error updating language")
+    })
 }
 
 export const menuAccountSelectorHandler = async (ctx: any) => {
@@ -317,7 +339,7 @@ export const editPersonalizationSectorsActionHandler = async (ctx: any) => {
     }
 }
 export const employerMenuSelectionHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`${ctx.from.first_name}, what do you like to do today?`, employerKeyboard);
+    ctx.replyWithHTML(`${ctx.from.first_name}, what do you like to do today?`, employerKeyboard(ctx));
 }
 
 

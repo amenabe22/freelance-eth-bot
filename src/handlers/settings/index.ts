@@ -3,7 +3,7 @@ import { confirmProfileEditKeyboard } from "../../keybaords/settings";
 import { Telegraf } from "telegraf";
 
 export const editProfileCancelHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard);
+    ctx.replyWithHTML(`Hi ${ctx.from.first_name}, please select which one of you are ?`, englishMainMenuKeyboard(ctx));
     ctx.scene.leave();
 }
 
