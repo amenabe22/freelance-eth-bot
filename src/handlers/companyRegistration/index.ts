@@ -140,28 +140,28 @@ export const companyNameRHandler = Telegraf.on(["photo", "text", "contact", "doc
         ctx.scene.state.companyRName = ctx.message.text;
         console.log(ctx.scene.state.companyRName);
         ctx.scene.state.companyRNameBold = ctx.scene.state.companyRName.bold(); 
-        ctx.replyWithHTML(ctx.i18.t('companyTLPhotoMsg'), cancelKeyboard); 
+        ctx.replyWithHTML(ctx.i18.t('companyTLPhotoMsg'), cancelKeyboard(ctx)); 
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));  
         return;
     }
 })
 export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.update.message.photo) {
+    if (ctx.update.message.photo) { 
         console.log(ctx.update.message.photo[0])
         const fname = `${ctx.from.id}.jpg`
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-            ctx.replyWithHTML(`please enter Representative id photo.`, cancelKeyboard);
+            ctx.replyWithHTML(ctx.i18.t('companyRepIdPhotoMsg'), cancelKeyboard(ctx)); 
             return ctx.wizard.next();
         }).catch((e) => {
             console.log(JSON.stringify(e))
         })
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));  
         return;
     }
 })
@@ -172,13 +172,13 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyIdPhoto)
         download(downloadURL, `files/GMIdphoto/${fname}`,).then(async () => {
-            ctx.replyWithHTML(`please enter photo of stamped letter.`, cancelKeyboard);
+            ctx.replyWithHTML(ctx.i18.t('companyRepLetterPhotoMsg'), cancelKeyboard(ctx)); 
         }).catch((e) => {
             console.log(JSON.stringify(e))
         })
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter a valid id photo!`, cancelKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));  
         return;
     }
 })
@@ -198,7 +198,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
                 }]))
                 secs.push([{ text: "Back" }])
                 ctx.session.sectorNames = snames
-                ctx.replyWithHTML("please enter industry sector.", {
+                ctx.replyWithHTML(ctx.i18.t('companySectorMsg'), {
                     reply_markup: JSON.stringify({
                         keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
                     }), 
@@ -208,7 +208,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
         })
 
     } else {
-        ctx.replyWithHTML(`Please enter avalid stamped letter photo!`, cancelKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));  
         return;
     }
 })
@@ -219,7 +219,7 @@ export const companyIndustrySectorRHandler = Telegraf.on(["photo", "text", "cont
         if (data) {
             const { sectors } = data
             if (!sectors.length) {
-                ctx.replyWithHTML("please enter valid industry sector!", {
+                ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
                     reply_markup: JSON.stringify({
                         keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
                             text: x,
@@ -232,7 +232,7 @@ export const companyIndustrySectorRHandler = Telegraf.on(["photo", "text", "cont
                 console.log("bpt 2", sectorId)
                 ctx.session.companyRSectorID = sectorId;
                 ctx.scene.state.companyRSectorID = sectorId;
-                ctx.replyWithHTML("please enter employee size of your company.", cancelKeyboard);
+                ctx.replyWithHTML(ctx.i18.t('companyEmployeeMsg'), cancelKeyboard(ctx));
                 return ctx.wizard.next();
             }
         }
@@ -242,10 +242,10 @@ export const companyEmployeeSizeRHandler = Telegraf.on(["photo", "text", "contac
     if (ctx.message.text) {
         ctx.scene.state.companyREmployeeSize = ctx.message.text;
         console.log(ctx.scene.state.companyREmployeeSize);
-        ctx.replyWithHTML(`please enter website of your company.`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(ctx.i18n.t('companyWebsiteMsg'), companyRegisterOptionalKeyboard(ctx));
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`please enter valid employee size of your company!`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));  
         return;
     }
 })
@@ -253,7 +253,7 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
-            ctx.replyWithHTML("Do you want to add social media links for your company ?",socialMediaYesNoKeyboard )
+            ctx.replyWithHTML("Do you want to add social media links for your company?",socialMediaYesNoKeyboard)
             return ctx.wizard.next();
         } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyRWebsite = ctx.message.text;

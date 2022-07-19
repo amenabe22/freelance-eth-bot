@@ -28,7 +28,7 @@ export const companyHandler = async (ctx: any) => {
                 return true; 
             } 
         });
-        console.log("is verified", myCompanies)
+        console.log("is verified", myCompanies) 
         if (checkUserEntity) {
             ctx.session.userEName = myCompanies.map((nam: any) => {
                 return `${nam.entity["name"]}`
@@ -38,7 +38,7 @@ export const companyHandler = async (ctx: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId);
-            await ctx.replyWithHTML(ctx.i18n.t('companyMsg'), {
+            await ctx.replyWithHTML(ctx.i18n.t('companyMsg'), { 
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
                         text: x, callback_data: JSON.stringify(xi + 30)

@@ -49,14 +49,15 @@ export const UnlicensedStartupKeyboard = {
         ]
     }
 }
-export const companyRegisterOptionalKeyboard = {
-
+export const companyRegisterOptionalKeyboard = ({ i18n }: any) =>{
+return{ 
     reply_markup: {
         keyboard: [
-            [{ text: "Skip" }],
-            [{ text: "Back" }],
+            [{ text: i18n.t("skipBtnLabel") }],
+            [{ text: i18n.t("backBtnLabel") }],
         ], resize_keyboard: true, one_time_keyboard: true,
     }
+}
 }
 export const companyRegisterSocialMediaLinkYesNoKeyboard = {
     reply_markup: {
