@@ -78,8 +78,8 @@ export const startupHandler = async (ctx: any) => {
             ctx.session.userEId = myStartups.map((nam: any) => {
                 return `${nam.entity["id"]}`
             })
-            console.log(ctx.session.userEId);
-            await ctx.replyWithHTML(`Starup you have registered\n\nplease select the startup to edit the information or update it.`, {
+            console.log(ctx.session.userEId); 
+            await ctx.replyWithHTML(ctx.i18n.t('startupFirstMsg'), {
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
                         text: x, callback_data: JSON.stringify(xi + 60)
@@ -88,17 +88,17 @@ export const startupHandler = async (ctx: any) => {
             })
             await ctx.replyWithHTML('********************************************', {
                 reply_markup: {
-                    keyboard: [[{ text: "Add Startup" }], [{ text: "Main Menu" }]], resize_keyboard: true, one_time_keyboard: true
+                    keyboard: [[{ text: ctx.i18n.t('addStrartupBtnLabel') }], [{ text: ctx.i18n.t('mainMenuBtnLabel') }]], resize_keyboard: true, one_time_keyboard: true
                 }
             })
         } else {
-            ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard);
+            ctx.replyWithHTML(ctx.i18n.t('addStartupMsg'), starupStatusKeyboard(ctx));
         }
     }
 }
 
 export const addMoreStartupHandler = async (ctx: any) => {
-    ctx.replyWithHTML(`Please choose your startup status.`, starupStatusKeyboard);
+    ctx.replyWithHTML(ctx.i18n.t('addStartupMsg'), starupStatusKeyboard(ctx));
 }
 export const menuJobseekerSelectionHandler = async (ctx: any) => {
     const { data: { users } } = await getUserByTelegramId({

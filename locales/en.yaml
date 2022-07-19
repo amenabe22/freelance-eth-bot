@@ -1,0 +1,174 @@
+greeting: |+ 
+  Welcome to Freelance Ethiopia, the leading jobs platform in the Country. 
+  
+  Tap/Click on the Start button below to start working and hiring with us.
+mainMenuBtnLabel: Main Menu
+jobseekerBtnLabel: Job Seeeker
+employeerBtnLabel: Employeer
+settingsBtnLabel: Settings
+helpBtnLabel: Help
+backBtnLabel: Back
+skipBtnLabel: Skip
+yesBtnLabel: Yes
+noBtnLabel: No
+doneBtnLabel: Done
+postJobBtnLabel: Post a Job
+myJobPostsBtnLabel: My Job Posts
+myCompaniesAndStartupsBtnLabel: My Companies/Startups 
+companyStartupMsg:  |+
+  Here you can manage your companies/startups. Please select the ‘company’ or ‘startup’ button to register and start posting jobs, and manage your registered companies/startups.
+
+  To register your companies and licensed startups you need to provide the following:
+    1. A photo of the General Manager’s ID OR a photo of a company/startup representative’s ID and a photo of a stamped letter that shows that the representative is authorized to register and manage the company/startup’s freelance Ethiopia Bot account. (IDs can be driver’s license, passport, company/employee ID or residence ID)
+    2. A photo of Renewed Trade License
+    3. Other mandatory and optional information 
+
+   To register your unlicensed startups you need to provide the following
+    1. A photo of one of the founder’s ID (ID can be driver’s license, passport, company/employee ID or residence ID)
+    2. Other mandatory and optional information
+companyStartupInvalidMsg: Please enter valid input!
+companyStartupName: Name
+companyStartupSecror: Sector 
+companyStartupPhone: Phone
+companyStartupEmail: Email
+companyStartupWebsite: Website 
+companyStartupHQ: Head Quarter
+companyStartupFbLink: Facebook Link
+companyStartupTgLink: Telegram Link
+companyStartupYTLink: YouTube Link
+companyStartupTTLink: TikTok Link
+companyStartupLILink: LinkedIn Link
+companyStartupTwitterLink: Twitter Link
+companyStartupOL1: Other link1
+companyStartupOL2: Other link2
+companyStartupOL3: Other link3
+companyStartupDone: Done
+companyBtnLabel: Company
+addcompanyBtnLabel: Add Company
+gmBtnLablel: General Manager 
+repBtnLabel: Representative
+companyMsg: |+
+  Here you can register your company with ‘Add Company’
+
+  You can also select any of your registered companies to Edit their information and Handover account control.
+addCompanyMsg: |+
+  Please choose how you would like to register your company 
+
+  Choose ‘General manager’ if you are using the ID of the person on the trade license to register
+
+  Choose ‘Representative’ if you are using the ID of an HR representative or any other employee of the company to register
+companyNameMsg: Please enter the name of your company                
+companyTLPhotoMsg: |+
+  Please upload a photo/scan of your trade license.
+
+  Make sure the image can be seen clearly.
+
+  This information will not be made public to anyone.            
+companyGMIdPhotoMsg: |+
+  Please upload a photo/scan of your General Manager ID (you can send driver's license, passport, Company ID or residence ID). 
+
+  The General Manager is the person that is on the Trade license.
+
+  Make sure the image can be seen clearly.
+
+  This information will not be made public to anyone.   
+companyRepIdPhotoMsg: |+
+  Please upload a photo/scan of your Representative ID (you can send driver's license, passport, employee ID or residence ID)
+
+  Make sure the image can be seen clearly
+
+  This information will not be made public to anyone.      
+companyRepLetterPhotoMsg: |+
+  Please upload a photo/scan of a letter with the company's stamp that proves you are a representative of the company that is assigned to manage the company's freelance Ethiopia Bot account
+
+  Make sure the image can be seen clearly.
+
+  This information will not be made public to anyone
+companySectorMsg: Please select your company's industry sector from the list provided below.
+companyEmployeeMsg: |+
+  Please enter the number of employees in the company.
+  This information will not be made public to other users or released associated with the company.
+companyWebsiteMsg: Please enter a link to your company's website (if there is any)
+companyAskSocialMediaMsg: Do you want to add social media links for your company?
+companySocialMediaMsg: Please enter the various social media links of your company by selecting the buttons of the media platforms you want to register (if there is any)
+companyEmailMsg: Please enter the email address of your company (if there is any)
+companyPhoneNoMsg: Please enter your company's official phone number
+companyHQMsg: Please select your company's headquarter location from the provided list
+startupBtnLabel: Startup
+startupFirstMsg: |+
+  Here you can register your company with ‘Add Startup’
+
+  You can also select any of your registered startups to Edit their information and Handover account control
+Handover: if you want to transfer control of your startup’s freelance Ethiopia Bot account to another Bot user, you can use the Handover feature.
+addStrartupBtnLabel: Add Startup
+addStartupMsg: Please choose if your startup is licensed or unlicensed
+whoisStartupMsg: |+
+  Please choose how you would like to register your startup 
+
+  Choose ‘General manager’ if you are using the ID of the person on the trade license to register
+  Choose ‘Representative’ if you are using the ID of an HR representative or any other employee of the startup to register’
+licensedBtnLabel: Licensed
+unlicensedBtnLabel: Unlicensed
+unlicensedFirstMsg: |+
+  To register your unlicensed startups you need to provide the following:
+
+    1. A photo of one of the founder’s ID (ID can be driver’s license, passport, company/employee ID or residence ID)
+    2. Other mandatory and optional information
+startupNameMsg: Please enter the name of your Startup
+startupFounder1: Founder1
+startupFounder2: Founder2
+startupFounder3: Founder3
+startupFounder4: Founder4
+startupFounder5: Founder5
+startupFounderMsg: |+
+  Please enter the names of the startup founders
+
+  you can add up to five founders
+
+  This information will not be made public to anyone
+startupTLPhotoMsg: |+
+  Please upload a photo/scan of your trade license.
+
+  Make sure the image can be seen clearly.
+
+  This information will not be made public to anyone.
+startupGMIdPhotoMsg: |+
+  Please upload a photo/scan of your General Manager ID (you can send driver's license, passport, Company ID or residence ID). 
+
+  The General Manager is the person that is on the Trade license.
+
+  Make sure the image can be seen clearly.
+  This information will not be made public to anyone.
+startupRepIdPhotoMsg: |+
+  Please upload a photo/scan of your Representative ID (you can send driver's license, passport, employee ID or residence ID)
+
+  Make sure the image can be seen clearly
+
+  This information will not be made public to anyone. 
+startupFounderIdPhotoMsg: |+
+  Please upload a photo/scan of one of founder ID (you can send driver's license, passport, employee ID or residence ID)
+
+  Make sure the image can be seen clearly
+
+  This information will not be made public to anyone.                                   
+startupRepLetterPhotoMsg: |+
+  Please upload a photo/scan of a letter with the startup's stamp that proves you are a representative of the startup that is assigned to manage the startup's freelance Ethiopia Bot account.
+
+  Make sure the image can be seen clearly.
+
+  This information will not be made public to anyone
+startupSectorMsg: Please select your startup's industry sector from the list provided below.
+startupEmployeeMsg: |+
+  Please enter the number of employees in the startup.
+
+  This information will not be made public to other users or released associated with the company.        
+startupWebsiteMsg: Please enter a link to your startup's website (if there is any)
+startupAskSocialMediaMsg: Do you want to add social media links for your company?
+LStartupSocialMediaMsg: Please enter the various social media links of your startup by selecting the buttons of the media platforms you want to register (if there is any)
+UStartupSocialMediaMsg: |+
+  Please enter the various social media links of your startup by selecting the buttons of the media platforms you want to register.
+
+  This is how we evaluate that you are a legitimate up and coming startup with digital presence and traction.
+startupEmailMsg: Please enter the email address of your startup
+startupPhoneNumberMsg: Please enter your startup's official phone number
+startupHQMsg: Please select your startup's headquarter location from the provided list     
