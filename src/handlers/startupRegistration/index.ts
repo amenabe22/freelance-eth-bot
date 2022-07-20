@@ -746,7 +746,7 @@ export const startupUFoundersHandler = Telegraf.on(["photo", "text", "contact", 
     ctx.scene.state.startupUGMFounder3 = " "
     ctx.scene.state.startupUGMFounder4 = " "
     ctx.scene.state.startupUGMFounder5 = " "
-    if (ctx.message.text == "Done") {
+    if (ctx.message.text == "Done" || ctx.message.text == "ጨረስኩ") {
       ctx.replyWithHTML(ctx.i18n.t('startupRepIdPhotoMsg'), cancelKeyboard(ctx));
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {

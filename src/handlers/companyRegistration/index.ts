@@ -154,7 +154,7 @@ export const companyTradeLicensePhotoRHandler = Telegraf.on(["photo", "text", "c
         const companyTradeLicensePhoto = ctx.update.message.photo[0].file_id;
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-            ctx.replyWithHTML(ctx.i18.t('companyRepIdPhotoMsg'), cancelKeyboard(ctx)); 
+            ctx.replyWithHTML(ctx.i18n.t('companyRepIdPhotoMsg'), cancelKeyboard(ctx)); 
             return ctx.wizard.next();
         }).catch((e) => {
             console.log(JSON.stringify(e))
@@ -250,7 +250,7 @@ export const companyEmployeeSizeRHandler = Telegraf.on(["photo", "text", "contac
     }
 })
 export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-    if (ctx.message.text) {
+    if (ctx.message.text) { 
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
            await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard)
@@ -261,11 +261,11 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
            await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard)
             return ctx.wizard.next();
         } else {
-            ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));  
+            ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));  
             return;
         }
     } else {
-        ctx.replyWithHTML(ctx.i18.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));  
+        ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));  
         return;
     }
 })
