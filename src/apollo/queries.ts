@@ -463,3 +463,50 @@ export const UPDATE_LANGUAGE = gql`mutation update_lang($id: uuid!, $lang: Strin
   }
 }
 `
+
+export const ENTITY_HIRE_COUNT =  gql `query hires_aggregate($entity_id: uuid!) {
+  hires_aggregate(
+    where: {
+      short_list: { application: { job: { entity_id: { _eq: $entity_id } } } }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}`
+
+export const PRIVATE_CLIENT_HIRE_COUNT = gql `query hires_aggregate($user_id: uuid!) {
+  hires_aggregate(
+    where: {
+      short_list: {
+        application: {
+          job: {
+            entity_id: { _is_null: true }
+            created_by: { _eq: $user_id }
+          }
+        }
+      }
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+}`
+
+export const ENTITY_jOB_COUNT = gql `query jobs_aggregate($entity_id: uuid!) {
+  jobs_aggregate(where: {entity_id: {_eq: $entity_id}}) {
+    aggregate {
+      count
+    }
+  }
+}`
+
+export const USER_JOB_POST_COUNT = gql `query jobs_aggregate($user_id: uuid!) {
+  jobs_aggregate(where: {created_by: {_eq: $user_id}}) {
+    aggregate {
+      count
+    }
+  }
+}`

@@ -253,12 +253,12 @@ export const companyWebsiteRHandler = Telegraf.on(["photo", "text", "contact", "
     if (ctx.message.text) { 
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyRWebsite = " ";
-           await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard)
+           await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard(ctx))
             // ctx.replyWithHTML("Do you want to add social media links for your company?",socialMediaYesNoKeyboard)
             return ctx.wizard.next();
         } else if (vw(ctx.message.text)) {
             ctx.scene.state.companyRWebsite = ctx.message.text;
-           await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard)
+           await ctx.replyWithHTML(ctx.i18n.t('companyAskSocialMediaMsg'),socialMediaYesNoKeyboard(ctx))
             return ctx.wizard.next();
         } else {
             ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));  

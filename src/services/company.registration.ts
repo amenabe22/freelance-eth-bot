@@ -3,7 +3,7 @@ import { client } from "../apollo"
 import { ENTITY_ENDPOINT } from "../constants"
 import axios from "axios"
 import FormData from "form-data";
-
+import * as qry from "../apollo/queries"
 export const registerNewBotUser = async (variables: any) => {
     const res = await client.mutate({
         mutation: REGISTER_USER,
@@ -37,3 +37,39 @@ export const companyEdit = async (variables: any) => {
     })
     return res
 }
+
+export const entityHireCount = async (vars: any) => {
+    const res = await client.query({
+        query: qry.ENTITY_HIRE_COUNT,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+export const privateClientHireCount = async (vars: any) => {
+    const res = await client.query({
+        query: qry.PRIVATE_CLIENT_HIRE_COUNT,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+
+export const entityJobCount = async (vars: any) => {
+    const res = await client.query({
+        query: qry.ENTITY_jOB_COUNT,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+
+export const userJobPostCount = async (vars: any) => {
+    const res = await client.query({
+        query: qry.USER_JOB_POST_COUNT,
+        fetchPolicy: "network-only",
+        variables: vars
+    })
+    return res
+}
+
