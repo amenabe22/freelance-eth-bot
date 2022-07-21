@@ -3,10 +3,11 @@ import { englishMainMenuKeyboard } from "../keybaords/menu_kbs"
 import { fetchJob } from "../services/jobpost"
 
 export const startCommandHand = async (ctx: any) => {
+    // console.log(ctx.i18n, "startCommand")
     console.log("******\n\n", ctx.from.id, "\n\n******")
     const startcmd = ctx.message.text.split(" ")
     const withmsg = startcmd.length > 1
-    
+
     const { data: { users } } = await getUserByTelegramId({
         telegram_id: JSON.stringify(ctx.from.id),
     })
@@ -14,7 +15,7 @@ export const startCommandHand = async (ctx: any) => {
         return ctx.scene.enter("newCustomerRegistrationScene");
     } else {
         const [{ language }] = users
-        console.log(language, "Lingo")
+        // console.log(language, "Lingo")
         ctx.i18n.locale(language)
 
         // have some condition to validate the job post
@@ -28,19 +29,19 @@ export const startCommandHand = async (ctx: any) => {
                 }
             }).catch((e: any) => {
                 console.log("error fetching job")
-            }) 
+            })
         }
 
-        console.log("POST: ", jobpostvalid) 
+        // console.log("POST: ", jobpostvalid)
         if (jobpostvalid) {
-            ctx.session.postId = startcmd[1]  
+            ctx.session.postId = startcmd[1]
             console.log("title", ctx.session.jobPostTitle);
-            console.log("des", ctx.session.jobPostDescription);  
+            console.log("des", ctx.session.jobPostDescription);
             return ctx.scene.enter("jobApplicationScene")
         } else {
             const [usr] = users
-            let firstName = usr.first_name; 
-            console.log(ctx.i18n.t('jobseekerBtnLabel'))
+            let firstName = usr.first_name;
+            // console.log(ctx.i18n.t('jobseekerBtnLabel'))
             const greeting = ctx.i18n.t('greeting', {
                 firstName
             })

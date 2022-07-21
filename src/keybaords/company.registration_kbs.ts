@@ -24,14 +24,14 @@ export const chooseCompanyStartupKeyboard = {
         ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
-export const companyKeyboard = ({ i18n }: any) =>{
-return{
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: i18n.t('gmBtnLablel'), callback_data: "Genaral Manager" }, { text: i18n.t('repBtnLabel'), callback_data: "Representative" }]
-        ]
+export const companyKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('gmBtnLablel'), callback_data: "Genaral Manager" }, { text: i18n.t('repBtnLabel'), callback_data: "Representative" }]
+            ]
+        }
     }
-}    
 }
 export const LicensedStartupKeyboard = {
 
@@ -42,27 +42,27 @@ export const LicensedStartupKeyboard = {
     }
 }
 export const UnlicensedStartupKeyboard = {
- 
+
     reply_markup: {
         inline_keyboard: [
             [{ text: "General Manager", callback_data: "StartupUnlicensedGM" }, { text: "Representative", callback_data: "StartupUnlicensedR" }]
         ]
     }
 }
-export const companyRegisterOptionalKeyboard = ({ i18n }: any) =>{
-return{ 
-    reply_markup: {
-        keyboard: [
-            [{ text: i18n.t("skipBtnLabel") }],
-            [{ text: i18n.t("backBtnLabel") }],
-        ], resize_keyboard: true, one_time_keyboard: true,
+export const companyRegisterOptionalKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            keyboard: [
+                [{ text: i18n.t("skipBtnLabel") }],
+                [{ text: i18n.t("backBtnLabel") }],
+            ], resize_keyboard: true, one_time_keyboard: true,
+        }
     }
-}
 }
 export const companyRegisterSocialMediaLinkYesNoKeyboard = {
     reply_markup: {
         keyboard: [
-            [{text: "Yes" }, { text: "No"}],
+            [{ text: "Yes" }, { text: "No" }],
         ], resize_keyboard: true, one_time_keyboard: true
     }
 }
@@ -219,30 +219,30 @@ export const registerStartupToBeEditFieldURKeyboard = {
         ]
     }
 }
-export const starupStatusKeyboard = ({ i18n }: any) =>{
-return { 
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: i18n.t('licensedBtnLabel'), callback_data: "LicensedStarup" }, { text: i18n.t('unlicensedBtnLabel'), callback_data: "UnlicensedStartup" }],
-        ]
+export const starupStatusKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('licensedBtnLabel'), callback_data: "LicensedStarup" }, { text: i18n.t('unlicensedBtnLabel'), callback_data: "UnlicensedStartup" }],
+            ]
+        }
     }
- }
 }
-export const starupFounderKeyboard = ({ i18n }: any) =>{
-  return {  
-    reply_markup: {
-        keyboard: [[{ text: i18n.t('doneBtnLabel') }, { text: i18n.t('backBtnLabel') }],], resize_keyboard: true, one_time_keyboard: true,
+export const starupFounderKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            keyboard: [[{ text: i18n.t('doneBtnLabel') }, { text: i18n.t('backBtnLabel') }],], resize_keyboard: true, one_time_keyboard: true,
+        }
     }
-  }
 }
 export const companyEditHandOverKeyboard = {
     reply_markup: {
-        inline_keyboard:[[{text: "Edit", callback_data: "edit-company"}, {text: "HandOver", callback_data: "hand-over-company"}]]
+        inline_keyboard: [[{ text: "Edit", callback_data: "edit-company" }, { text: "HandOver", callback_data: "hand-over-company" }]]
     }
 }
 export const startupEditHandOverKeyboard = {
     reply_markup: {
-        inline_keyboard:[[{text: "Edit", callback_data: "edit-startup"}, {text: "HandOver", callback_data: "hand-over-startup"}]]
+        inline_keyboard: [[{ text: "Edit", callback_data: "edit-startup" }, { text: "HandOver", callback_data: "hand-over-startup" }]]
     }
 }
 export const companyEditKeyboard = {
@@ -259,43 +259,43 @@ export const startupEditKeyboard = {
         inline_keyboard: [
             [{ text: "Name", callback_data: "edit_name_of_startup" }, { text: "Employee Size", callback_data: "edit_employee_of_startup" }],
             [{ text: "Email", callback_data: "edit_email_of_startup" }, { text: "Phone No", callback_data: "edit_phone_of_startup" }],
-            [{ text: "Location", callback_data: "edit_location_of_startup" }, { text: "Website", callback_data: "edit_websit_of_startup"}],
-            [{ text: "Add License", callback_data: "add_license_startup"}]
+            [{ text: "Location", callback_data: "edit_location_of_startup" }, { text: "Website", callback_data: "edit_websit_of_startup" }],
+            [{ text: "Add License", callback_data: "add_license_startup" }]
         ]
-    } 
+    }
 }
 export const socialMediaListLGMKeyboard = {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "facebook link", callback_data: "facebook-linkLGM" }, { text: "Telegram link", callback_data: "telegram-linkLGM"}],
+            [{ text: "facebook link", callback_data: "facebook-linkLGM" }, { text: "Telegram link", callback_data: "telegram-linkLGM" }],
             [{ text: "YouTube link", callback_data: "youtube-linkLGM" }, { text: "TikTok link", callback_data: "tiktok-linkLGM" }],
             [{ text: "Twitter link", callback_data: "twitter-linkLGM" }, { text: "LinkedIn link", callback_data: "linkedin-linkLGM" }],
             [{ text: "Other Link 1", callback_data: "otherlink1-linkLGM" }, { text: "Other link 2", callback_data: "otherlink2-linkLGM" }],
-            [{ text: "Other Link 3", callback_data: "otherlink3-linkLGM"}, { text: "Done", callback_data: "done-linkLGM"}],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkLGM" }, { text: "Done", callback_data: "done-linkLGM" }],
         ]
     }
 }
-export const socialMediaListUGMKeyboard = ({ i18n }: any) =>{
-   return { 
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook-linkUGM" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram-linkUGM"}],
-            [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube-linkUGM" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok-linkUGM" }],
-            [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter-linkUGM" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin-linkUGM" }],
-            [{ text: i18n.t('companyStartupOL1'), callback_data: "otherlink1-linkUGM" }, { text: i18n.t('companyStartupOL2'), callback_data: "otherlink2-linkUGM" }],
-            [{ text: i18n.t('companyStartupOL3'), callback_data: "otherlink3-linkUGM"}, { text: i18n.t('companyStartupDone'), callback_data: "done-linkUGM"}],
-        ]
-    }
+export const socialMediaListUGMKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook-linkUGM" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram-linkUGM" }],
+                [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube-linkUGM" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok-linkUGM" }],
+                [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter-linkUGM" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin-linkUGM" }],
+                [{ text: i18n.t('companyStartupOL1'), callback_data: "otherlink1-linkUGM" }, { text: i18n.t('companyStartupOL2'), callback_data: "otherlink2-linkUGM" }],
+                [{ text: i18n.t('companyStartupOL3'), callback_data: "otherlink3-linkUGM" }, { text: i18n.t('companyStartupDone'), callback_data: "done-linkUGM" }],
+            ]
+        }
     }
 }
 export const socialMediaListLRKeyboard = {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "facebook link", callback_data: "facebook-linkLR" }, { text: "Telegram link", callback_data: "telegram-linkLR"}],
+            [{ text: "facebook link", callback_data: "facebook-linkLR" }, { text: "Telegram link", callback_data: "telegram-linkLR" }],
             [{ text: "YouTube link", callback_data: "youtube-linkLR" }, { text: "TikTok link", callback_data: "tiktok-linkLR" }],
             [{ text: "Twitter link", callback_data: "twitter-linkLR" }, { text: "LinkedIn link", callback_data: "linkedin-linkLR" }],
             [{ text: "Other Link 1", callback_data: "otherlink1-linkLR" }, { text: "Other link 2", callback_data: "otherlink2-linkLR" }],
-            [{ text: "Other Link 3", callback_data: "otherlink3-linkLR"}, { text: "Done", callback_data: "done-linkLR"}],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkLR" }, { text: "Done", callback_data: "done-linkLR" }],
         ]
     }
 }
@@ -310,37 +310,37 @@ export const socialMediaListLRKeyboard = {
 //         ]
 //     }
 // }
-export const socialMediaListCRKeyboard = ({ i18n }: any) =>{
- return{ 
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook-linkCR" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram-linkCR"}],
-            [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube-linkCR" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok-linkCR" }],
-            [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter-linkCR" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin-linkCR" }],
-            [{ text: i18n.t('companyStartupOL1'), callback_data: "otherlink1-linkCR" }, { text: i18n.t('companyStartupOL2'), callback_data: "otherlink2-linkCR" }],
-            [{ text: i18n.t('companyStartupOL3'), callback_data: "otherlink3-linkCR"}, { text: i18n.t('companyStartupDone'), callback_data: "done-linkCR"}],
-        ]
-    } 
-}
+export const socialMediaListCRKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook-linkCR" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram-linkCR" }],
+                [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube-linkCR" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok-linkCR" }],
+                [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter-linkCR" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin-linkCR" }],
+                [{ text: i18n.t('companyStartupOL1'), callback_data: "otherlink1-linkCR" }, { text: i18n.t('companyStartupOL2'), callback_data: "otherlink2-linkCR" }],
+                [{ text: i18n.t('companyStartupOL3'), callback_data: "otherlink3-linkCR" }, { text: i18n.t('companyStartupDone'), callback_data: "done-linkCR" }],
+            ]
+        }
+    }
 }
 export const socialMediaListCGMKeyboard = {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "facebook link", callback_data: "facebook-linkCGM" }, { text: "Telegram link", callback_data: "telegram-linkCGM"}],
+            [{ text: "facebook link", callback_data: "facebook-linkCGM" }, { text: "Telegram link", callback_data: "telegram-linkCGM" }],
             [{ text: "YouTube link", callback_data: "youtube-linkCGM" }, { text: "TikTok link", callback_data: "tiktok-linkCGM" }],
             [{ text: "Twitter link", callback_data: "twitter-linkCGM" }, { text: "LinkedIn link", callback_data: "linkedin-linkCGM" }],
             [{ text: "Other Link 1", callback_data: "otherlink1-linkCGM" }, { text: "Other link 2", callback_data: "otherlink2-linkCGM" }],
-            [{ text: "Other Link 3", callback_data: "otherlink3-linkCGM"}, { text: "Done", callback_data: "done-linkCGM"}],
+            [{ text: "Other Link 3", callback_data: "otherlink3-linkCGM" }, { text: "Done", callback_data: "done-linkCGM" }],
         ]
-    } 
-}
-export const socialMediaYesNoKeyboard = ({ i18n }: any) =>{
-   return{ 
-    reply_markup: {
-        keyboard: [
-            [{ text: i18n.t('yesBtnLabel') }, { text: i18n.t('noBtnLabel') }],
-            [{ text: i18n.t('backBtnLabel') }],
-        ], resize_keyboard: true, one_time_keyboard: true,
     }
 }
+export const socialMediaYesNoKeyboard = ({ i18n }: any) => {
+    return {
+        reply_markup: {
+            keyboard: [
+                [{ text: i18n.t('yesBtnLabel') }, { text: i18n.t('noBtnLabel') }],
+                [{ text: i18n.t('backBtnLabel') }],
+            ], resize_keyboard: true, one_time_keyboard: true,
+        }
+    }
 }
