@@ -4,7 +4,7 @@ import { fetchJob } from "../services/jobpost"
 
 export const startCommandHand = async (ctx: any) => {
     // console.log(ctx.i18n, "startCommand")
-    console.log("******\n\n", ctx.from.id, "\n\n******")
+    console.log("*******\n\n", ctx.from.id, "\n\n******")
     const startcmd = ctx.message.text.split(" ")
     const withmsg = startcmd.length > 1
 
