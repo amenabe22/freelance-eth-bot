@@ -29,8 +29,8 @@ export const editCompanyRegistrationRCbActionHandler = async (ctx: any) => {
     ctx.scene.state.editTarget = target;
     ctx.session.editTarget = target
     ctx.session.editType = "R"
-    ctx.scene.state.editType = "G";
-    return ctx.scene.enter("companyRegistrationEditScene")
+    ctx.scene.state.editType = "R";
+    return ctx.scene.enter("companyRegistrationREditScene")
 }
 export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
     console.log("initiating edit scene")
@@ -43,13 +43,12 @@ export const editCompanyRegistrationCbActionHandler = async (ctx: any) => {
 }
 
 export const editCompanyRegistringGMHandler = async (ctx: any) => {
-    console.log(globalState, "state")
-    await ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
-    // ctx.replyWithHTML(`${globalState.companyGNameBold}\n . Name: ${globalState.companyGName}\n . Sectory: ${globalState.companyGSectorName}\n . Phone: ${globalState.companyGPhoneNumber}\n . Website: ${globalState.companyGWebsite}\n . Email: ${globalState.companyGEmail}\n . Employee size: ${globalState.companyGEmployeeSize}\n . HQ Location: ${globalState.companyGHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyEditKeyboard);
+    console.log("state G")
+    await ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyEditKeyboard);
 }
 export const editCompanyRegistringHandler = async (ctx: any) => {
-    await ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
-    // ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sectory: ${globalState.companyRSectorName}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}\n\n\n\n\n\n...`, registerCompanyREditKeyboard);
+    console.log("state R")
+    await ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyREditKeyboard);
 }
 
 export const confirmRegisterCompanyGMActionHanlder = async (ctx: any) => {
@@ -440,7 +439,7 @@ export const companyEditInitHandler = async (ctx: any) => {
             ctx.replyWithHTML(ctx.i18n.t('companyPhoneNoMsg'), cancelKeyboard(ctx));
             return
         case "website":
-            ctx.replyWithHTML(ctx.i18n('companyWebsiteMsg'), cancelKeyboard(ctx));
+            ctx.replyWithHTML(ctx.i18n.t('companyWebsiteMsg'), cancelKeyboard(ctx));
             return
         case "email":
             ctx.replyWithHTML(ctx.i18n.t('companyEmailMsg'), cancelKeyboard(ctx));
@@ -469,20 +468,20 @@ export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact",
     // ctx.scene.state.firstNameRegister = ctx.message.text;
     const response = ctx.message.text
     const target = ctx.session.editTarget
-    console.log(response, target, "dawg")
+    console.log(response, target, "dawg RR")
     if (response) {
         // validate and update state
         switch (target) {
             case "name":
                 globalState.companyRSectorName = response
                 ctx.reply("Name Updated")
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                 break;
             case "sector":
                 globalState.companyRSectorName = response
                 ctx.scene.state.companyRSectorName = response;
                 const { data } = await fetchSector({ name: response })
                 const { sectors } = data
-                console.log(data)
                 if (!sectors) {
                     ctx.replyWithHTML("please enter valid industry sector!", {
                         reply_markup: JSON.stringify({
@@ -497,25 +496,28 @@ export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact",
                     ctx.session.companyRSectorID = sectorId;
                     ctx.scene.state.companyRSectorID = sectorId;
                     ctx.reply("Sector Updated")
+                    ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                     break;
                 }
             case "phone":
                 globalState.companyRPhoneNumber = response
                 ctx.reply("Phone Updated")
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                 break;
             case "website":
                 globalState.companyRWebsite = response
                 ctx.reply("Website Updated")
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                 break;
             case "email":
                 globalState.companyREmail = response
                 ctx.reply("Email Updated")
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                 break;
             case "hqs":
                 globalState.companyRHeadQuarterLocation = response
                 const res = await fetchCity({ name: globalState.companyRHeadQuarterLocation })
                 const { cities } = res.data
-                console.log(cities.length, "bpt 1")
                 if (!cities.length) {
                     ctx.replyWithHTML("Please enter a valid location of your company head quarter!", {
                         reply_markup: JSON.stringify({
@@ -529,9 +531,11 @@ export const companyEditRValueHandler = Telegraf.on(["photo", "text", "contact",
                     let hqId = cities[0].id;
                     ctx.session.companyRHeadQuarterLocationId = hqId;
                     ctx.scene.state.companyRHeadQuarterLocationId = hqId;
-                    globalState = ctx.scene.state;
+                    globalState.companyRHeadQuarterLocationId = hqId
+                    // globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
                 break;
         }
     }
@@ -546,7 +550,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
             case "name":
                 globalState.companyGName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "sector":
                 globalState.companyGSectorName = response
@@ -568,24 +572,24 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     ctx.session.companyGSectorID = sectorId;
                     ctx.scene.state.companyGSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                    ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                     break;
                 }
             case "phone":
                 globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "website":
                 globalState.companyRWebsite = response
                 globalState.companyGWebsite = response
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "email":
                 globalState.companyGEmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "hqs":
                 globalState.companyGHeadQuarterLocation = response
@@ -608,7 +612,7 @@ export const companyEditValueRHandler = Telegraf.on(["photo", "text", "contact",
                     globalState = ctx.scene.state;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
         }
     }
@@ -624,7 +628,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
             case "name":
                 isG ? globalState.companyGName = response : globalState.companyRName = response
                 ctx.reply("Name Updated")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "sector":
                 isG ? globalState.companyGSectorName = response : globalState.companyRSectorName = response
@@ -646,23 +650,23 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                     isG ? ctx.session.companyGSectorID = sectorId : ctx.session.companyRSectorID = sectorId;
                     isG ? ctx.scene.state.companyGSectorID = sectorId : ctx.scene.state.companyRSectorID = sectorId;
                     ctx.reply("Sector Updated")
-                    ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                    ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                     break;
                 }
             case "phone":
                 isG ? globalState.companyGPhoneNumber = response : globalState.companyGPhoneNumber = response
                 ctx.reply("Phone Updated")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "website":
                 isG ? globalState.companyGWebsite = response : globalState.companyRWebsite
                 ctx.reply("Website Updated")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "email":
                 isG ? globalState.companyGEmail = response : globalState.companyREmail = response
                 ctx.reply("updated")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                ctx.replyWithHTML(formatCompanyRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
             case "hqs":
                 isG ? globalState.companyGHeadQuarterLocation = response : globalState.companyGHeadQuarterLocation = response
@@ -688,7 +692,7 @@ export const companyEditValueHandler = Telegraf.on(["photo", "text", "contact", 
                     isG ? ctx.session.companyGHeadQuarterLocationId = hqId : ctx.session.companyRHeadQuarterLocationId = hqId;
                 }
                 ctx.reply("Updated HeadQuarters")
-                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+                ctx.replyWithHTML(isG ? formatCompanyRegistrationMsg(globalState) : formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmGMKeyboard);
                 break;
         }
     }

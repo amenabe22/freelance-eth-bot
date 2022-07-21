@@ -5,7 +5,7 @@ Verified Company ✅
 60 Jobs Posted | Hired 51 times
 __________________
 
-Company Name: ${state.companyGName} 
+Company Name: ${state.companyRName} 
 
 Industry sector: ${state.companyRSectorName}   
 
@@ -21,15 +21,15 @@ Company HQ location: ${state.companyRHeadQuarterLocation}
 
 Social Media Links  
 
-${state.companyCGMFacebookLink ? `Facebook: ${state.companyCRMFacebookLink}` : ''}
+${state.companyCRFacebookLink ? `Facebook: ${state.companyCRFacebookLink}` : ''}
 
-${state.companyCGMTelegramLink ? `Telegram: ${state.companyCRMTelegramLink}` : ''}
+${state.companyCRTelegramLink ? `Telegram: ${state.companyCRTelegramLink}` : ''}
 
-${state.companyCGMYouTubeLink ? `YouTube: ${state.companyCRMYouTubeLink}` : ''}
+${state.companyCRYouTubeLink ? `YouTube: ${state.companyCRYouTubeLink}` : ''}
 
-${state.companyCGMTikTokLink ? `TikTok: ${state.companyCRMTikTokLink}` : ''}
+${state.companyCRTikTokLink ? `TikTok: ${state.companyCRTikTokLink}` : ''}
 
-${state.companyCGMTwitterLink ? `Twitter: ${state.companyCRMTwitterLink}` : ''}
+${state.companyCRTwitterLink ? `Twitter: ${state.companyCRMTwitterLink}` : ''}
 
 ${state.companyCGMOther1Link ? `Link 1: ${state.companyCRMOther1Link}` : ''}
 
@@ -67,10 +67,12 @@ ${state.companyCGMYouTubeLink ? `YouTube: ${state.companyCGMYouTubeLink}` : ''}
 
 ${state.companyCGMTikTokLink ? `TikTok: ${state.companyCGMTikTokLink}` : ''}
 
-${state.companyCGMTwitterLink ? `Twitter: ${state.companyCGMTwitterLink}` : ''}
+${state.companyCRTwitterLink ? `Twitter: ${state.companyCRTwitterLink}` : ''}
 
-${state.companyCGMOther1Link ? `Link 1: ${state.companyCGMOther1Link}` : ''}
+${state.companyCRLinkedInLink ? `Link 1: ${state.companyCRLinkedInLink}` : ''}
 
-${state.companyCGMOther2Link ? `Link 2: ${state.companyCGMOther2Link}` : ''}
+${state.companyCROther1Link ? `Link 2: ${state.companyCROther1Link}` : ''}
 
-${state.companyCGMOther3Link ? `Link 2: ${state.companyCGMOther3Link}` : ''}`;
+${state.companyCROther2Link ? `Link 2: ${state.companyCROther2Link}` : ''}
+
+${state.companyCROther3Link ? `Link 2: ${state.companyCROther3Link}` : ''}`;
