@@ -223,17 +223,19 @@ export const COMPANY_SECTORS = gql`query {
     type
   }
 }`
-export const COMPNAY_SECTOR = gql`query getSector($name: citext!) {
-  entity_sectors(where: { name: { _eq: $name } }) {
+export const COMPNAY_SECTOR = gql`query getSector($name: String!) {
+  entity_sectors(where: { en: { _eq: $name } }) {
     id
-    name
+    en
+    am
   }
 }
 `
-export const STARTUP_SECTOR = gql`query getSector($name: citext!) {
-  entity_sectors(where: { name: { _eq: $name } }) {
+export const STARTUP_SECTOR = gql`query getSector($name: String!) {
+  entity_sectors(where: { en: { _eq: $name } }) {
     id
-    name
+    en
+    am
   }
 }
 `

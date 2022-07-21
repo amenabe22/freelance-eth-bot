@@ -20,7 +20,7 @@ import {
   socialMediaListUGMKeyboard,
   socialMediaListLRKeyboard,
   companyRegisterOptionalKeyboard,
-  
+
 
 } from "../../keybaords/company.registration_kbs"
 import { companyHandOver, companyEdit } from "../../services/company.registration";
@@ -258,7 +258,7 @@ export const startupLGMOfficialPhoneNoHandler = Telegraf.on(["photo", "text", "c
   }
 })
 export const startupLGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
-  if (ctx.message.text) { 
+  if (ctx.message.text) {
     ctx.scene.state.startupLGMHeadQuarterLocation = ctx.message.text;
     const { data, error } = await fetchCity({ name: ctx.scene.state.startupLGMHeadQuarterLocation })
     const { cities } = data
@@ -278,36 +278,36 @@ export const startupLGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
       ctx.scene.state.startupLGMHeadQuarterLocation = hqId;
       globalState = ctx.scene.state;
       console.log(globalState, "global states")
-      if(!globalState.startupLGMFounder2) {
+      if (!globalState.startupLGMFounder2) {
         globalState.startupLGMFounder2 = " ";
-      }else if(!globalState.startupLGMFounder3){
+      } else if (!globalState.startupLGMFounder3) {
         globalState.startupLGMFounder3 = " ";
-      }else if(!globalState.startupLGMFounder4){
+      } else if (!globalState.startupLGMFounder4) {
         globalState.startupLGMFounder4 = " ";
-      }else if(!globalState.startupLGMFounder5){
-        globalState.startupLGMFounder5 = " ";      
-      }else if (!globalState.startupLGMFacebookLink){
+      } else if (!globalState.startupLGMFounder5) {
+        globalState.startupLGMFounder5 = " ";
+      } else if (!globalState.startupLGMFacebookLink) {
         globalState.startupLGMFacebookLink = " ";
-      }else if (!globalState.startupLGMTelegramLink){
+      } else if (!globalState.startupLGMTelegramLink) {
         globalState.startupLGMTelegramLink = " ";
-      }else if (!globalState.startupYoutubeLink){
+      } else if (!globalState.startupYoutubeLink) {
         globalState.startupYoutubeLink = " ";
-      }else if (!globalState.startupLGMTikTokLink){
+      } else if (!globalState.startupLGMTikTokLink) {
         globalState.startupLGMTikTokLink = " ";
-      }else if (!globalState.startupLGMTwitterLink){
+      } else if (!globalState.startupLGMTwitterLink) {
         globalState.startupLGMTwitterLink = " ";
-      }else if (!globalState.startupLGMLinkedInLink){
+      } else if (!globalState.startupLGMLinkedInLink) {
         globalState.startupLGMLinkedInLink = " ";
-      }else if (!globalState.startupLGMOther1Link){
+      } else if (!globalState.startupLGMOther1Link) {
         globalState.startupLGMOther1Link = " ";
-      }else if (!globalState.startupLGMOther2Link){
+      } else if (!globalState.startupLGMOther2Link) {
         globalState.startupLGMOther2Link = " ";
-      }else if (!globalState.startupLGMOther3Link){
+      } else if (!globalState.startupLGMOther3Link) {
         globalState.startupLGMOther3Link = " ";
       }
- await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nLinkedIn link: ${globalState.startupLGMLinkedInLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
- await ctx.replyWithHTML("***********************************", onlyMainMenuKeyboard) 
-}
+      await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName}\nFounder1: ${globalState.startupLGMFounder1}\nFounder2: ${globalState.startupLGMFounder2}\nFounder3: ${globalState.startupLGMFounder3}\nFounder4: ${globalState.startupLGMFounder4}\nFounder5: ${globalState.startupLGMFounder5}\nPhone: ${globalState.startupLGMPhoneNumber}\nSector: ${globalState.startupLGMSectorName}\nEmployee Size: ${globalState.startupLGMEmployeeSize}\nWebsite: ${globalState.startupLGMWebsite}\nEmail: ${globalState.startupLGMEmail}\nFacebook link: ${globalState.startupLGMFacebookLink}\nTelegram link: ${globalState.startupLGMTelegramLink}\nYouTube link: ${globalState.startupLGMYouTubeLink}\nTikTok link: ${globalState.startupLGMTikTokLink}\nTwitter link: ${globalState.startupLGMTwitterLink}\nLinkedIn link: ${globalState.startupLGMLinkedInLink}\nOther link1: ${globalState.startupLGMOther1Link}\nOther link2: ${globalState.startupLGMOther2Link}\nOther link3: ${globalState.startupLGMOther3Link}`, registerStartupConfirmLGMKeyboard)
+      await ctx.replyWithHTML("***********************************", onlyMainMenuKeyboard)
+    }
   } else {
     ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
       reply_markup: JSON.stringify({
@@ -391,8 +391,32 @@ export const socialMediaAddingActionLGMHandler = async (ctx: any) => {
   ctx.session.targetedText = clicked.split('-')[0];
   console.log(ctx.session.targetedText);
   console.log(ctx.scene.state.startupLGMFounder1)
-  ctx.scene.enter("socialMediaLinkLGMScene", ctx.scene.state)  
+  ctx.scene.enter("socialMediaLinkLGMScene", ctx.scene.state)
+}
+
+export const startupSocialMediaLinkLGMInitHandler = async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.replyWithHTML("please enter facebook link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.replyWithHTML("please enter telegram link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.replyWithHTML("please enter youtube link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.replyWithHTML("please enter tiktok link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.replyWithHTML("please enter twitter link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.replyWithHTML("please enter linkedin link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.replyWithHTML("please enter otherlink1 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.replyWithHTML("please enter otherlink2 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+    ctx.scene.enter("socialMediaLinkDoneLGMScene", ctx.scene.state);
   }
+<<<<<<< HEAD
   
   export const startupSocialMediaLinkLGMInitHandler = async (ctx: any) => {
     if(ctx.session.targetedText == "facebook"){
@@ -454,7 +478,47 @@ export const socialMediaAddingActionLGMHandler = async (ctx: any) => {
   })
   export const startupSocialMediaLinkDoneLGMInitHandler = async (ctx: any) => {
     ctx.replyWithHTML("please enter email of your startup.",companyRegisterOptionalKeyboard(ctx))
+=======
+
+}
+
+export const startupSocialMediaLinkLGMValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.scene.state.startupLGMFacebookLink = ctx.message.text;
+    ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.scene.state.startupLGMTelegramLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.scene.state.startupLGMYouTubeLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.scene.state.startupLGMTikTokLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.scene.state.startupLGMTwitterLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.scene.state.startupLGMLinkedInLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.scene.state.startupLGMOther1Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.scene.state.startupLGMOther2Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.scene.state.startupLGMOther3Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLGMKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+
+    ctx.scene.enter("socialMediaLinkDoneLGMScene", ctx.scene.state);
+>>>>>>> 102ecfa838a41b6612f65112656b48e315dfbed6
   }
+})
+export const startupSocialMediaLinkDoneLGMInitHandler = async (ctx: any) => {
+  ctx.replyWithHTML("please enter email of your startup.", companyRegisterOptionalKeyboard(ctx))
+}
 // handling social media in LGM ends here
 
 //licensed startup registration with General manager ends here...
@@ -582,7 +646,7 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
       case "name":
         globalState.startupLGMName = response
         ctx.reply("Name Updated")
-        await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard);        break;
+        await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLGMName} \nFounder1: ${globalState.startupLGMFounder1} \nFounder2: ${globalState.startupLGMFounder2} \nFounder3: ${globalState.startupLGMFounder3} \nFounder4: ${globalState.startupLGMFounder4} \nFounder5: ${globalState.startupLGMFounder5} \nPhone: ${globalState.startupLGMPhoneNumber} \nSector: ${globalState.startupLGMSectorName} \nEmployee Size: ${globalState.startupLGMEmployeeSize} \nWebsite: ${globalState.startupLGMWebsite} \nEmail: ${globalState.startupLGMEmail} \nFacebook link: ${globalState.startupLGMFacebookLink} \nTelegram link: ${globalState.startupLGMTelegramLink} \nYouTube link: ${globalState.startupLGMYouTubeLink} \nTikTok link: ${globalState.startupLGMTikTokLink} \nTwitter link: ${globalState.startupLGMTwitterLink} \nOther link1: ${globalState.startupLGMOther1Link} \nOther link2: ${globalState.startupLGMOther2Link} \nOther link3: ${globalState.startupLGMOther3Link} `, registerStartupConfirmLGMKeyboard); break;
       case "founderN1":
         globalState.startupLGMFounder1 = response
         ctx.replyWithHTML("Founder one Name Updated");
@@ -752,7 +816,7 @@ export const startupUFoundersHandler = Telegraf.on(["photo", "text", "contact", 
       ctx.replyWithHTML(ctx.i18n.t('startupRepIdPhotoMsg'), cancelKeyboard(ctx));
       return ctx.wizard.next();
     } else if (vn(ctx.message.text)) {
-      totalAddedFounders++ 
+      totalAddedFounders++
       ctx.scene.state[`startupUGMFounder${totalAddedFounders}`] = ctx.message.text;
       console.log(ctx.scene.state[`startupUGMFounder${totalAddedFounders} `])
       if (totalAddedFounders >= MAX_ST_FOUNDERS_LIMIT) {
@@ -866,7 +930,7 @@ export const startupUSocialMediaLinkHandler = Telegraf.on(["photo", "text", "con
   } else {
     ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));
     return;
-  } 
+  }
 })
 
 export const startupUEmailHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -935,28 +999,28 @@ export const startupUHeadQuarterLocationHandler = Telegraf.on(["photo", "text", 
       let hqId = cities[0].id;
       ctx.session.startupUGMHeadQuarterLocation = hqId;
       ctx.scene.state.startupUGMHeadQuarterLocation = hqId;
-     ctx.scene.state.uStartupName  =  ctx.i18n.t('companyStartupName')
-     ctx.scene.state.uStartupFounder1Name = ctx.i18n.t('startupFounder1') 
-     ctx.scene.state.uStartupFounder2Name = ctx.i18n.t('startupFounder2')
-     ctx.scene.state.uStartupFounder3Name = ctx.i18n.t('startupFounder3')
-     ctx.scene.state.uStartupFounder4Name = ctx.i18n.t('startupFounder4')
-     ctx.scene.state.uStartupFounder5Name = ctx.i18n.t('startupFounder5')
-     ctx.scene.state.uStartupPhone = ctx.i18n.t('companyStartupPhone')
-     ctx.scene.state.uStartupSector = ctx.i18n.t('companyStartupSector')
-     ctx.scene.state.uStartupWebsite = ctx.i18n.t('companyStartupWebsite')
-     ctx.scene.state.uStartupEmail = ctx.i18n.t('companyStartupEmail')
-     ctx.scene.state.uStartupHQLocation = ctx.i18n.t('companyStartupHQ')
-     ctx.scene.state.uStartupFbLink = ctx.i18n.t('companyStartupFbLink')                                               
-     ctx.scene.state.uStartupTgLink = ctx.i18n.t('companyStartupTgLink')                                               
-     ctx.scene.state.uStartupYTLink = ctx.i18n.t('companyStartupYTLink')                                           
-     ctx.scene.state.uStartupTTLink = ctx.i18n.t('companyStartupTTLink')                                              
-     ctx.scene.state.uStartupLILink = ctx.i18n.t('companyStartupLILink')                                               
-     ctx.scene.state.uStartupTwitterLink = ctx.i18n.t('companyStartupTwitterLink')                                              
-     ctx.scene.state.uStartupOtherL1 = ctx.i18n.t('companyStartupOL1')                                             
-     ctx.scene.state.uStartupOtherL2 = ctx.i18n.t('companyStartupOL2')                                              
-     ctx.scene.state.uStartupOtherL3 = ctx.i18n.t('companyStartupOL3') 
-     globalState = ctx.scene.state                  
-     //work in progress.                          
+      ctx.scene.state.uStartupName = ctx.i18n.t('companyStartupName')
+      ctx.scene.state.uStartupFounder1Name = ctx.i18n.t('startupFounder1')
+      ctx.scene.state.uStartupFounder2Name = ctx.i18n.t('startupFounder2')
+      ctx.scene.state.uStartupFounder3Name = ctx.i18n.t('startupFounder3')
+      ctx.scene.state.uStartupFounder4Name = ctx.i18n.t('startupFounder4')
+      ctx.scene.state.uStartupFounder5Name = ctx.i18n.t('startupFounder5')
+      ctx.scene.state.uStartupPhone = ctx.i18n.t('companyStartupPhone')
+      ctx.scene.state.uStartupSector = ctx.i18n.t('companyStartupSector')
+      ctx.scene.state.uStartupWebsite = ctx.i18n.t('companyStartupWebsite')
+      ctx.scene.state.uStartupEmail = ctx.i18n.t('companyStartupEmail')
+      ctx.scene.state.uStartupHQLocation = ctx.i18n.t('companyStartupHQ')
+      ctx.scene.state.uStartupFbLink = ctx.i18n.t('companyStartupFbLink')
+      ctx.scene.state.uStartupTgLink = ctx.i18n.t('companyStartupTgLink')
+      ctx.scene.state.uStartupYTLink = ctx.i18n.t('companyStartupYTLink')
+      ctx.scene.state.uStartupTTLink = ctx.i18n.t('companyStartupTTLink')
+      ctx.scene.state.uStartupLILink = ctx.i18n.t('companyStartupLILink')
+      ctx.scene.state.uStartupTwitterLink = ctx.i18n.t('companyStartupTwitterLink')
+      ctx.scene.state.uStartupOtherL1 = ctx.i18n.t('companyStartupOL1')
+      ctx.scene.state.uStartupOtherL2 = ctx.i18n.t('companyStartupOL2')
+      ctx.scene.state.uStartupOtherL3 = ctx.i18n.t('companyStartupOL3')
+      globalState = ctx.scene.state
+      //work in progress.                          
       await ctx.replyWithHTML(`${globalState.uStartupName}: ${globalState.startupUGMName} \nFounder1: ${globalState.startupUGMFounder1} \nFounder2: ${globalState.startupUGMFounder2} \nFounder3: ${globalState.startupUGMFounder3} \nFounder4: ${globalState.startupUGMFounder4} \nFounder5: ${globalState.startupUGMFounder5} \nPhone: ${globalState.startupUGMPhoneNumber} \nSector: ${globalState.startupUGMSectorName}\nWebsite: ${globalState.startupUGMWebsite} \nEmail: ${globalState.startupUGMEmail} \nFacebook link: ${globalState.startupUGMFacebookLink} \nTelegram link: ${globalState.startupUGMTelegramLink} \nYouTube link: ${globalState.startupUGMYouTubeLink} \nTikTok link: ${globalState.startupUGMTikTokLink} \nTwitter link: ${globalState.startupUGMTwitterLink} \nOther link1: ${globalState.startupUGMOther1Link} \nOther link2: ${globalState.startupUGMOther2Link} \nOther link3: ${globalState.startupUGMOther3Link} `, registerStartupConfirmUGMKeyboard)
       await ctx.replyWithHTML("****************************", onlyMainMenuKeyboard)
     }
@@ -1045,8 +1109,32 @@ export const socialMediaAddingActionUHandler = async (ctx: any) => {
   console.log(ctx.session.targetedText);
   console.log(ctx.scene.state.startupUGMFounder1)
   ctx.scene.enter("socialMediaLinkUScene", ctx.scene.state)
-  
+
+}
+
+export const startupSocialMediaLinkUInitHandler = async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.replyWithHTML("please enter facebook link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.replyWithHTML("please enter telegram link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.replyWithHTML("please enter youtube link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.replyWithHTML("please enter tiktok link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.replyWithHTML("please enter twitter link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.replyWithHTML("please enter linkedin link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.replyWithHTML("please enter otherlink1 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.replyWithHTML("please enter otherlink2 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+    ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
   }
+<<<<<<< HEAD
   
   export const startupSocialMediaLinkUInitHandler = async (ctx: any) => {
     if(ctx.session.targetedText == "facebook"){
@@ -1107,7 +1195,46 @@ export const socialMediaAddingActionUHandler = async (ctx: any) => {
   })
   export const startupSocialMediaLinkDoneUInitHandler = async (ctx: any) => {
     ctx.replyWithHTML("please enter email of your startup.",companyRegisterOptionalKeyboard(ctx))
+=======
+
+}
+
+export const startupSocialMediaLinkUValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.scene.state.startupUGMFacebookLink = ctx.message.text;
+    ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.scene.state.startupUGMTelegramLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.scene.state.startupUGMYouTubeLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.scene.state.startupUGMTikTokLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.scene.state.startupUGMTwitterLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.scene.state.startupUGMLinkedInLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.scene.state.startupUGMOther1Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.scene.state.startupUGMOther2Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.scene.state.startupUGMOther3Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+    ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
+>>>>>>> 102ecfa838a41b6612f65112656b48e315dfbed6
   }
+})
+export const startupSocialMediaLinkDoneUInitHandler = async (ctx: any) => {
+  ctx.replyWithHTML("please enter email of your startup.", companyRegisterOptionalKeyboard(ctx))
+}
 //handling social media for UGM ends here...
 
 //edit startup registeration with UGM starts here
@@ -1529,11 +1656,11 @@ export const startupLREmployeeSizeHandler = Telegraf.on(["photo", "text", "conta
   } else {
     ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), companyRegisterOptionalKeyboard(ctx));
     return;
-  } 
+  }
 })
 export const startupLRWebsiteHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
-    if (ctx.message.text == "Skip") { 
+    if (ctx.message.text == "Skip") {
       ctx.scene.state.startupLRWebsite = " ";
       ctx.replyWithHTML(ctx.i18n.t('startupAskSocialMediaMsg'), socialMediaYesNoKeyboard(ctx));
       return ctx.wizard.next();
@@ -1731,8 +1858,32 @@ export const socialMediaAddingActionLRHandler = async (ctx: any) => {
   console.log(ctx.session.targetedText);
   console.log(ctx.scene.state.startupLRFounder1)
   ctx.scene.enter("socialMediaLinkLRScene", ctx.scene.state)
-  
+
+}
+
+export const startupSocialMediaLinkLRInitHandler = async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.replyWithHTML("please enter facebook link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.replyWithHTML("please enter telegram link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.replyWithHTML("please enter youtube link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.replyWithHTML("please enter tiktok link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.replyWithHTML("please enter twitter link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.replyWithHTML("please enter linkedin link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.replyWithHTML("please enter otherlink1 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.replyWithHTML("please enter otherlink2 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+    ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
   }
+<<<<<<< HEAD
   
   export const startupSocialMediaLinkLRInitHandler = async (ctx: any) => {
     if(ctx.session.targetedText == "facebook"){
@@ -1755,46 +1906,47 @@ export const socialMediaAddingActionLRHandler = async (ctx: any) => {
       ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard(ctx));
      }else if(ctx.session.targetedText == "done"){
       ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
+=======
+
+}
+
+export const startupSocialMediaLinkLRValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
+  if (ctx.session.targetedText == "facebook") {
+    ctx.scene.state.startupLRFacebookLink = ctx.message.text;
+    ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "telegram") {
+    ctx.scene.state.startupLRTelegramLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "youtube") {
+    ctx.scene.state.startupLRYouTubeLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "tiktok") {
+    ctx.scene.state.startupLRTikTokLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "twitter") {
+    ctx.scene.state.startupLRTwitterLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "linkedin") {
+    ctx.scene.state.startupLRLinkedInLink = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "otherlink1") {
+    ctx.scene.state.startupLROther1Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "otherlink2") {
+    ctx.scene.state.startupLROther2Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "otherlink3") {
+    ctx.scene.state.startupLROther3Link = ctx.message.text;
+    ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
+  } else if (ctx.session.targetedText == "done") {
+    ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
+>>>>>>> 102ecfa838a41b6612f65112656b48e315dfbed6
   }
-  
-  }
-  
-  export const startupSocialMediaLinkLRValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) =>{ 
-    if(ctx.session.targetedText == "facebook"){
-      ctx.scene.state.startupLRFacebookLink = ctx.message.text;
-      ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "telegram"){
-      ctx.scene.state.startupLRTelegramLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "youtube"){
-      ctx.scene.state.startupLRYouTubeLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "tiktok"){
-      ctx.scene.state.startupLRTikTokLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "twitter"){
-      ctx.scene.state.startupLRTwitterLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "linkedin"){
-      ctx.scene.state.startupLRLinkedInLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "otherlink1"){
-      ctx.scene.state.startupLROther1Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "otherlink2"){
-      ctx.scene.state.startupLROther2Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "otherlink3"){
-      ctx.scene.state.startupLROther3Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
-    }else if(ctx.session.targetedText == "done"){
-      ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
-    }
-  })
-  export const startupSocialMediaLinkDoneLRInitHandler = async (ctx: any) => {
-    ctx.replyWithHTML("please enter email of your startup.",companyRegisterOptionalKeyboard(ctx))
-  }
-  
+})
+export const startupSocialMediaLinkDoneLRInitHandler = async (ctx: any) => {
+  ctx.replyWithHTML("please enter email of your startup.", companyRegisterOptionalKeyboard(ctx))
+}
+
 // hanling social media links for LR ends here
 
 
@@ -2057,10 +2209,10 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
           globalState = ctx.scene.state;
         }
         ctx.reply("Updated HeadQuarters")
-       await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
-       await ctx.replyWithHTML("***********************", onlyMainMenuKeyboard);
-       break;
-      }
+        await ctx.replyWithHTML(`Here is your data\nStartupName:${globalState.startupLRName} \nFounder1: ${globalState.startupLRFounder1} \nFounder2: ${globalState.startupLRFounder2} \nFounder3: ${globalState.startupLRFounder3} \nFounder4: ${globalState.startupLRFounder4} \nFounder5: ${globalState.startupLRFounder5} \nPhone: ${globalState.startupLRPhoneNumber} \nSector: ${globalState.startupLRSectorName} \nEmployee Size: ${globalState.startupLREmployeeSize} \nWebsite: ${globalState.startupLRWebsite} \nEmail: ${globalState.startupLREmail} \nFacebook link: ${globalState.startupLRFacebookLink} \nTelegram link: ${globalState.startupLRTelegramLink} \nYouTube link: ${globalState.startupLRYouTubeLink} \nTikTok link: ${globalState.startupLRTikTokLink} \nTwitter link: ${globalState.startupLRTwitterLink} \nOther link1: ${globalState.startupLROther1Link} \nOther link2: ${globalState.startupLROther2Link} \nOther link3: ${globalState.startupLROther3Link} `, registerStartupConfirmLRKeyboard)
+        await ctx.replyWithHTML("***********************", onlyMainMenuKeyboard);
+        break;
+    }
   }
 })
 //edit startup registeration with LR ends here
@@ -2083,12 +2235,12 @@ export const startupSelectionActionHandler = async (ctx: any) => {
     let checkUserEntity = data.users[0].user_entities;
     console.log(checkUserEntity);
     if (checkUserEntity) {
-      let myStartups = checkUserEntity.filter((startup: any)=>{
-        if(startup.entity["verified_at"] != null){
+      let myStartups = checkUserEntity.filter((startup: any) => {
+        if (startup.entity["verified_at"] != null) {
           return true;
         }
       });
-      console.log("my startups list",myStartups)
+      console.log("my startups list", myStartups)
       ctx.session.userSName = myStartups.map((nam: any) => (nam.entity["name"]))
       console.log(ctx.session.userSName)
       ctx.session.userSId = myStartups.map((nam: any) => nam.entity["id"])
