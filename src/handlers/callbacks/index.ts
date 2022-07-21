@@ -72,7 +72,7 @@ export const menuJobseekerSelection = {
 }
 
 export const menuMainSelector = {
-    key: "Main Menu",
+    key: /^(Main Menu|ዋና ማውጫ)$/,
     handler: menuMainSelectorHandler
 }
 
