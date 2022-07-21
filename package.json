@@ -26,6 +26,7 @@
     "form-data": "^4.0.0",
     "graphql": "^14.7.0",
     "graphql-tag": "^2.12.6",
+    "nodemon": "^2.0.19",
     "react-apollo": "^3.1.5",
     "request": "^2.88.2",
     "telegraf": "^4.8.5",

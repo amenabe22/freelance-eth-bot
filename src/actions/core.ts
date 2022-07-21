@@ -112,7 +112,7 @@ export const SectorSelectionAction = {
 }
 //listen for 30 - 40 in the callback data for list of companies
 export const CompanySelectionAction = {
-    key: /\b(3?[0-9]|4[0-9]|5[0-0])\b/g,
+    key: /^myCompanies_*.*$/,
     handler: hdlr.companySelectionActionHandler
 }
 
@@ -126,7 +126,7 @@ export const PersonalizationSectSelectorAction = {
     handler: hdlr.personalizedSectSectorActionHandler
 }
 export const StartupSelectionAction = {
-    key: /\b(6?[0-9]|7[0-9]|8[0-0])\b/g,
+    key: /^myStartups_*.*$/,
     handler: hdlr.startupSelectionActionHandler
 }
 export const EditProfileAction = {
@@ -229,4 +229,3 @@ export const socialMediaAddingCGMInitAction = {
     key: ["facebook-linkCGM", "telegram-linkCGM", "youtube-linkCGM", "tiktok-linkCGM", "twitter-linkCGM", "linkedin-linkCGM", "otherlink1-linkCGM", "otherlink2-linkCGM", "otherlink3-linkCGM", "done-linkCGM"],
     handler: hdlr.socialMediaAddingActionCGMHandler
 }
-
