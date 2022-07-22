@@ -873,7 +873,7 @@ export const companyIndustrySectorGHandler = Telegraf.on(["photo", "text", "cont
             console.log("bpt 2", sectorId)
             ctx.session.companyGSectorID = sectorId;
             ctx.scene.state.companyGSectorID = sectorId;
-            ctx.replyWithHTML("please enter employee size of your company.", cancelKeyboard);
+            ctx.replyWithHTML("please enter employee size of your company.", cancelKeyboard(ctx));
             return ctx.wizard.next();
         }
     }
@@ -882,10 +882,10 @@ export const companyEmployeeSizeGHandler = Telegraf.on(["photo", "text", "contac
     if (ctx.message.text) {
         ctx.scene.state.companyGEmployeeSize = ctx.message.text;
         console.log(ctx.scene.state.companyGEmployeeSize);
-        ctx.replyWithHTML(`please enter website of your company.`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(`please enter website of your company.`, companyRegisterOptionalKeyboard(ctx));
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`please enter valid employee size of your company!`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(`please enter valid employee size of your company!`, companyRegisterOptionalKeyboard(ctx));
         return;
     }
 })
@@ -898,29 +898,29 @@ export const companyWebsiteGHandler = Telegraf.on(["photo", "text", "contact", "
             ctx.scene.state.companyGWebsite = ctx.message.text;
             await ctx.replyWithHTML(`Do you want to add social media links for your company ?`, socialMediaYesNoKeyboard(ctx));
         } else {
-            ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
+            ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard(ctx));
             return;
         }
 
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(`please enter valid company website!`, companyRegisterOptionalKeyboard(ctx));
         return;
     }
 })
 export const companySocialMediaLinkYesNoGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         if (ctx.message.text == "No") {
-            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard);
+            await ctx.replyWithHTML(`please enter your company Email`, companyRegisterOptionalKeyboard(ctx));
             return ctx.wizard.next();
         } else if (ctx.message.text == "Yes") {
             ctx.replyWithHTML(`please choose which social media link to enter.`, socialMediaListCGMKeyboard);
         } else {
-            ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+            ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard(ctx));
             return;
         }
     } else {
-        ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard);
+        ctx.replyWithHTML(`sorry I don't understand!`, socialMediaYesNoKeyboard(ctx));
         return;
     }
 })
@@ -928,7 +928,7 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
     if (ctx.message.text) {
         if (ctx.message.text == "Skip") {
             ctx.scene.state.companyGEmail = " ";
-            ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
+            ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard(ctx));
             return ctx.wizard.next();
         } else if (ve(ctx.message.text)) {
             const res = await verifyEmailEntity({ email: ctx.message.text })
@@ -938,14 +938,14 @@ export const companyEmailGHandler = Telegraf.on(["photo", "text", "contact", "do
             }
             ctx.scene.state.companyGEmail = ctx.message.text;
             console.log(ctx.scene.state.companyGEmail);
-            ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard);
+            ctx.replyWithHTML(`please enter your company official phone number.`, cancelKeyboard(ctx));
             return ctx.wizard.next();
         } else {
-            ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+            ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard(ctx));
             return;
         }
     } else {
-        ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard);
+        ctx.replyWithHTML(`please enter valid email address of your company!`, companyRegisterOptionalKeyboard(ctx));
         return;
     }
 })
