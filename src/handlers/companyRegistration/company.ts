@@ -5,6 +5,6 @@ export const companyGMSelectionHandler = async (ctx: any) => {
 }
 export const companyRSelectionHandler = async (ctx: any) => { 
     ctx.answerCbQuery(); 
-    ctx.deleteMessage(); 
+    ctx.deleteMessage();  
     ctx.scene.enter("companyRegistrationRScene", (ctx));  
 }

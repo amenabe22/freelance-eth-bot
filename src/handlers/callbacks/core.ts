@@ -42,7 +42,7 @@ export const companyHandler = async (ctx: any) => {
             await ctx.replyWithHTML(ctx.i18n.t('companyMsg'), { 
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
-                        text: x, callback_data: JSON.stringify("myCompanies_"+companyId)
+                        text: x, callback_data: JSON.stringify(xi+30)
                     }]))
                 }),
             })
@@ -84,7 +84,7 @@ export const startupHandler = async (ctx: any) => {
             await ctx.replyWithHTML(ctx.i18n.t('startupFirstMsg'), {
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
-                        text: x, callback_data: JSON.stringify("myStartups_"+startupId)
+                        text: x, callback_data: JSON.stringify(xi+60)
                     }]))
                 }),
             })

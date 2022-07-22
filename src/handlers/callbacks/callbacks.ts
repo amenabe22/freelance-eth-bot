@@ -33,9 +33,10 @@ export const registerJobSeekerCancelHandler = (ctx: any) => {
   ctx.replyWithHTML(`Alright ${ctx.from.first_name}, what do you like to do today?`, jobSeekerKeyboard)
   ctx.scene.leave();
 }
-// handler for new customer registration back button click event
+// handler for company startup registration back button click event
+
 export const companyRegistraionCancelHandler = (ctx: any) => {
-  ctx.replyWithHTML(`Please Select Company or Startup to register and post jobs.\n\nRequirements---\n${boldCompany}\n   . General manager ID\n   . License Photo\n${boldStartup}\n   . General Manager ID\n   . License Photo`, chooseCompanyStartupKeyboard);
+  ctx.replyWithHTML(ctx.i18n.t('companyStartupMsg'), chooseCompanyStartupKeyboard(ctx));
   ctx.scene.leave();
 
 }

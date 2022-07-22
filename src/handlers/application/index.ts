@@ -94,7 +94,7 @@ export const jobApplyConfirmHandler = async (ctx: any) => {
                 ]
             }
         }
-    })
+    }) 
 
     if (data) {
         ctx.replyWithHTML(`Congradulations you have apply a job successfully.`, applicationStateCancelBtn);
@@ -109,7 +109,7 @@ export const jobApplyEditInitHandler = async (ctx: any) => {
 }
 
 export const jobApplyingSelectedFieldEditHandler = async (ctx: any) => {
-    ctx.deleteMessage();
+    ctx.deleteMessage(); 
     let editTarget = ctx.match[0].split('-')[1];
     console.log(editTarget);
     ctx.session.editTarget = editTarget;

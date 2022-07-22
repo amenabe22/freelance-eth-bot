@@ -1,7 +1,7 @@
 import fs from "fs"
 import { Telegraf, Context } from "telegraf";
 import FormData from "form-data";
-import { cancelKeyboard, employerKeyboard } from "../../keybaords/menu_kbs";
+import { cancelKeyboard, employerKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
 import { fetchCities, fetchCity, fetchCompanySector, fetchCompanySectors } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { getUserByTelegramId, getUserByPhone, verifyEmailEntity } from "../../services/registration";
@@ -211,8 +211,8 @@ export const companyIdPhotoRHandler = Telegraf.on(["photo", "text", "contact", "
         }).catch((e) => {
             console.log(JSON.stringify(e))
         })
-        return ctx.wizard.next();
-    } else {
+        return ctx.wizard.next(); 
+    } else { 
         ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));
         return;
     }
@@ -236,7 +236,7 @@ export const companyStampedLetterPhotoRHandler = Telegraf.on(["photo", "text", "
                 ctx.replyWithHTML(ctx.i18n.t('companySectorMsg'), {
                     reply_markup: JSON.stringify({
                         keyboard: secs, resize_keyboard: true, one_time_keyboard: true,
-                    }),
+                    }), 
                 })
                 return ctx.wizard.next();
             }
@@ -390,8 +390,8 @@ export const companyHeadQuarterLocationRHandler = Telegraf.on(["photo", "text", 
             ctx.session.companyRHeadQuarterLocationId = hqId;
             ctx.scene.state.companyRHeadQuarterLocationId = hqId;
             globalState = ctx.scene.state;
-            await ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard)
-            // await ctx.replyWithHTML(`${globalState.companyRNameBold}\n . Name: ${globalState.companyRName}\n . Sector: ${globalState.companyRSectorName}\n . Facebook Link: ${globalState.companyCRFacebookLink}\n . Telegram Link: ${globalState.companyCRTelegramLink}\n .YouTube Link: ${globalState.companyCRYouTubeLink}\n . TikTok Link: ${globalState.companyCRTikTokLink}\n . Twitter Link: ${globalState.companyCRTwitterLink}\n . LinkedIn Link: ${globalState.companyCRLinkedInLink}\n . Other Link1: ${globalState.companyCROther1Link}\n . Other Link2: ${globalState.companyCROther2Link}\n . Other Link3: ${globalState.companyCROther3Link}\n . Phone: ${globalState.companyRPhoneNumber}\n . Website: ${globalState.companyRWebsite}\n . Email: ${globalState.companyREmail}\n . Employee size: ${globalState.companyREmployeeSize}\n . HQ Location: ${globalState.companyRHeadQuarterLocation}`, registerCompanyConfirmKeyboard);
+            await ctx.replyWithHTML(formatCompanyRRegistrationMsg(globalState), registerCompanyConfirmKeyboard);
+            await ctx.replyWithHTML("****************************", onlyMainMenuKeyboard(ctx))
         }
     } else {
         ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
@@ -792,17 +792,17 @@ export const companySocialMediaLinkDoneCRInitHandler = async (ctx: any) => {
 
 
 export const companyGInitHandler = async (ctx: any) => {
-    ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard);
+    ctx.replyWithHTML("please enter the name of your comapny", cancelKeyboard(ctx));
 }
 export const companyNameGHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
         ctx.scene.state.companyGName = ctx.message.text;
         console.log(ctx.scene.state.companyGName);
         ctx.scene.state.companyGNameBold = ctx.scene.state.companyGName.bold();
-        ctx.replyWithHTML(`please send the photo of company trade license scanned photo.`, cancelKeyboard);
+        ctx.replyWithHTML(`please send the photo of company trade license scanned photo.`, cancelKeyboard(ctx));
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard);
+        ctx.replyWithHTML(`Please enter a valid name!`, cancelKeyboard(ctx));
         return;
     }
 })
@@ -813,12 +813,12 @@ export const companyTradeLicensePhotoGHandler = Telegraf.on(["photo", "text", "c
         const fname = `${ctx.from.id}.jpg`
         const { downloadURL }: any = await fetchTelegramDownloadLink(companyTradeLicensePhoto)
         download(downloadURL, `files/tradeLPhoto/${fname}`,).then(async () => {
-            ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard);
+            ctx.replyWithHTML(`please enter General Manager id photo.`, cancelKeyboard(ctx));
             // return ctx.wizard.next();
         })
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard);
+        ctx.replyWithHTML(`Please enter avalid trade license photo!`, cancelKeyboard(ctx));
         return;
     }
 })
@@ -847,7 +847,7 @@ export const companyIdPhotoGHandler = Telegraf.on(["photo", "text", "contact", "
             return ctx.wizard.next();
         })
     } else {
-        ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard);
+        ctx.replyWithHTML(`Please enter avalid id photo!`, cancelKeyboard(ctx));
         return;
     }
 })
@@ -970,7 +970,7 @@ export const companyOfficialPhoneNoGHandler = Telegraf.on(["photo", "text", "con
         }
         return ctx.wizard.next();
     } else {
-        ctx.replyWithHTML(`Please enter valid official phone number of your company!`, cancelKeyboard);
+        ctx.replyWithHTML(`Please enter valid official phone number of your company!`, cancelKeyboard(ctx));
         return;
     }
 })
@@ -1024,23 +1024,23 @@ export const socialMediaAddingActionCGMHandler = async (ctx: any) => {
 
 export const companySocialMediaLinkCGMInitHandler = async (ctx: any) => {
     if (ctx.session.targetedText == "facebook") {
-        ctx.replyWithHTML("please enter facebook link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter facebook link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "telegram") {
-        ctx.replyWithHTML("please enter telegram link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter telegram link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "youtube") {
-        ctx.replyWithHTML("please enter youtube link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter youtube link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "tiktok") {
-        ctx.replyWithHTML("please enter tiktok link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter tiktok link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "twitter") {
-        ctx.replyWithHTML("please enter twitter link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter twitter link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "linkedin") {
-        ctx.replyWithHTML("please enter linkedin link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter linkedin link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "otherlink1") {
-        ctx.replyWithHTML("please enter otherlink1 link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter otherlink1 link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "otherlink2") {
-        ctx.replyWithHTML("please enter otherlink2 link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter otherlink2 link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "otherlink3") {
-        ctx.replyWithHTML("please enter otherlink3 link of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter otherlink3 link of your company", cancelKeyboard(ctx));
     } else if (ctx.session.targetedText == "done") {
         ctx.scene.enter("socialMediaLinkDoneCGMScene", ctx.scene.state);
     }
@@ -1206,13 +1206,13 @@ export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
     ctx.deleteMessage();
     console.log(ctx.session.tobeEditedCompanyField)
     if (ctx.session.tobeEditedCompanyField == "edit_name_of_company") {
-        ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new name of your company", cancelKeyboard(ctx));
     } else if (ctx.session.tobeEditedCompanyField == "edit_employee_of_company") {
-        ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new employee size of your company", cancelKeyboard(ctx));
     } else if (ctx.session.tobeEditedCompanyField == "edit_email_of_company") {
-        ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new email of your company", cancelKeyboard(ctx));
     } else if (ctx.session.tobeEditedCompanyField == "edit_phone_of_company") {
-        ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new phone no of your company", cancelKeyboard(ctx));
     } else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
         ctx.replyWithHTML("please enter the new location of your company", {
             reply_markup: JSON.stringify({
@@ -1222,7 +1222,7 @@ export const companyEditSpecificFieldInitHandler = async (ctx: any) => {
             }),
         });
     } else if (ctx.session.tobeEditedCompanyField == "edit_websit_of_company") {
-        ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard);
+        ctx.replyWithHTML("please enter the new website of your company", cancelKeyboard(ctx));
     }
 }
 export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -1240,7 +1240,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 console.log(errors);
             } else {
                 console.log(data);
-                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
             }
 
         } else if (ctx.session.tobeEditedCompanyField == "edit_employee_of_company") {
@@ -1256,7 +1256,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 console.log(errors);
             } else {
                 console.log(data);
-                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
             }
         }
         else if (ctx.session.tobeEditedCompanyField == "edit_email_of_company") {
@@ -1272,7 +1272,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 console.log(errors);
             } else {
                 console.log(data);
-                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
             }
         }
 
@@ -1289,7 +1289,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                 console.log(errors);
             } else {
                 console.log(data);
-                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
             }
         } else if (ctx.session.tobeEditedCompanyField == "edit_location_of_company") {
             ctx.scene.state.tobeEditedCompanyLocationField = ctx.message.text;
@@ -1320,7 +1320,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
                     console.log(errors);
                 } else {
                     console.log(data);
-                    ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+                    ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
                 }
             }
         }
@@ -1338,7 +1338,7 @@ export const companyEditSpecificFieldInputHandler = Telegraf.on(["photo", "text"
             console.log(errors);
         } else {
             console.log(data);
-            ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard);
+            ctx.replyWithHTML("you have successfully edited your company", cancelKeyboard(ctx));
         }
     }
 })
@@ -1353,7 +1353,7 @@ export const companyHandOverHandler = async (ctx: any) => {
 
 export const handOverCompanyInitHandler = async (ctx: any) => {
     ctx.deleteMessage();
-    ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard)
+    ctx.replyWithHTML("Please send us representative phone number", cancelKeyboard(ctx))
 }
 export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
     if (ctx.message.text) {
@@ -1362,7 +1362,7 @@ export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contac
             phone: ctx.scene.state.representativeCompanyPhone
         })
         if (!users.length) {
-            ctx.replyWithHTML("User registered by this user does not exist on our database please use different number", cancelKeyboard);
+            ctx.replyWithHTML("User registered by this number does not exist on our database please use different number", cancelKeyboard(ctx));
             return;
         } else {
             let destId = users[0].id;
@@ -1378,7 +1378,8 @@ export const handOverCompanyPhoneHandler = Telegraf.on(["photo", "text", "contac
             return ctx.wizard.next();
         }
     } else {
-        ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard)
+        ctx.replyWithHTML("Please enter a valid phone number", cancelKeyboard(ctx))
+        return
     }
 })
 export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
@@ -1398,15 +1399,15 @@ export const handOverComapanyYesNoHandler = Telegraf.on(["photo", "text", "conta
             })
             if (errors) {
                 console.log(errors);
-                ctx.replyWithHTML(`Error cease you from handing over your company`, cancelKeyboard);
+                ctx.replyWithHTML(`Error cease you from handing over your company`, cancelKeyboard(ctx));
             } else {
                 console.log(data);
-                ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard);
+                ctx.replyWithHTML("You have successfully handed over your company", cancelKeyboard(ctx));
             }
             // ctx.scene.leave();
 
         } else if (ctx.message.text == "No") {
-            ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard)
+            ctx.replyWithHTML("You haven't handed over your company", cancelKeyboard(ctx));
         }
         // ctx.scene.leave();
     }

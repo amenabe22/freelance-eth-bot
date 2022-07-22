@@ -92,32 +92,35 @@ export const registerCompanyConfirmGMKeyboard = {
         ]
     }
 }
-export const registerStartupConfirmLGMKeyboard = {
-
+export const registerStartupConfirmLGMKeyboard = ({ i18n }: any) =>{
+ return {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Edit", callback_data: "editStartupRegistringLGM" }, { text: "Confirm", callback_data: "confirmRegisteringStartupLGM" }],
+            [{ text: i18n.t('editBtnLabel'), callback_data: "editStartupRegistringLGM" }, { text: i18n.t('confirmBtnLabel'), callback_data: "confirmRegisteringStartupLGM" }],
 
         ]
+    }
+ }   
+}
+export const registerStartupConfirmUGMKeyboard = ({ i18n }: any) =>{
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('editBtnLabel'), callback_data: "editStartupRegistringUGM" }, { text: i18n.t('confirmBtnLabel'), callback_data: "confirmRegisteringStartupUGM" }],
+    
+            ]
+        }
     }
 }
-export const registerStartupConfirmUGMKeyboard = {
-
+export const registerStartupConfirmLRKeyboard = ({ i18n }: any) =>{
+ return {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Edit", callback_data: "editStartupRegistringUGM" }, { text: "Confirm", callback_data: "confirmRegisteringStartupUGM" }],
+            [{ text: i18n.t('editBtnLabel'), callback_data: "editStartupRegistringLR" }, { text: i18n.t('confirmBtnLabel'), callback_data: "confirmRegisteringStartupLR" }],
 
         ]
     }
-}
-export const registerStartupConfirmLRKeyboard = {
-
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: "Edit", callback_data: "editStartupRegistringLR" }, { text: "Confirm", callback_data: "confirmRegisteringStartupLR" }],
-
-        ]
-    }
+ }
 }
 
 
@@ -151,56 +154,63 @@ export const registerCompanyToBeEditFieldGMKeyboard = {
         ]
     }
 }
-export const registerStartupToBeEditFieldLGMKeyboard = {
+export const registerStartupToBeEditFieldLGMKeyboard = ({ i18n }: any) =>{
+ return {
     reply_markup: {
         inline_keyboard: [
-            [{ text: "Name", callback_data: "name.LGM" }, { text: "Founder Name 1", callback_data: "founderN1.LGM" }],
-            [{ text: "Founder Name 2", callback_data: "founderN2.LGM" }, { text: "Founder Name 3", callback_data: "founderN3.LGM" }],
-            [{ text: "Founder Name 4", callback_data: "founderN3.LGM" }, { text: "Founder Name 5", callback_data: "founderN5.LGM" }],
-            [{ text: "Employee Size", callback_data: "employee.LGM" }, { text: "Sector", callback_data: "sector.LGM" }],
-            [{ text: "Facebook Link", callback_data: "facebook.LGM" }, { text: "Telegram Link", callback_data: "telegram.LGM" }],
-            [{ text: "YouTube Link", callback_data: "youtube.LGM" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
-            [{ text: "TwitterLink", callback_data: "twitter.LGM" }, { text: "LinkedIn Link", callback_data: "linkedin.LGM" }],
-            [{ text: "Other Link 1", callback_data: "other1.LGM" }, { text: "Other Link 2", callback_data: "other2.LGM" }],
-            [{ text: "Other LInk 3", callback_data: "other3.LGM" }, { text: "Email", callback_data: "email.LGM" }],
-            [{ text: "Phone No", callback_data: "phone.LGM" }, { text: "Website", callback_data: "website.LGM" }],
-            [{ text: "Location", callback_data: "location.LGM" }],
+            [{ text: i18n.t('companyStartupName'), callback_data: "name.LGM" }, { text: i18n.t('startupFounder1'), callback_data: "founderN1.LGM" }],
+            [{ text: i18n.t('startupFounder2'), callback_data: "founderN2.LGM" }, { text: i18n.t('startupFounder3'), callback_data: "founderN3.LGM" }],
+            [{ text: i18n.t('startupFounder4'), callback_data: "founderN4.LGM" }, { text: i18n.t('startupFounder5'), callback_data: "founderN5.LGM" }],
+            [{ text: i18n.t('companyStartupEmployeeSize'), callback_data: "employee.LGM" }, { text: i18n.t('companyStartupSector'), callback_data: "sector.LGM" }],
+            [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook.LGM" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram.LGM" }],
+            [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube.LGM" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok.startupLGM" }],
+            [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter.LGM" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin.LGM" }],
+            [{ text: i18n.t('companyStartupOL1'), callback_data: "other1.LGM" }, { text: i18n.t('companyStartupOL2'), callback_data: "other2.LGM" }],
+            [{ text: i18n.t('companyStartupOL3'), callback_data: "other3.LGM" }, { text: i18n.t('companyStartupEmail'), callback_data: "email.LGM" }],
+            [{ text: i18n.t('companyStartupPhone'), callback_data: "phone.LGM" }, { text: i18n.t('companyStartupWebsite'), callback_data: "website.LGM" }],
+            [{ text: i18n.t('companyStartupHQ'), callback_data: "location.LGM" }, {text: i18n.t('companyStartupDone'), callback_data: "done.LGM"}], 
         ]
     }
+ }
 }
-export const registerStartupToBeEditFieldUGMKeyboard = {
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: "Name", callback_data: "name.UGM" }, { text: "Founder Name 1", callback_data: "founderN1.UGM" }],
-            [{ text: "Founder Name 2", callback_data: "founderN2.UGM" }, { text: "Founder Name 3", callback_data: "founderN3.UGM" }],
-            [{ text: "Founder Name 4", callback_data: "founderN3.UGM" }, { text: "Founder Name 5", callback_data: "founderN5.UGM" }],
-            [{ text: "Employee Size", callback_data: "employee.UGM" }, { text: "Sector", callback_data: "sector.UGM" }],
-            [{ text: "Facebook Link", callback_data: "facebook.UGM" }, { text: "Telegram Link", callback_data: "telegram.UGM" }],
-            [{ text: "YouTube Link", callback_data: "youtube.UGM" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
-            [{ text: "TwitterLink", callback_data: "twitter.UGM" }, { text: "LinkedIn Link", callback_data: "linkedin.UGM" }],
-            [{ text: "Other Link 1", callback_data: "other1.UGM" }, { text: "Other Link 2", callback_data: "other2.UGM" }],
-            [{ text: "Other LInk 3", callback_data: "other3.UGM" }, { text: "Email", callback_data: "email.UGM" }],
-            [{ text: "Phone No", callback_data: "phone.UGM" }, { text: "Website", callback_data: "website.UGM" }],
-            [{ text: "Location", callback_data: "location.UGM" }],
-        ]
-    }
+//
+export const registerStartupToBeEditFieldUGMKeyboard = ({ i18n }: any) =>{
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('companyStartupName'), callback_data: "name.UGM" }, { text: i18n.t('startupFounder1'), callback_data: "founderN1.UGM" }],
+                [{ text: i18n.t('startupFounder2'), callback_data: "founderN2.UGM" }, { text: i18n.t('startupFounder3'), callback_data: "founderN3.UGM" }],
+                [{ text: i18n.t('startupFounder4'), callback_data: "founderN4.UGM" }, { text: i18n.t('startupFounder5'), callback_data: "founderN5.UGM" }],
+                [{ text: i18n.t('companyStartupEmployeeSize'), callback_data: "employee.UGM" }, { text: i18n.t('companyStartupSector'), callback_data: "sector.UGM" }],
+                [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook.UGM" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram.UGM" }],
+                [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube.UGM" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok.startupLGM" }],
+                [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter.UGM" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin.UGM" }],
+                [{ text: i18n.t('companyStartupOL1'), callback_data: "other1.UGM" }, { text: i18n.t('companyStartupOL2'), callback_data: "other2.UGM" }],
+                [{ text: i18n.t('companyStartupOL3'), callback_data: "other3.UGM" }, { text: i18n.t('companyStartupEmail'), callback_data: "email.UGM" }],
+                [{ text: i18n.t('companyStartupPhone'), callback_data: "phone.UGM" }, { text: i18n.t('companyStartupWebsite'), callback_data: "website.UGM" }],
+                [{ text: i18n.t('companyStartupHQ'), callback_data: "location.UGM" }, {text: i18n.t('companyStartupDone'), callback_data: "done.UGM"}], 
+            ]
+        }
+     }
 }
-export const registerStartupToBeEditFieldLRKeyboard = {
-    reply_markup: {
-        inline_keyboard: [
-            [{ text: "Name", callback_data: "name.LR" }, { text: "Founder Name 1", callback_data: "founderN1.LR" }],
-            [{ text: "Founder Name 2", callback_data: "founderN2.LR" }, { text: "Founder Name 3", callback_data: "founderN3.LR" }],
-            [{ text: "Founder Name 4", callback_data: "founderN3.LR" }, { text: "Founder Name 5", callback_data: "founderN5.LR" }],
-            [{ text: "Employee Size", callback_data: "employee.LR" }, { text: "Sector", callback_data: "sector.LR" }],
-            [{ text: "Facebook Link", callback_data: "facebook.LR" }, { text: "Telegram Link", callback_data: "telegram.LR" }],
-            [{ text: "YouTube Link", callback_data: "youtube.LR" }, { text: "TikTok Link", callback_data: "tiktok.startupLGM" }],
-            [{ text: "TwitterLink", callback_data: "twitter.LR" }, { text: "LinkedIn Link", callback_data: "linkedin.LR" }],
-            [{ text: "Other Link 1", callback_data: "other1.LR" }, { text: "Other Link 2", callback_data: "other2.LR" }],
-            [{ text: "Other LInk 3", callback_data: "other3.LR" }, { text: "Email", callback_data: "email.LR" }],
-            [{ text: "Phone No", callback_data: "phone.LR" }, { text: "Website", callback_data: "website.LR" }],
-            [{ text: "Location", callback_data: "location.LR" }],
-        ]
-    }
+export const registerStartupToBeEditFieldLRKeyboard = ({ i18n }: any) =>{
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: i18n.t('companyStartupName'), callback_data: "name.LR" }, { text: i18n.t('startupFounder1'), callback_data: "founderN1.LR" }],
+                [{ text: i18n.t('startupFounder2'), callback_data: "founderN2.LR" }, { text: i18n.t('startupFounder3'), callback_data: "founderN3.LR" }],
+                [{ text: i18n.t('startupFounder4'), callback_data: "founderN4.LR" }, { text: i18n.t('startupFounder5'), callback_data: "founderN5.LR" }],
+                [{ text: i18n.t('companyStartupEmployeeSize'), callback_data: "employee.LR" }, { text: i18n.t('companyStartupSector'), callback_data: "sector.LR" }],
+                [{ text: i18n.t('companyStartupFbLink'), callback_data: "facebook.LR" }, { text: i18n.t('companyStartupTgLink'), callback_data: "telegram.LR" }],
+                [{ text: i18n.t('companyStartupYTLink'), callback_data: "youtube.LR" }, { text: i18n.t('companyStartupTTLink'), callback_data: "tiktok.startupLGM" }],
+                [{ text: i18n.t('companyStartupTwitterLink'), callback_data: "twitter.LR" }, { text: i18n.t('companyStartupLILink'), callback_data: "linkedin.LR" }],
+                [{ text: i18n.t('companyStartupOL1'), callback_data: "other1.LR" }, { text: i18n.t('companyStartupOL2'), callback_data: "other2.LR" }],
+                [{ text: i18n.t('companyStartupOL3'), callback_data: "other3.LR" }, { text: i18n.t('companyStartupEmail'), callback_data: "email.LR" }],
+                [{ text: i18n.t('companyStartupPhone'), callback_data: "phone.LR" }, { text: i18n.t('companyStartupWebsite'), callback_data: "website.LR" }],
+                [{ text: i18n.t('companyStartupHQ'), callback_data: "location.LR" }, {text: i18n.t('companyStartupDone'), callback_data: "done.LR"}], 
+            ]
+        }
+     }
 }
 export const registerStartupToBeEditFieldURKeyboard = {
     reply_markup: {
