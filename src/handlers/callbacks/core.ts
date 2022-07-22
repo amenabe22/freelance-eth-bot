@@ -38,10 +38,11 @@ export const companyHandler = async (ctx: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId);
+            let companyId = ctx.session.userEId;
             await ctx.replyWithHTML(ctx.i18n.t('companyMsg'), { 
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
-                        text: x, callback_data: JSON.stringify(xi + 30)
+                        text: x, callback_data: JSON.stringify("myCompanies_"+companyId)
                     }]))
                 }),
             })
@@ -50,12 +51,12 @@ export const companyHandler = async (ctx: any) => {
                     keyboard: [[{ text: ctx.i18n.t('addcompanyBtnLabel') }], [{ text: ctx.i18n.t('mainMenuBtnLabel')}]], resize_keyboard: true, one_time_keyboard: true
                 }
             })
-        } else {
+        } else { 
             ctx.replyWithHTML(ctx.i18n.t('addCompanyMsg'), companyKeyboard(ctx))
         }
     }
 }
-export const addMoreCompanyHandler = async (ctx: any) => {
+export const addMoreCompanyHandler = async (ctx: any) => { 
     ctx.replyWithHTML(ctx.i18n.t('addCompanyMsg'), companyKeyboard(ctx))
    }
 export const startupHandler = async (ctx: any) => {
@@ -79,10 +80,11 @@ export const startupHandler = async (ctx: any) => {
                 return `${nam.entity["id"]}`
             })
             console.log(ctx.session.userEId); 
+            let startupId = ctx.session.userEId
             await ctx.replyWithHTML(ctx.i18n.t('startupFirstMsg'), {
                 reply_markup: JSON.stringify({
                     inline_keyboard: ctx.session.userEName.map((x: string, xi: string) => ([{
-                        text: x, callback_data: JSON.stringify(xi + 60)
+                        text: x, callback_data: JSON.stringify("myStartups_"+startupId)
                     }]))
                 }),
             })
