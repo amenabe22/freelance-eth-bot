@@ -1,6 +1,6 @@
 import FormData from "form-data"
 import { Telegraf } from "telegraf";
-import { fetchCities, fetchCity } from "../../services/basic";
+import { fetchCities, fetchCity, fetchStartupSector, fetchStartupSectors } from "../../services/basic";
 import { fetchSectors, fetchSector } from "../../services/basic";
 import { cancelKeyboard, onlyMainMenuKeyboard } from "../../keybaords/menu_kbs";
 import { registerStartup } from "../../services/startup.process";
@@ -99,10 +99,10 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = snames.map((x: string, _: string) => ([{
           text: x,
@@ -115,8 +115,8 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
         })
       }
       return ctx.wizard.next();
-    })  
-  } else { 
+    })
+  } else {
     ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), cancelKeyboard(ctx));
     return;
   }
@@ -124,10 +124,10 @@ export const startupLGMIdPhotoHandler = Telegraf.on(["photo", "text", "contact",
 export const startupLGMIndustrySectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupLGMSectorName = ctx.message.text;
-    const { data, error } = await fetchSector({ name: ctx.scene.state.startupLGMSectorName })
-    const { sectors } = data
-    console.log(sectors.length, "bpt 1")
-    if (!sectors.length) {
+    const { data, error } = await fetchStartupSector({ name: ctx.scene.state.startupLGMSectorName })
+    const { entity_sectors } = data
+    console.log(entity_sectors.length, "bpt 1")
+    if (!entity_sectors.length) {
       ctx.replyWithHTML(ctx.i18n('companyStartupInvalidMsg'), {
         reply_markup: JSON.stringify({
           keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -137,7 +137,7 @@ export const startupLGMIndustrySectorHandler = Telegraf.on(["photo", "text", "co
       })
       return;
     } else {
-      let sectorId = sectors[0].id;
+      let sectorId = entity_sectors[0].id;
       console.log("bpt 2", sectorId)
       ctx.session.startupLGMSectorID = sectorId;
       ctx.scene.state.startupLGMSectorID = sectorId;
@@ -284,7 +284,7 @@ export const startupLGMHeadQuarterLocationHandler = Telegraf.on(["photo", "text"
   } else {
     ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
       reply_markup: JSON.stringify({
-        keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{     
+        keyboard: ctx.session.cityNames.map((x: string, xi: string) => ([{
           text: x,
         }])), resize_keyboard: true, one_time_keyboard: true,
       }),
@@ -369,23 +369,23 @@ export const socialMediaAddingActionLGMHandler = async (ctx: any) => {
 
 export const startupSocialMediaLinkLGMInitHandler = async (ctx: any) => {
   if (ctx.session.targetedText == "facebook") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)" , cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "telegram") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "youtube") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "tiktok") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "twitter") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "linkedin") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink1") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink2") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink3") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneLGMScene", ctx.scene.state);
   }
@@ -473,10 +473,10 @@ export const startupRegisteringEditLGMInitHandler = async (ctx: any) => {
       ctx.replyWithHTML(ctx.i18n.t('startupEmployeeMsg'), cancelKeyboard(ctx));
       return
     case "sector":
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = snames.map((x: string, _: string) => ([{
           text: x,
@@ -490,31 +490,31 @@ export const startupRegisteringEditLGMInitHandler = async (ctx: any) => {
       }
       return
     case "facebook":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
       return
     case "telegram":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
       return
     case "youtube":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
       return
     case "tiktok":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
       return
     case "twitter":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
       return
     case "linkedin":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
       return
     case "other1":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other2":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other3":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "phone":
       ctx.replyWithHTML(ctx.i18n.t('startupPhoneNumberMsg'), cancelKeyboard(ctx));
@@ -543,7 +543,7 @@ export const startupRegisteringEditLGMInitHandler = async (ctx: any) => {
     case "done":
       await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmLGMKeyboard(ctx));
       return
-     default:
+    default:
       break;
   }
 }
@@ -565,7 +565,7 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
         await ctx.replyWithHTML(ctx.i18n.t('companyStartupEditMoreMsg'), registerStartupToBeEditFieldLGMKeyboard(ctx));
         return
       case "founderN2":
-        globalState.startupLGMFounder2 = responseLocationId = hqId
+        globalState.startupLGMFounder2 = response
         await ctx.replyWithHTML(ctx.i18n.t('companyStartupEditMoreMsg'), registerStartupToBeEditFieldLGMKeyboard(ctx));
         return
       case "founderN3":
@@ -587,10 +587,10 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
       case "sector":
         globalState.startupLGMSectorName = response
         ctx.scene.state.startupLGMSectorName = response;
-        const { data } = await fetchSector({ name: response })
-        const { sectors } = data
+        const { data } = await fetchStartupSector({ name: response })
+        const { entity_sectors } = data
         console.log(data)
-        if (!sectors) {
+        if (!entity_sectors) {
           ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
             reply_markup: JSON.stringify({
               keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -600,7 +600,7 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
           })
           return;
         } else {
-          let sectorId = sectors[0].id;
+          let sectorId = entity_sectors[0].id;
           ctx.session.startupLGMSectorID = sectorId;
           ctx.scene.state.startupLGMSectorID = sectorId;
           await ctx.replyWithHTML(ctx.i18n.t('companyStartupEditMoreMsg'), registerStartupToBeEditFieldLGMKeyboard(ctx));
@@ -681,7 +681,7 @@ export const startupRegisteringEditLGMValueHandler = Telegraf.on(["photo", "text
       case "done":
         await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmLGMKeyboard(ctx));
         return
-        default:
+      default:
         break;
     }
   }
@@ -734,10 +734,10 @@ export const startupUIdPhotoHandler = Telegraf.on(["photo", "text", "contact", "
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     download(downloadURL, `files/GMIdPhoto/${fname}`,).then(async () => {
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = snames.map((x: string, _: string) => ([{
           text: x,
@@ -759,10 +759,10 @@ export const startupUIdPhotoHandler = Telegraf.on(["photo", "text", "contact", "
 export const startupUIndustrySectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupUGMSectorName = ctx.message.text;
-    const { data, error } = await fetchSector({ name: ctx.scene.state.startupUGMSectorName })
-    const { sectors } = data
-    console.log(sectors.length, "bpt 1")
-    if (!sectors.length) {
+    const { data, error } = await fetchStartupSector({ name: ctx.scene.state.startupUGMSectorName })
+    const { entity_sectors } = data
+    console.log(entity_sectors.length, "bpt 1")
+    if (!entity_sectors.length) {
       ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
         reply_markup: JSON.stringify({
           keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -772,7 +772,7 @@ export const startupUIndustrySectorHandler = Telegraf.on(["photo", "text", "cont
       })
       return;
     } else {
-      let sectorId = sectors[0].id;
+      let sectorId = entity_sectors[0].id;
       console.log("bpt 2", sectorId)
       ctx.session.startupUGMSectorID = sectorId;
       ctx.scene.state.startupUGMSectorID = sectorId;
@@ -915,7 +915,7 @@ export const startupUHeadQuarterLocationHandler = Telegraf.on(["photo", "text", 
       ctx.scene.state.uStartupOtherL3 = ctx.i18n.t('companyStartupOL3')
       ctx.scene.state.startupUGMNameBold = ctx.scene.state.startupUGMName.bold();
       globalState = ctx.scene.state
-      await ctx.replyWithHTML(formatStartupURegistrationMsg(globalState), registerStartupConfirmUGMKeyboard(ctx))                       
+      await ctx.replyWithHTML(formatStartupURegistrationMsg(globalState), registerStartupConfirmUGMKeyboard(ctx))
       await ctx.replyWithHTML("****************************", onlyMainMenuKeyboard(ctx))
     }
   } else {
@@ -1008,23 +1008,23 @@ export const socialMediaAddingActionUHandler = async (ctx: any) => {
 
 export const startupSocialMediaLinkUInitHandler = async (ctx: any) => {
   if (ctx.session.targetedText == "facebook") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "telegram") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "youtube") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "tiktok") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "twitter") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "linkedin") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink1") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink2") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink3") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
   }
@@ -1109,10 +1109,10 @@ export const startupRegisteringEditUInitHandler = async (ctx: any) => {
       ctx.replyWithHTML(ctx.i18n.t('startupEmployeeMsg'), cancelKeyboard(ctx));
       return
     case "sector":
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = snames.map((x: string, _: string) => ([{
           text: x,
@@ -1126,31 +1126,31 @@ export const startupRegisteringEditUInitHandler = async (ctx: any) => {
       }
       return
     case "facebook":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
       return
     case "telegram":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
       return
     case "youtube":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
       return
     case "tiktok":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
       return
     case "twitter":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
       return
     case "linkedin":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
       return
     case "other1":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other2":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other3":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "phone":
       ctx.replyWithHTML(ctx.i18n.t('startupPhoneNumberMsg'), cancelKeyboard(ctx));
@@ -1179,7 +1179,7 @@ export const startupRegisteringEditUInitHandler = async (ctx: any) => {
     case "done":
       await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmUGMKeyboard(ctx));
       return;
-      default:
+    default:
       break;
   }
 }
@@ -1223,10 +1223,10 @@ export const startupRegisteringEditUValueHandler = Telegraf.on(["photo", "text",
       case "sector":
         globalState.startupUGMSectorName = response
         ctx.scene.state.startupUGMSectorName = response;
-        const { data } = await fetchSector({ name: response })
-        const { sectors } = data
+        const { data } = await fetchStartupSector({ name: response })
+        const { entity_sectors } = data
         console.log(data)
-        if (!sectors) {
+        if (!entity_sectors) {
           ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
             reply_markup: JSON.stringify({
               keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -1236,7 +1236,7 @@ export const startupRegisteringEditUValueHandler = Telegraf.on(["photo", "text",
           })
           return;
         } else {
-          let sectorId = sectors[0].id;
+          let sectorId = entity_sectors[0].id;
           ctx.session.startupUGMSectorID = sectorId;
           ctx.scene.state.startupUGMSectorID = sectorId;
           await ctx.replyWithHTML(ctx.i18n.t('companyStartupEditMoreMsg'), registerStartupToBeEditFieldUGMKeyboard(ctx));
@@ -1317,7 +1317,7 @@ export const startupRegisteringEditUValueHandler = Telegraf.on(["photo", "text",
       case "done":
         await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmUGMKeyboard(ctx));
         return;
-        default:
+      default:
         break;
     }
   }
@@ -1400,10 +1400,10 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
     const fname = `${ctx.from.id}.jpg`
     const { downloadURL }: any = await fetchTelegramDownloadLink(ctx.update.message.photo[2].file_id)
     download(downloadURL, `files/letterPhoto/${fname}`,).then(async () => {
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = ctx.session.sectorNames.map((x: string, _: string) => ([{
           text: x,
@@ -1424,10 +1424,10 @@ export const startupLRStampedLetterHandler = Telegraf.on(["photo", "text", "cont
 export const startupLRIndustrySectorHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) => {
   if (ctx.message.text) {
     ctx.scene.state.startupLRSectorName = ctx.message.text;
-    const { data, error } = await fetchSector({ name: ctx.scene.state.startupLRSectorName })
-    const { sectors } = data
-    console.log(sectors.length)
-    if (!sectors.length) {
+    const { data, error } = await fetchStartupSector({ name: ctx.scene.state.startupLRSectorName })
+    const { entity_sectors } = data
+    console.log(entity_sectors.length)
+    if (!entity_sectors.length) {
       ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
         reply_markup: JSON.stringify({
           keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -1437,7 +1437,7 @@ export const startupLRIndustrySectorHandler = Telegraf.on(["photo", "text", "con
       })
       return;
     } else {
-      let sectorId = sectors[0].id;
+      let sectorId = entity_sectors[0].id;
       console.log("bpt 2", sectorId)
       ctx.session.startupLRSectorID = sectorId;
       ctx.scene.state.startupLRSectorID = sectorId;
@@ -1675,23 +1675,23 @@ export const socialMediaAddingActionLRHandler = async (ctx: any) => {
 
 export const startupSocialMediaLinkLRInitHandler = async (ctx: any) => {
   if (ctx.session.targetedText == "facebook") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "telegram") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "youtube") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "tiktok") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "twitter") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "linkedin") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink1") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink2") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "otherlink3") {
-    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+    ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
   }
@@ -1778,10 +1778,10 @@ export const startupRegisteringEditLRInitHandler = async (ctx: any) => {
       ctx.replyWithHTML(ctx.i18n.t('startupEmployeeMsg'), cancelKeyboard(ctx));
       return
     case "sector":
-      const { data, error } = await fetchSectors()
+      const { data, error } = await fetchStartupSectors()
       if (data) {
-        const { sectors } = data;
-        let snames = sectors.map((nm: any) => nm.name);
+        const { entity_sectors } = data;
+        let snames = entity_sectors.map((nm: any) => nm.en);
         ctx.session.sectorNames = snames
         let secs = snames.map((x: string, _: string) => ([{
           text: x,
@@ -1795,31 +1795,31 @@ export const startupRegisteringEditLRInitHandler = async (ctx: any) => {
       }
       return
     case "facebook":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Facebook)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Facebook)", cancelKeyboard(ctx));
       return
     case "telegram":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Telegram)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Telegram)", cancelKeyboard(ctx));
       return
     case "youtube":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (YouTube)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (YouTube)", cancelKeyboard(ctx));
       return
     case "tiktok":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (TikTok)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (TikTok)", cancelKeyboard(ctx));
       return
     case "twitter":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Twitter)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Twitter)", cancelKeyboard(ctx));
       return
     case "linkedin":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (LinkedIn)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (LinkedIn)", cancelKeyboard(ctx));
       return
     case "other1":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other2":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "other3":
-      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg')+ " (Other)", cancelKeyboard(ctx));
+      ctx.replyWithHTML(ctx.i18n.t('companyStartupEnterLinkMsg') + " (Other)", cancelKeyboard(ctx));
       return
     case "phone":
       ctx.replyWithHTML(ctx.i18n.t('startupPhoneNumberMsg'), cancelKeyboard(ctx));
@@ -1848,7 +1848,7 @@ export const startupRegisteringEditLRInitHandler = async (ctx: any) => {
     case "done":
       await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmLRKeyboard(ctx));
       return;
-      default:
+    default:
       break;
   }
 }
@@ -1892,10 +1892,10 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
       case "sector":
         globalState.startupUGMSectorName = response
         ctx.scene.state.startupUGMSectorName = response;
-        const { data } = await fetchSector({ name: response })
-        const { sectors } = data
+        const { data } = await fetchStartupSector({ name: response })
+        const { entity_sectors } = data
         console.log(data)
-        if (!sectors) {
+        if (!entity_sectors) {
           ctx.replyWithHTML(ctx.i18n.t('companyStartupInvalidMsg'), {
             reply_markup: JSON.stringify({
               keyboard: ctx.session.sectorNames.map((x: string, xi: string) => ([{
@@ -1905,7 +1905,7 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
           })
           return;
         } else {
-          let sectorId = sectors[0].id;
+          let sectorId = entity_sectors[0].id;
           ctx.session.startupUGMSectorID = sectorId;
           ctx.scene.state.startupUGMSectorID = sectorId;
           await ctx.replyWithHTML(ctx.i18n.t('companyStartupEditMoreMsg'), registerStartupToBeEditFieldLRKeyboard(ctx));
@@ -1986,7 +1986,7 @@ export const startupRegisteringEditLRValueHandler = Telegraf.on(["photo", "text"
       case "done":
         await ctx.replyWithHTML(formatStartupLGMRegistrationMsg(globalState), registerStartupConfirmLRKeyboard(ctx));
         return;
-        default:
+      default:
         break;
     }
   }
@@ -2025,7 +2025,7 @@ export const startupSelectionActionHandler = async (ctx: any) => {
         ctx.session.selectedStartupName = ctx.session.userSName[0];
         ctx.session.selectedStartupId = ctx.session.userSId[0];
       } else if (selectedStartup == 61) {
-        ctx.session.selectedStartupName = ctx.session.userSName[1]; 
+        ctx.session.selectedStartupName = ctx.session.userSName[1];
         ctx.session.selectedStartupId = ctx.session.userSId[1];
       } else if (selectedStartup == 62) {
         ctx.session.selectedStartupName = ctx.session.userSName[2];
@@ -2033,7 +2033,7 @@ export const startupSelectionActionHandler = async (ctx: any) => {
       }
       else if (selectedStartup == 63) {
         ctx.session.selectedStartupName = ctx.session.userSName[3];
-        ctx.session.selectedStartupId = ctx.session.userSId[3]; 
+        ctx.session.selectedStartupId = ctx.session.userSId[3];
       }
       else if (selectedStartup == 64) {
         ctx.session.selectedStartupName = ctx.session.userSName[4];

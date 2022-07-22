@@ -240,7 +240,7 @@ export const STARTUP_SECTOR = gql`query getSector($name: String!) {
 }
 `
 export const STARTUP_SECTORS = gql`query {
-  entity_sectors (where: {type: {_eq: "COMPANY"}}) {
+  entity_sectors (where: {type: {_eq: "STARTUP"}}) {
     id
     en
     am
