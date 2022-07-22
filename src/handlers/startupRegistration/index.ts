@@ -1070,68 +1070,6 @@ export const startupSocialMediaLinkUInitHandler = async (ctx: any) => {
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
   }
-<<<<<<< HEAD
-  
-  export const startupSocialMediaLinkUInitHandler = async (ctx: any) => {
-    if(ctx.session.targetedText == "facebook"){
-      ctx.replyWithHTML("please enter facebook link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "telegram"){
-      ctx.replyWithHTML("please enter telegram link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "youtube"){
-      ctx.replyWithHTML("please enter youtube link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "tiktok"){
-      ctx.replyWithHTML("please enter tiktok link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "twitter"){
-      ctx.replyWithHTML("please enter twitter link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "linkedin"){
-      ctx.replyWithHTML("please enter linkedin link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink1"){
-      ctx.replyWithHTML("please enter otherlink1 link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink2"){
-      ctx.replyWithHTML("please enter otherlink2 link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink3"){
-      ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard(ctx));
-     }else if(ctx.session.targetedText == "done"){
-      ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
-  }
-  
-  }
-  
-  export const startupSocialMediaLinkUValueHandler = Telegraf.on(["photo", "text", "contact", "document"], async (ctx: any) =>{ 
-    if(ctx.session.targetedText == "facebook"){
-      ctx.scene.state.startupUGMFacebookLink = ctx.message.text;
-      ctx.replyWithHTML(" you have added facebook link.\n\nyou can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "telegram"){
-      ctx.scene.state.startupUGMTelegramLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "youtube"){
-      ctx.scene.state.startupUGMYouTubeLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "tiktok"){
-      ctx.scene.state.startupUGMTikTokLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "twitter"){
-      ctx.scene.state.startupUGMTwitterLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "linkedin"){
-      ctx.scene.state.startupUGMLinkedInLink = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "otherlink1"){
-      ctx.scene.state.startupUGMOther1Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "otherlink2"){
-      ctx.scene.state.startupUGMOther2Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "otherlink3"){
-      ctx.scene.state.startupUGMOther3Link = ctx.message.text;
-      ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
-    }else if(ctx.session.targetedText == "done"){
-      ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
-    }
-  })
-  export const startupSocialMediaLinkDoneUInitHandler = async (ctx: any) => {
-    ctx.replyWithHTML("please enter email of your startup.",companyRegisterOptionalKeyboard(ctx))
-=======
 
 }
 
@@ -1165,7 +1103,6 @@ export const startupSocialMediaLinkUValueHandler = Telegraf.on(["photo", "text",
     ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListUGMKeyboard);
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneUScene", ctx.scene.state);
->>>>>>> 102ecfa838a41b6612f65112656b48e315dfbed6
   }
 })
 export const startupSocialMediaLinkDoneUInitHandler = async (ctx: any) => {
@@ -1819,30 +1756,6 @@ export const startupSocialMediaLinkLRInitHandler = async (ctx: any) => {
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
   }
-<<<<<<< HEAD
-  
-  export const startupSocialMediaLinkLRInitHandler = async (ctx: any) => {
-    if(ctx.session.targetedText == "facebook"){
-      ctx.replyWithHTML("please enter facebook link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "telegram"){
-      ctx.replyWithHTML("please enter telegram link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "youtube"){
-      ctx.replyWithHTML("please enter youtube link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "tiktok"){
-      ctx.replyWithHTML("please enter tiktok link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "twitter"){
-      ctx.replyWithHTML("please enter twitter link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "linkedin"){
-      ctx.replyWithHTML("please enter linkedin link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink1"){
-      ctx.replyWithHTML("please enter otherlink1 link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink2"){
-      ctx.replyWithHTML("please enter otherlink2 link of your startup", cancelKeyboard(ctx));
-    }else if(ctx.session.targetedText == "otherlink3"){
-      ctx.replyWithHTML("please enter otherlink3 link of your startup", cancelKeyboard(ctx));
-     }else if(ctx.session.targetedText == "done"){
-      ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
-=======
 
 }
 
@@ -1876,7 +1789,6 @@ export const startupSocialMediaLinkLRValueHandler = Telegraf.on(["photo", "text"
     ctx.replyWithHTML("u can add other social media links or click done and go to next step", socialMediaListLRKeyboard);
   } else if (ctx.session.targetedText == "done") {
     ctx.scene.enter("socialMediaLinkDoneLRScene", ctx.scene.state);
->>>>>>> 102ecfa838a41b6612f65112656b48e315dfbed6
   }
 })
 export const startupSocialMediaLinkDoneLRInitHandler = async (ctx: any) => {
